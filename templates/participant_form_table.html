@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participant Form </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Participant Form</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Participant ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Training Location ID</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in participant_data %}
+                <tr>
+                    <td>{{ participant[0] }}</td>
+                    <td>{{ participant[1] }}</td>
+                    <td>{{ participant[2] }}</td>
+                    <td>{{ participant[3] }}</td>
+                    <td>{{ participant[4] }}</td>
+                    <td>{{ participant[5] }}</td>
+                    <td>{{ participant[6] }}</td>
+                    <td>{{ participant[7] }}</td>
+                    <td>{{ participant[8] }}</td>
+                    <td>{{ participant[9] }}</td>
+                    <td>{{ participant[10] }}</td>
+                    <td>{{ participant[11] }}</td> <!-- New column: Created At -->
+                    <td>{{ participant[12] }}</td> <!-- New column: Updated At -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>      
+</body>
+</html>

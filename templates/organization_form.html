@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Organization Form</title>
+  <style>
+    /* CSS styling for the form */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .form-group input:invalid,
+    .form-group textarea:invalid,
+    .form-group select:invalid {
+      border-color: red;
+    }
+
+    .form-group input[type="file"] {
+      padding: 6px 10px;
+    }
+
+    .form-group button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .form-group button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Organization Form</h1>
+    <form id="organization-form" method="POST" action="/submit_form" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <label for="organization-name">Organization Name:</label>
+        <input type="text" id="organization-name" name="organization-name" required>
+        <span class="error-message" id="error-organization-name">Please enter the organization name.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-address">Organization Address:</label>
+        <input type="text" id="organization-address" name="organization-address" required>
+        <span class="error-message" id="error-organization-address">Please enter the organization address.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-contact">Organization Contact:</label>
+        <input type="tel" id="organization-contact" name="organization-contact" pattern="[0-9]{10}" maxlength="10" required>
+        <span class="error-message" id="error-organization-contact">Please enter a valid 10-digit contact number.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-email">Organization Email:</label>
+        <input type="email" id="organization-email" name="organization-email" required>
+        <span class="error-message" id="error-organization-email">Please enter a valid email address.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-type">Organization Type:</label>
+        <select id="organization-type" name="organization-type" required>
+          <option value="" selected disabled>Select Organization Type</option>
+          <option value="Public Limited Company">Public Limited Company</option>
+          <option value="Private Limited Company">Private Limited Company</option>
+          <option value="Registered Trust">Registered Trust</option>
+          <option value="Registered Society">Registered Society</option>
+          <option value="Registered Resident Welfare Association (RWA)">Registered Resident Welfare Association (RWA)</option>
+          <option value="Section 8 Company">Section 8 Company</option>
+          <option value="Other">Other</option>
+        </select>
+        <span class="error-message" id="error-organization-type">Please select an organization type.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-activities">Organization Activities:</label>
+        <input type="text" id="organization-activities" name="organization-activities" required>
+        <span class="error-message" id="error-organization-activities">Please enter the organization activities.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="organization-legal-status-document">Organization Legal Status Document:</label>
+        <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept="image/*, .pdf">
+        <span class="error-message" id="error-organization-legal-status-document">Please upload a valid legal status document.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="coordinator-name">Coordinator Name:</label>
+        <input type="text" id="coordinator-name" name="coordinator-name" required>
+        <span class="error-message" id="error-coordinator-name">Please enter the coordinator name.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="coordinator-email">Coordinator Email:</label>
+        <input type="email" id="coordinator-email" name="coordinator-email" required>
+        <span class="error-message" id="error-coordinator-email">Please enter a valid email address.</span>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const organizationNameInput = document.getElementById("organization-name");
+    const organizationAddressInput = document.getElementById("organization-address");
+    const organizationContactInput = document.getElementById("organization-contact");
+    const organizationEmailInput = document.getElementById("organization-email");
+    const organizationTypeInput = document.getElementById("organization-type");
+    const organizationActivitiesInput = document.getElementById("organization-activities");
+    const organizationLegalStatusInput = document.getElementById("organization-legal-status-document");
+    const coordinatorNameInput = document.getElementById("coordinator-name");
+    const coordinatorEmailInput = document.getElementById("coordinator-email");
+
+    const errorMessages = document.getElementsByClassName("error-message");
+
+    organizationNameInput.addEventListener("input", function() {
+      errorMessages[0].style.display = organizationNameInput.validity.valid ? "none" : "block";
+    });
+
+    organizationAddressInput.addEventListener("input", function() {
+      errorMessages[1].style.display = organizationAddressInput.validity.valid ? "none" : "block";
+    });
+
+    organizationContactInput.addEventListener("input", function() {
+      errorMessages[2].style.display = organizationContactInput.validity.valid ? "none" : "block";
+    });
+
+    organizationEmailInput.addEventListener("input", function() {
+      errorMessages[3].style.display = organizationEmailInput.validity.valid ? "none" : "block";
+    });
+
+    organizationTypeInput.addEventListener("change", function() {
+      errorMessages[4].style.display = organizationTypeInput.validity.valid? "none" : "block";
+    });
+
+    organizationActivitiesInput.addEventListener("input", function() {
+      errorMessages[5].style.display = organizationActivitiesInput.validity.valid ? "none" : "block";
+    });
+
+    organizationLegalStatusInput.addEventListener("change", function() {
+      errorMessages[6].style.display = organizationLegalStatusInput.validity.valid ? "none" : "block";
+    });
+
+    coordinatorNameInput.addEventListener("input", function() {
+      errorMessages[7].style.display = coordinatorNameInput.validity.valid ? "none" : "block";
+    });
+
+    coordinatorEmailInput.addEventListener("input", function() {
+      errorMessages[8].style.display = coordinatorEmailInput.validity.valid ? "none" : "block";
+    });
+
+    document.getElementById("organization-form").addEventListener("submit", function(event) {
+      if (
+        !organizationNameInput.checkValidity() ||
+        !organizationAddressInput.checkValidity() ||
+        !organizationContactInput.checkValidity() ||
+        !organizationEmailInput.checkValidity() ||
+        !organizationTypeInput.checkValidity() ||
+        !organizationActivitiesInput.checkValidity() ||
+        !organizationLegalStatusInput.checkValidity() ||
+        !coordinatorNameInput.checkValidity() ||
+        !coordinatorEmailInput.checkValidity()
+      ) {
+        event.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
