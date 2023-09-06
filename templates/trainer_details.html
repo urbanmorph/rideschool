@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trainer Details</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cbtp.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <img src="{{ url_for('static', filename='Image/banner-img.jpg') }}" alt="home-banner">
+    <h1>Welcome {{ trainer_name }}!</h1>
+    <h2>Participants in Your Training Location:</h2>
+    <br>
+
+    <form id="update-participant-form" method="POST">
+        <table>
+            <tr>
+                <th>Participant Name</th>
+                <th>Participant Contact</th>
+                <th>Participant Status</th>
+                <th>Update Participant Status</th>
+            </tr>
+            {% for participant in participants %}
+            <tr>
+                <td>{{ participant[1] }}</td>
+                <td>{{ participant[2] }}</td>
+                <td>
+                    <select class="participant-status-dropdown" data-participant-id="{{ participant[0] }}" name="participant_status">
+                        <option value="ONGOING">ONGOING</option>
+                        <option value="CERTIFIED">COMPLETED</option>
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    
+        <!-- Add a single "Update All" button -->
+        <button class="update-all-button">Update All</button>
+    </form>
+
+   
+    <script>
+        // Add a click event handler for the "Update All" button
+        $(".update-all-button").click(function () {
+            // Create an empty array to store participant data
+            var participantData = [];
+    
+            // Iterate through all select elements with the class "participant-status-dropdown"
+            $(".participant-status-dropdown").each(function () {
+                var participantId = $(this).data("participant-id");
+                var participantStatus = $(this).val();
+    
+                // Create an object representing the participant data
+                var participant = {
+                    participantId: participantId,
+                    participantStatus: participantStatus
+                };
+    
+                // Add the participant data to the array
+                participantData.push(participant);
+            });
+    
+            // Send the participantData array to the server using AJAX
+            $.ajax({
+                url: "/update_participant_statuses", // Update this URL to match your server route
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(participantData), // Convert the array to JSON
+                success: function (response) {
+                    console.log(response); // Handle the response from the server
+                },
+                error: function (error) {
+                    console.error(error); // Handle errors
+                }
+            });
+        });
+    </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='js/trainer_details.js') }}"></script>
+</body>
+</html>

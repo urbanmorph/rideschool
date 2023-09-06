@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Pedalಶಾಲೆ</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="bootstrap-5.2.2-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="fontawesome-free-6.2.0-web/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css-4/cbtp.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">
+        <img src="cbtpimages/pedalshaale-bgblack.png" height="50" class="d-inline-block align-top" alt="Pedalಶಾಲೆ" class="img-thumbnail">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+       <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ms-auto" style="text-align: right;">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="FAQ.html">FAQ</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="pedalshaale-resources.html">Resources</a>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Training centers</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>    
+
+  <!-- Masthead -->
+  <header class="masthead1 text-center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+      </div>
+        <p class="bottomright">
+          Illustrations by Nidhi KS
+        </p>
+      </div>
+    </div>
+  </header>
+
+<!-- Heading Row -->
+
+<div class="container">
+
+  <div class="text-center py-1 rounded-3">
+    <h2 style="font-family: 'Baloo 2', cursive;"><img src="./cbtpimages/pedalshaale-bgwhite.png" height="40" class="d-inline-block align-center" alt="Urban Morph" class="img-thumbnail"> Participant Training Process</h2>
+  </div>
+
+  <div class="d-flex justify-content-center">
+      <div class="col-lg-6 py-3 mx-3 rounded-3">
+            <ul class="list-group">
+              <li class="list-group-item active">
+                <i class="fa fa-pen-alt fa-fw"></i> Theoretical component <span class="badge badge-light badge-pill">2 hours</span>
+              </li>
+              <li class="list-group-item px-5">Theoretical training focuses on learning the traffic and cycling rules identifying dangerous situations.</li>
+              <li class="list-group-item px-5">A detailed document for the student/commuter to navigate on the streets of Bangalore.</li>
+              <li class="list-group-item px-5">The document also consists of questions back for the student to practise before the test.</li>
+              <li class="list-group-item px-5">The document will be followed by an online test where their understanding of traffic rules will be tested. </li>
+            </ul>
+        </p>
+      </div>
+      <div class="col-lg-3 py-3 mx-3 rounded-3">
+           <img src="cbtpimages/IMG_5847.jpeg" class="img-fluid" style="object-fit: cover;" alt="cycles for all">
+      </div>
+  </div>      
+
+  <div class="d-flex justify-content-center">
+      <div class="col-lg-3 py-3 mx-3 rounded-3">
+           <img src="cbtpimages/IMG_5110.jpeg" class="img-fluid" style="object-fit: cover;" alt="cycles for all">
+      </div>
+    <div class="col-lg-6 py-3 mx-3 rounded-3">
+            <ul class="list-group">
+              <li class="list-group-item active">
+                <i class="fa fa-bicycle fa-fw"></i>  Practical component  <span class="badge badge-light badge-pill">8 hours minimum</span>
+              </li> 
+              <li class="list-group-item px-5">Practical training will prepare you for cycling on the road.</li>
+              <li class="list-group-item px-5">Aimed at obtaining proper control over the cycle and learning how to manoeuvre in traffic.</li>
+              <li class="list-group-item px-5">Practical training will be taught by a certified trainer or Instructor. </li>
+              <li class="list-group-item px-5">The practical test will be organised and supervised by a certified instructor to ensure quality and safety.</li>
+            </ul>
+          </p>
+      </div>
+  </div>
+
+  <!-- Icons Grid -->
+  <div class="row features-icons text-center">
+    <div class="col-lg-4">
+      <div class="features-icons-item mx-auto mb-3 mb-lg-0 mb-lg-3">
+        <div class="features-icons-icon d-flex justify-content-center">
+          <i class="fa fa-star fa-fw" style="color: red;"></i>
+        </div>
+        <h2 style="font-family: 'Baloo 2', cursive;"><img src="./cbtpimages/pedalshaale-bgwhite.png" height="40" class="d-inline-block align-center" alt="Pedalಶಾಲೆ" class="img-thumbnail"> Level 1</h3>
+        <p class="lead mb-0">Teaches trainees to learn to control and master a cycle. The training takes place in an environment away from cars or traffic – usually in a playground or closed park.</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xs-12">
+      <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+        <div class="features-icons-icon d-flex justify-content-center">
+          <i class="fa fa-star fa-fw" style="color: orange;"></i><i class="fa fa-star fa-fw" style="color: orange;"></i>
+        </div>
+        <h2 style="font-family: 'Baloo 2', cursive;"><img src="./cbtpimages/pedalshaale-bgwhite.png" height="40" class="d-inline-block align-center" alt="Pedalಶಾಲೆ" class="img-thumbnail"> Level 2</h3>
+        <p class="lead mb-0">Is delivered on local roads giving trainees real cycling experience that equips them with skills to deal with traffic on short journeys such as cycling to school, work or the local shops.</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-xs-12">
+      <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+        <div class="features-icons-icon d-flex justify-content-center">
+          <i class="fa fa-star fa-fw" style="color: green;"></i><i class="fa fa-star fa-fw" style="color: green;"></i><i class="fa fa-star fa-fw" style="color: green;"></i>
+        </div>
+        <h2 style="font-family: 'Baloo 2', cursive;"><img src="./cbtpimages/pedalshaale-bgwhite.png" height="40" class="d-inline-block align-center" alt="Pedalಶಾಲೆ" class="img-thumbnail"> Level 3</h3>
+        <p class="lead mb-0">Teaches the skills to tackle a wider variety of traffic conditions than Level 2. It is designed to equip trainees with skills that enable them to be able to deal with all types of road conditions and more challenging traffic situations. </p>
+      </div>
+    </div>
+  </div> <!-- /row -->
+
+</div><!-- container -->
+
+
+  <!-- Footer -->
+  <footer class="footer bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item">
+              <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal">About</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="mailto: councilforactivemobility@gmail.com?subject=[Contact]" class="text-decoration-none">Contact</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#" class="text-decoration-none">ಕನ್ನಡ</a>
+            </li>
+          </ul>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; <img src="cbtpimages/pedalshaale-bgwhite.png" height="30" class="d-inline-block align-center px-1" alt="Pedalಶಾಲೆ" class="img-thumbnail"> All Rights Reserved.</p>
+        </div>
+        <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item mr-3">
+              <a href="#" target="_blank">
+                <i class="fab fa-facebook fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item mr-3">
+              <a href="#" target="_blank">
+                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#" target="_blank">
+                <i class="fab fa-instagram fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#" target="_blank">
+                <i class="fab fa-telegram-plane fa-2x fa-fw"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">About</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row text-center justify-content-md-center mx-auto mt-3 mb-5">
+                <div class="col text-align-top">
+                  <p>This is an initiative of Karnataka Non-Motorised Transport Agency (KNMTA) in association with Citizens for Sustainability (CiFoS), Bangalore Bicycleing School (BBS) and partner organisations. The target is to train as many people as possible in Karnataka to learn to cycle confidently on Indian streets.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
