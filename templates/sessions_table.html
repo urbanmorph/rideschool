@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sessions Table</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tbody tr:hover {
+      background-color: #e0e0e0;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>Session ID</th>
+        <th>Trainer ID</th>
+        <th>Participant ID</th>
+        <th>Scheduled Date and Time</th>
+        <th>Actual Date and Time</th>
+        <th>Hours Trained</th>
+        <th>Picture</th>
+        <th>Video</th>
+        <th>Description</th>
+        <th>Session Create Date and Time</th>
+        <th>Session Updated Date and Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for session in sessions %}
+      <tr>
+        <td>{{ session[0] }}</td>
+        <td>{{ session[1] }}</td>
+        <td>{{ session[2] }}</td>
+        <td>{{ session[3] }}</td>
+        <td>{{ session[4] }}</td>
+        <td>{{ session[5] }}</td>
+        <td><a href="{{ session_data[6] }}" target="_blank"><img src="{{ session_data[6] }}" style="height: 50px; width: 50px"></a></td>
+        <td><video controls width="100"><source src="{{ session_data[7] }}" type="video/mp4"> </video></td>
+       
+        <td>{{ session[8] }}</td>
+        <td>{{ session[9] }}</td>
+        <td>{{ session[10] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
