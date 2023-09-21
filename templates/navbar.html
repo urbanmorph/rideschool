@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedalಶಾಲೆ</title>
+  <!-- Bootstrap core CSS links -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="static/css/cbtp.css" rel="stylesheet">
+
+  <style>
+     body {margin:0;}
+    /* Adjust the height of the navbar */
+    
+    .navbar { height: 80px; position: fixed; width: 100%; }
+    .navbar-brand { display: inline-block; vertical-align: middle; } /* Navbar Styling: This makes sure that the navbar elements stay in one line and are centered vertically within the navbar */
+    .navbar-nav { display: inline-block; vertical-align: middle; }/* Navbar Menu Styling: it makes sure that the menu items are in one line and evenly spaced.left margin (margin-left: 20px;) to separate the menu items visually. */ 
+    .nav-item { display: inline-block; margin-left: 20px; }
+     
+  </style>
+
+ 
+    </head>
+    <body>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="\static\Image\pedalshaale-bgblack.png" alt="logo" class="image-logo">
+      </a>
+      <a class="navbar-brand" href="#">Pedal Shaale</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="fa fa-fw fa-home"></i> Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="FAQ.html">FAQ</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Register 
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="participant-form">Participant</a></li>
+              <li><a class="dropdown-item" href="trainer-form">Trainer</a></li>
+            </ul>
+          </li>
+          
+
+   
+
+
+    <!-- ... (other menu items) ... -->
+
+    {% if session['role'] == 'trainer' %}
+    <!-- Trainer-specific links -->
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for('logins.trainer_details') }}"><i class="fa fa-fw fa-user"></i> {{ session['trainer_name'] }}</a>
+    </li>
+    
+    <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>
+    <li class="nav-item"><a class="nav-link" href="/participant-form"><i class="fa fa-fw fa-comments"></i> Feedback</a></li>
+    <!-- Logout button always displayed -->
+    <li class="nav-item">
+      <form action="{{ url_for('logins.logout') }}" method="post">
+        <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
+      </form>
+    </li>
+    {% elif session['role'] == 'participant' %}
+    <!-- Participant-specific links -->
+    <li class="nav-item">
+      <a class="nav-link" href="#"><i class="fa fa-fw fa-user"></i> {{ session['participant_name'] }}</a>
+    </li>
+    
+    <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Participants Info</a></li>
+    
+    <!-- Logout button always displayed -->
+    <li class="nav-item">
+      <form action="{{ url_for('logins.logout') }}" method="post">
+        <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
+      </form>
+    </li>
+
+    {% elif session['role'] == 'admin'%}
+    <li class="nav-item">
+      <a class="nav-link" href="#"><i class="fa fa-fw fa-user"></i> {{ session['role'] }}</a> 
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="viewDropdown" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          View
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="viewDropdown">
+          <li><a class="dropdown-item" href="/trainer-info">Trainer </a></li>
+          <li><a class="dropdown-item" href="/participant-info">Participant </a></li>
+          <li><a class="dropdown-item" href="/sessions_info">sessions </a></li>
+      </ul>
+  </li>
+  
+   <!-- Logout button always displayed -->
+   <li class="nav-item">
+    <form action="{{ url_for('logins.logout') }}" method="post">
+      <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
+    </form>
+  </li>
+
+
+    {% else %}
+    <!-- Default links for unauthenticated users -->
+    <li class="nav-item">
+      <a class="nav-link" href="logins"><i class="fa fa-fw fa-user"></i> Login</a>
+    </li>
+    {% endif %}
+  </ul>
+
+
+<!-- ... (the rest of the HTML code for other pages admin, instructor ) ... -->
+
+    </div>
+  </nav>
+  
+ 
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
