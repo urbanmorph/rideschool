@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Admin Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Style for paragraphs */
+        p {
+            margin-bottom: 10px;
+        }
+
+        img {
+            height: 50px;
+            width: 50px;
+        }
+
+        video {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+
+    <h1>Trainer Details</h1>
+
+    <!-- Display trainer details as paragraphs -->
+    <p><strong>Trainer Name:</strong> {{ trainer_name }}</p>
+    <p><strong>Trainer Email:</strong> {{ trainer_email }}</p>
+    <p><strong>Trainer Contact:</strong> {{ trainer_contact }}</p>
+    <p><strong>Training Location Address:</strong> {{ training_location_address }}</p>
+    <p><strong>Trainer Address:</strong> {{ trainer_address }}</p>
+    <p><strong>Trainer Gender:</strong> {{ trainer_gender }}</p>
+    <p><strong>Trainer Aadhar No:</strong> {{ trainer_aadhar_no }}</p>
+    <p><strong>Trainer Created At:</strong> {{ trainer_created_at }}</p>
+    <p><strong>Trainer Training Completion Date:</strong> {{ trainer_training_completion_date }}</p>
+    <p><strong>Organisation Name:</strong> {{ organisation_name }}</p>
+    <p><strong>Trainer Status:</strong> {{ trainer_status }}</p>
+    <p><strong>Trainer Code:</strong> {{ trainer_code }}</p>
+
+    <p><strong>Hours Trained:</strong> {{ total_hours_trained }} hours</p>
+    <p><strong>Sessions Attended:</strong> {{ session_count }}</p>
+</body>
+</html>
