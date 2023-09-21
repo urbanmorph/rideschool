@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Trainer Form</title>
+     
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f4f4f4;
+    }
+
+
+    h1  {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center; /* Added to center the heading */
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Changed the font */
+    }
+
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+           
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .info {
+    color: #008CBA;
+    margin-top: 5px;
+}
+
+.error {
+    color: #FF0000;
+    margin-top: 5px;
+}
+
+#message {
+    font-weight: bold;
+    margin-top: 15px;
+    color: #4CAF50;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 40px;
+   
+   
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+    </style>
+
+
+
+
+<style>
+    .custom_nav-container {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      background-color: black; /* Set the background color to black */
+    }
+
+        /* Style for alert messages */
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #dff0d8;
+            border-color: #d0e9c6;
+            color: #3c763d;
+        }
+
+        .alert-danger {
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            color: #a94442;
+        }
+    </style>
+
+    <script>
+        function validateRegistrationForm() {
+            // Perform additional validation if needed
+            return true;
+        }
+        
+        function validateEmail() {
+            var emailInput = document.getElementById("trainer_email");
+            var email = emailInput.value;
+            var errorElement = document.getElementById("email_error");
+            
+            if (!email.includes("@") || !email.includes(".")) {
+                errorElement.textContent = "Email should include the @ symbol and at least one '.' symbol.";
+                emailInput.focus();
+                return false;
+            } else {
+                errorElement.textContent = "";
+                return true;
+            }
+        }
+        
+        function validateAadharNumber() {
+            var aadharInput = document.getElementById("trainer_aadhar_no");
+            var aadharNumber = aadharInput.value;
+            var errorElement = document.getElementById("aadhar_error");
+            
+            if (aadharNumber.length !== 12 || isNaN(aadharNumber)) {
+                errorElement.textContent = "Aadhar number should be a 12-digit numeric value.";
+                aadharInput.focus();
+                return false;
+            } else {
+                errorElement.textContent = "";
+                return true;
+            }
+        }
+        
+        function validateContact() {
+            var contactInput = document.getElementById("trainer_contact");
+            var contactNumber = contactInput.value;
+            var errorElement = document.getElementById("contact_error");
+            
+            if (contactNumber.length !== 10 || isNaN(contactNumber)) {
+                errorElement.textContent = "Contact number should be a 10-digit numeric value.";
+                contactInput.focus();
+                return false;
+            } else {
+                errorElement.textContent = "";
+                return true;
+            }
+        }
+        
+    // Function to display a message in the alert
+    function displayMessage(message, success) {
+        var alertElement = document.getElementById('messageAlert');
+        alertElement.style.display = 'block';
+        alertElement.innerHTML = message;
+        alertElement.classList.remove('alert-success', 'alert-danger');
+        alertElement.classList.add(success ? 'alert-success' : 'alert-danger');
+    }
+
+    // Function to submit the form asynchronously
+    function submitForm() {
+    var form = document.getElementById('trainerForm');
+    var formData = new FormData(form);
+
+    fetch('/register', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        var alertType = data.includes('successfully') ? 'alert-success' : 'alert-danger';
+        var message = data;
+        var alertHTML = '<div class="alert ' + alertType + '">' + message + '</div>';
+        var messageContainer = document.getElementById('messageAlert');
+        messageContainer.innerHTML = alertHTML;
+        messageContainer.style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Error submitting form:', error);
+        var alertHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
+        var messageContainer = document.getElementById('messageAlert');
+        messageContainer.innerHTML = alertHTML;
+        messageContainer.style.display = 'block';
+    });
+}
+
+
+
+$(document).ready(function() {
+    $('#trainerForm').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        if (!validateRegistrationForm()) {
+            return false; // Prevent submitting if form validation fails
+        }
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: '/register',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                var message = data;
+                $('#messageAlert').removeClass('alert-danger').addClass('alert-success').text(message).show();
+                setTimeout(function() {
+                    $('#messageAlert').hide();
+                    $('#trainerForm')[0].reset(); // Reset the form
+                }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
+            },
+            error: function() {
+                $('#messageAlert').removeClass('alert-success').addClass('alert-danger').text('An error occurred. Please try again later.').show();
+            }
+        });
+    });
+});
+
+    </script>
+</head>
+
+          
+          <body class="sub_page">
+
+            
+       <!-- navbar navbar header section strats -->
+              
+       {% include 'navbar.html' %}
+       <!-- header section ends -->
+<br>
+<br>
+<br>
+<br>
+    <div class="container">
+        <h1>Trainer Form</h1>
+        <form id="trainerForm" action="/register" method="POST" onsubmit="return validateRegistrationForm();">
+
+            <label for="trainer_name">Name:</label>
+            <br>
+            <input type="text" id="trainer_name" name="trainer_name" required>
+            <br><br>
+
+            <label for="trainer_email">Email:</label>
+            <br>
+            <input type="email" id="trainer_email" name="trainer_email" required onblur="validateEmail()">
+            <span id="email_error" class="error"></span>
+            <br><br>
+
+            <label for="trainer_contact">Contact No:</label>
+            <br>
+            <input type="text" id="trainer_contact" name="trainer_contact" required onblur="validateContact()">
+            <span id="contact_error" class="error"></span>
+            <br><br>
+
+            <label for="trainer_address">Address:</label>
+            <br>
+            <textarea id="trainer_address" name="trainer_address" required></textarea>
+            <br><br>
+
+            <label for="trainer_age">Age:</label>
+            <br>
+            <input type="text" id="trainer_age" name="trainer_age" required>
+            <br><br>
+
+            <label for="trainer_gender">Gender:</label>
+            <br>
+            <select id="trainer_gender" name="trainer_gender" required>
+                <option value="">Select gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Others</option>
+            </select>
+            <br><br>
+
+            <label for="trainer_education">Education Qualification:</label>
+            <br>
+            <select id="trainer_education" name="trainer_education" onchange="handleEducationChange()" required>
+                <option value="">Select qualification</option>
+                <option value="Below 10th">Below 10th</option>
+                <option value="10th / SSLC">10th / SSLC</option>
+                <option value="12th / PUC">12th / PUC</option>
+                <option value="Graduation">Graduation</option>
+                <option value="Post Graduation">Post Graduation</option>
+            </select>
+            <br><br>
+
+            <label for="trainer_language">Language:</label>
+            <br>
+            <input type="checkbox" id="language_kannada" name="trainer_language" value="Kannada">
+            <label for="language_kannada">Kannada</label>
+            <br>
+            <input type="checkbox" id="language_hindi" name="trainer_language" value="Hindi">
+            <label for="language_hindi">Hindi</label>
+            <br>
+            <input type="checkbox" id="language_english" name="trainer_language" value="English">
+            <label for="language_english">English</label>
+            <br><br>
+
+            <label for="trainer_aadhar_no">Aadhar Number:</label>
+            <br>
+            <input type="text" id="trainer_aadhar_no" name="trainer_aadhar_no" required onblur="validateAadharNumber()">
+            <span id="aadhar_error" class="error"></span>
+            <br><br>
+
+            <label for="organisation_name">Organisation Name:</label>
+            <br>
+            <select id="organisation_name" name="organisation_name" required>
+                <option value="">Select organisation</option>
+                {% for organisation_name in organisation_names %}
+                    <option value="{{ organisation_name }}">{{ organisation_name }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+
+            <input type="submit" value="Register" onclick="submitForm()">
+        </form>
+        <div class="alert" id="messageAlert" style="display: none;"></div>
+    </div>
+    
+    <p><center>If you have already registered, please create an account to login : <a href="/signup">Create an account  </a></center></p>
+</body>
+</html>
+
+
+
