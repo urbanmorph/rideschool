@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participants Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ddd; /* Add border to the table */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            white-space: pre-wrap; /* Add line divisions */
+        }
+
+        /* Adjust the width for the "Training Location" column */
+        th:nth-child(10),
+        td:nth-child(10) {
+            width: 30%; /* Adjust the width as needed */
+        }
+
+        thead {
+            background-color: #343a40; /* Bootstrap dark background color */
+            color: #fff;
+        }
+
+        th {
+            font-weight: bold;
+            border-right: 1px solid #ddd; /* Add right border to table headers */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Alternate row background color */
+        }
+        form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+    </style>
+    
+    <title>trainer display </title>
+    <!-- Add jQuery script in your head section if it's not already loaded -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br><br>
+    <br>
+    <br>
+    <br>
+    <br>
+<form method="POST" id="update-form">
+    <table border="1">
+        <tr><th>Participant Id</th>
+            <th>Participant Name</th>
+            <th>Participant Contact</th>
+            <th>Participant Status</th>
+        </tr>
+        {% for participant in participants %}
+        <tr>
+            <td>{{ participant[0] }}</td>
+            <td>{{ participant[1] }}</td>
+            <td>{{ participant[2] }}</td>
+            <td>
+                <!-- Add a class to the select element to make it easier to select with jQuery -->
+                <select class="status-select" name="participant_status" data-participant-id="{{ participant[0] }}" data-initial-status="{{ participant[3] }}">
+
+                    <option value="{{ participant[3] }}" selected>{{ participant[3] }}</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                </select>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <center><button type="button" id="update-button">Update</button></center>
+</form>
+
+<!-- Add the JavaScript code here -->
+<script>
+$(document).ready(function () {
+    $("#update-button").click(function () {
+        // Create an array to store updates
+        var updates = [];
+
+        // Loop through all select elements
+        $(".status-select").each(function () {
+            //For each select element:, wheenever you select an option from the droplist
+//It retrieves the participant's ID, the newly selected status, and the initial status from data attributes in the HTML.
+//It checks if the status has changed. If it has, it adds an object containing the participant ID and the new status to the updates array.
+            var participantId = $(this).data("participant-id");              
+            var newStatus = $(this).val();
+            var initialStatus = $(this).closest("td").data("initial-status");
+
+            // Check if the status has changed
+            if (newStatus !== initialStatus) {
+                updates.push({
+                    "participantId": participantId,
+                    "newStatus": newStatus,
+                });
+            }
+        });
+
+        // Send an AJAX request to update the statuses , to the server 
+        $.ajax({
+            type: "POST",
+            url: "/update_participant_statuses",
+            contentType: "application/json",
+            data: JSON.stringify(updates),  // Send the array of updates, sends the data in json format,The data to be sent in JSON format (the updates array).
+
+//The success and error callback functions handle the response from the server:
+
+//If the server responds with success, it displays a success message in the "message-div" element.
+//If there's an error during the request, it logs the error and displays an error message.
+            success: function (response) {
+                // Handle the response
+                console.log("Response from server:", response);
+
+                // Check if the response contains a success message
+                if (response.success) {
+                    // Display success message with participant details
+                    $("#message-div").text("Participant status updated Successfully.");
+                } else {
+                    // Display an error message
+                    $("#message-div").text("Unable to update participant status.");
+                }
+            },
+            error: function () {
+                // Handle errors
+                console.error("Error occurred during AJAX request");
+                // Display an error message
+                $("#message-div").text("Unable to update participant status. An error occurred.");
+            },
+        });
+    });
+});
+
+</script>
+
+<div id="message-div"></div>
+
+</body>
+</html>
