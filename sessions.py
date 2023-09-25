@@ -155,11 +155,8 @@ def submit_form():
     try:
         print("Form data:", request.form)  # Add this line for debugging
         
-        # Rest of your code to process the form data
+        # Rest of the code to process the form data
         trainer_id = request.form['trainer-id']  # Retrieve the trainer_id from the hidden input
-
-
-         # Rest of your code to process the form data
         participant_name = request.form['participant-name']
         scheduled_datetime = request.form['scheduled-datetime']
         actual_datetime = request.form['actual-datetime']
@@ -175,7 +172,13 @@ def submit_form():
  # Fetch participant_id based on participant_name
     
         cursor.execute("SELECT participant_id FROM participants WHERE participant_name = %s", (participant_name,))
-        participant_id = cursor.fetchone()[0]
+        participant_id = cursor.fetchone()
+
+        if participant_id is not None:
+            participant_id = participant_id[0]
+        else:
+            # Handle the case where the participant is not found
+            return jsonify({'status': 'error', 'message': 'Participant not found'})
 
        # Check if this is the first session entry for the participant
         cursor.execute("SELECT COUNT(*) FROM sessions WHERE participant_id = %s", (participant_id,))

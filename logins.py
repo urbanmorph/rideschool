@@ -3,6 +3,7 @@ import bcrypt
 import psycopg2
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify 
 from flask import current_app
+
 logins_bp = Blueprint('logins', __name__)  # Fix the Blueprint constructor
 
 # Initialize db_connection to None initially
@@ -81,6 +82,8 @@ def check_logins():
                     # Fetch participant details from the participants table using contact number
                     db_cursor.execute("SELECT participant_id, participant_name, participant_status, training_location_id FROM participants WHERE participant_contact=%s", (contact,))
                     participant_data = db_cursor.fetchone()
+                    # Debugging: Print participant_data to check if it's retrieved correctly
+                    print("Participant Data:", participant_data)
 
                     if participant_data:
                         session['logged_in'] = True
@@ -90,7 +93,7 @@ def check_logins():
                         session['participant_status'] = participant_data[2]  # Store participant data in the session
 
                         # Fetch training_location_id based on the participant's training_location_id
-                        training_location_id = participant_data[3]  
+                        training_location_id = participant_data[3]
                         print("Training Location ID:", training_location_id)  # Debugging statement
 
                         # Fetch training_location_address based on the participant's training_location_id
@@ -105,19 +108,34 @@ def check_logins():
                         else:
                             print("Training Location Address not found in the database")  # Debugging statement
 
-                        # Fetch session data and corresponding trainer data using inner join
-                        db_cursor.execute("SELECT s.actual_datetime, s.picture_path, s.video_path, t.trainer_name, t.trainer_contact, tl.training_location_address FROM sessions s INNER JOIN trainer t ON s.trainer_id = t.trainer_id INNER JOIN participants p ON s.participant_id = p.participant_id INNER JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id WHERE s.participant_id = %s", (session['participant_id'],))
-                        session_trainer_data = db_cursor.fetchall()
-                        # Print the fetched data
-                        print("Session Trainer Data:", session_trainer_data)
+                        # Check the participant's status
+                        if participant_data[2] == 'NEW':
+                            # Fetch data for 'NEW' participants from different tables
+                            db_cursor.execute("SELECT t.trainer_name, t.trainer_contact, tl.training_location_address, p.participant_status FROM participants p INNER JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id INNER JOIN trainer t ON t.training_location_id = tl.training_location_id WHERE p.participant_id = %s", (session['participant_id'],))
+                            participant_data_new = db_cursor.fetchone()
 
-                        if session_trainer_data:
-                            # Store combined session and trainer data in the session
-                            session['session_trainer_data'] = session_trainer_data
+                            if participant_data_new:
+                                # Store the relevant data in the session
+                                session['trainer_name'] = participant_data_new[0]
+                                session['trainer_contact'] = participant_data_new[1]
+                                session['training_location_address'] = participant_data_new[2]
+                                session['participant_status'] = participant_data_new[3]
 
-                            return render_template('participant_display.html', role=role)
+                            # Render the 'participant_display.html' template
+                            return render_template('participant_display_new.html', role=role)
                         else:
-                            return "Session and Trainer data not found."
+                            # Fetch session data and corresponding trainer data using inner join for 'ONGOING' or 'COMPLETED' participants
+                            db_cursor.execute("SELECT s.actual_datetime, s.picture_path, s.video_path, t.trainer_name, t.trainer_contact, tl.training_location_address FROM sessions s INNER JOIN trainer t ON s.trainer_id = t.trainer_id INNER JOIN participants p ON s.participant_id = p.participant_id INNER JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id WHERE s.participant_id = %s", (session['participant_id'],))
+                            session_trainer_data = db_cursor.fetchall()
+                            # Print the fetched data
+                            print("Session Trainer Data:", session_trainer_data)
+
+                            if session_trainer_data:
+                                # Store combined session and trainer data in the session
+                                session['session_trainer_data'] = session_trainer_data
+
+                            # Render the 'participant_display.html' template
+                            return render_template('participant_display.html', role=role)
                     else:
                         return "Participant details not found."
 
@@ -137,7 +155,6 @@ def check_logins():
         # Close the cursor and connection here, after you're done using them
         if db_cursor is not None:
             db_cursor.close()
-
 
 @logins_bp.route('/update_participant_statuses', methods=['POST'])
 def update_participant_statuses():
@@ -177,11 +194,9 @@ def update_participant_statuses():
 
         return jsonify({"success": False, "error": "An error occurred. Please check the logs for more information."})
     finally:
-
         # Close the cursor and connection here, after you're done using them
         if db_cursor is not None:
             db_cursor.close()
-
 
 @logins_bp.route('/logout', methods=['POST'])
 def logout():
