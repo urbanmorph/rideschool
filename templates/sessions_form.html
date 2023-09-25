@@ -147,8 +147,7 @@
   <br>
     <h1> Session Completion Form</h1>
     
-    <form id="training-session-form" method="POST" action="/submit_form" enctype="multipart/form-data">
-      
+    <form id="training-session-form" method="POST" action="/submit_form" enctype="multipart/form-data"> 
 
       <div class="form-group">
         <label for="trainer-name">Trainer Name:</label>
@@ -221,7 +220,8 @@
 
 <script>
   $(document).ready(function () {
-    // Fetch participants for the logged-in trainer and populate the participant select element
+    //(participant name is populated here )
+    // Fetch participants for the logged-in trainer and populate the participant select element (participant name is populated here )
     $.get('/participants/{{ session["trainer_id"] }}', function (participantsData) {
       var participantSelect = $('#participant_name');
       participantSelect.empty(); // Clear previous options
@@ -247,11 +247,6 @@
     $('#logged-in-trainer-name').text(loggedInTrainerName);
     $('#trainer_training_location_id').val('{{ session["trainer_id"] }}');
   
-  
-  
-
-
-
      // Handle form submission (alert messages code: returns the return messages in the form of allert message )
      $('#training-session-form').on('submit', function (event) {
       event.preventDefault(); // Prevent the form from submitting normally

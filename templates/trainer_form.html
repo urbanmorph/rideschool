@@ -19,173 +19,165 @@
         background-color: #f4f4f4;
     }
 
-
-    h1  {
-    margin-bottom: 20px;
-    color: #333;
-    text-align: center; /* Added to center the heading */
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Changed the font */
+    h1 {
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-           
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    label {
+        font-weight: bold;
+    }
 
-        label {
-            font-weight: bold;
-        }
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
-        input[type="text"],
-        input[type="email"],
-        textarea,
-        select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    .info {
+        color: #008CBA;
+        margin-top: 5px;
+    }
 
-        .info {
-    color: #008CBA;
-    margin-top: 5px;
-}
+    .error {
+        color: #FF0000;
+        margin-top: 5px;
+    }
 
-.error {
-    color: #FF0000;
-    margin-top: 5px;
-}
+    #message {
+        font-weight: bold;
+        margin-top: 15px;
+        color: #4CAF50;
+    }
 
-#message {
-    font-weight: bold;
-    margin-top: 15px;
-    color: #4CAF50;
-}
+    form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
 
-form {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 40px;
-   
-   
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
+    form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-form button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #45a049;
-}
+    form button:hover {
+        background-color: #45a049;
+    }
     </style>
 
-
-
-
-<style>
+    <style>
     .custom_nav-container {
-      width: 100%;
-      margin-left: 0;
-      margin-right: 0;
-      background-color: black; /* Set the background color to black */
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        background-color: black;
     }
 
-        /* Style for alert messages */
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
+    /* Style for alert messages */
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
 
-        .alert-success {
-            background-color: #dff0d8;
-            border-color: #d0e9c6;
-            color: #3c763d;
-        }
+    .alert-success {
+        background-color: #dff0d8;
+        border-color: #d0e9c6;
+        color: #3c763d;
+    }
 
-        .alert-danger {
-            background-color: #f2dede;
-            border-color: #ebccd1;
-            color: #a94442;
-        }
+    .alert-danger {
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        color: #a94442;
+    }
     </style>
 
-    <script>
-        function validateRegistrationForm() {
-            // Perform additional validation if needed
+<script>
+    function validateRegistrationForm() {
+        // Perform additional validation if needed
+        return true;
+    }
+
+    function validateEmail() {
+        var emailInput = document.getElementById("trainer_email");
+        var email = emailInput.value;
+        var errorElement = document.getElementById("email_error");
+
+        if (!email.includes("@") || !email.includes(".")) {
+            errorElement.textContent = "Email should include the @ symbol and at least one '.' symbol.";
+            emailInput.focus();
+            return false;
+        } else {
+            errorElement.textContent = "";
             return true;
         }
-        
-        function validateEmail() {
-            var emailInput = document.getElementById("trainer_email");
-            var email = emailInput.value;
-            var errorElement = document.getElementById("email_error");
-            
-            if (!email.includes("@") || !email.includes(".")) {
-                errorElement.textContent = "Email should include the @ symbol and at least one '.' symbol.";
-                emailInput.focus();
-                return false;
-            } else {
-                errorElement.textContent = "";
-                return true;
-            }
+    }
+
+    function validateAadharNumber() {
+        var aadharInput = document.getElementById("trainer_aadhar_no");
+        var aadharNumber = aadharInput.value;
+        var errorElement = document.getElementById("aadhar_error");
+
+        if (aadharNumber.length !== 12 || isNaN(aadharNumber)) {
+            errorElement.textContent = "Aadhar number should be a 12-digit numeric value.";
+            aadharInput.focus();
+            return false;
+        } else {
+            errorElement.textContent = "";
+            return true;
         }
-        
-        function validateAadharNumber() {
-            var aadharInput = document.getElementById("trainer_aadhar_no");
-            var aadharNumber = aadharInput.value;
-            var errorElement = document.getElementById("aadhar_error");
-            
-            if (aadharNumber.length !== 12 || isNaN(aadharNumber)) {
-                errorElement.textContent = "Aadhar number should be a 12-digit numeric value.";
-                aadharInput.focus();
-                return false;
-            } else {
-                errorElement.textContent = "";
-                return true;
-            }
+    }
+
+    function validateContact() {
+        var contactInput = document.getElementById("trainer_contact");
+        var contactNumber = contactInput.value;
+        var errorElement = document.getElementById("contact_error");
+
+        if (contactNumber.length !== 10 || isNaN(contactNumber)) {
+            errorElement.textContent = "Contact number should be a 10-digit numeric value.";
+            contactInput.focus();
+            return false;
+        } else {
+            errorElement.textContent = "";
+            return true;
         }
-        
-        function validateContact() {
-            var contactInput = document.getElementById("trainer_contact");
-            var contactNumber = contactInput.value;
-            var errorElement = document.getElementById("contact_error");
-            
-            if (contactNumber.length !== 10 || isNaN(contactNumber)) {
-                errorElement.textContent = "Contact number should be a 10-digit numeric value.";
-                contactInput.focus();
-                return false;
-            } else {
-                errorElement.textContent = "";
-                return true;
-            }
-        }
-        
+    }
+
     // Function to display a message in the alert
     function displayMessage(message, success) {
         var alertElement = document.getElementById('messageAlert');
@@ -197,42 +189,8 @@ form button:hover {
 
     // Function to submit the form asynchronously
     function submitForm() {
-    var form = document.getElementById('trainerForm');
-    var formData = new FormData(form);
-
-    fetch('/register', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(data => {
-        var alertType = data.includes('successfully') ? 'alert-success' : 'alert-danger';
-        var message = data;
-        var alertHTML = '<div class="alert ' + alertType + '">' + message + '</div>';
-        var messageContainer = document.getElementById('messageAlert');
-        messageContainer.innerHTML = alertHTML;
-        messageContainer.style.display = 'block';
-    })
-    .catch(error => {
-        console.error('Error submitting form:', error);
-        var alertHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
-        var messageContainer = document.getElementById('messageAlert');
-        messageContainer.innerHTML = alertHTML;
-        messageContainer.style.display = 'block';
-    });
-}
-
-
-
-$(document).ready(function() {
-    $('#trainerForm').submit(function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        if (!validateRegistrationForm()) {
-            return false; // Prevent submitting if form validation fails
-        }
-
-        var formData = new FormData(this);
+        var form = document.getElementById('trainerForm');
+        var formData = new FormData(form);
 
         $.ajax({
             url: '/register',
@@ -240,39 +198,46 @@ $(document).ready(function() {
             data: formData,
             processData: false,
             contentType: false,
-            success: function(data) {
+            success: function (data) {
                 var message = data;
-                $('#messageAlert').removeClass('alert-danger').addClass('alert-success').text(message).show();
-                setTimeout(function() {
-                    $('#messageAlert').hide();
-                    $('#trainerForm')[0].reset(); // Reset the form
-                }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
+                displayMessage(message, true);
+                $('#trainerForm')[0].reset(); // Reset the form
             },
-            error: function() {
-                $('#messageAlert').removeClass('alert-success').addClass('alert-danger').text('An error occurred. Please try again later.').show();
+            error: function () {
+                displayMessage('An error occurred. Please try again later.', false);
             }
         });
-    });
-});
 
-    </script>
+        return false; // Prevent the default form submission
+    }
+
+    $(document).ready(function () {
+        $('#trainerForm').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            if (!validateRegistrationForm()) {
+                return false; // Prevent submitting if form validation fails
+            }
+
+            submitForm();
+        });
+    });
+</script>
 </head>
 
-          
-          <body class="sub_page">
+<body class="sub_page">
 
-            
-       <!-- navbar navbar header section strats -->
-              
-       {% include 'navbar.html' %}
-       <!-- header section ends -->
-<br>
-<br>
-<br>
-<br>
+    <!-- navbar navbar header section starts -->
+    {% include 'navbar.html' %}
+    <!-- header section ends -->
+
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="container">
         <h1>Trainer Form</h1>
-        <form id="trainerForm" action="/register" method="POST" onsubmit="return validateRegistrationForm();">
+        <form id="trainerForm" action="/register" method="POST">
 
             <label for="trainer_name">Name:</label>
             <br>
@@ -346,7 +311,7 @@ $(document).ready(function() {
             <select id="organisation_name" name="organisation_name" required>
                 <option value="">Select organisation</option>
                 {% for organisation_name in organisation_names %}
-                    <option value="{{ organisation_name }}">{{ organisation_name }}</option>
+                <option value="{{ organisation_name }}">{{ organisation_name }}</option>
                 {% endfor %}
             </select>
             <br><br>
@@ -355,10 +320,7 @@ $(document).ready(function() {
         </form>
         <div class="alert" id="messageAlert" style="display: none;"></div>
     </div>
-    
-    <p><center>If you have already registered, please create an account to login : <a href="/signup">Create an account  </a></center></p>
+
+    <p><center>If you have already registered, please create an account to login : <a href="/signup">Create an account </a></center></p>
 </body>
 </html>
-
-
-

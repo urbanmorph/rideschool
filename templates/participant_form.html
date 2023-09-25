@@ -209,24 +209,26 @@
   </script>
 
 <script>
- // Function to display a message in the alert
- function displayMessage(message, success) {
-        var alertElement = document.getElementById('messageAlert');
-        alertElement.style.display = 'block';
-        alertElement.innerHTML = message;
-        alertElement.classList.remove('alert-success', 'alert-danger');
-        alertElement.classList.add(success ? 'alert-success' : 'alert-danger');
+ // Function to display a message in the alert box , so in an alert box it will have things/parameters message, success( colour  if success  true =green , false= red )
+ function displayMessage(message, success) { //takes two parameters: message and success. ,,,message: It defines the text message to display in an alert box ,, and success: It determines the styling of the alert box; true makes it green for success, and false makes it red for an error. 
+        var alertElement = document.getElementById('messageAlert');//It retrieves an HTML element with the ID 'messageAlert' from the current HTML document and stores it in the variable alertElement.
+        alertElement.style.display = 'block';// It makes the alert box visible by changing its CSS display property to 'block'.
+        alertElement.innerHTML = message;// It sets the content inside the alert box to the value of the message parameter, dynamically updating what's displayed.
+        alertElement.classList.remove('alert-success', 'alert-danger');//It removes the CSS classes 'alert-success' and 'alert-danger' from the alertElement to reset its styling.
+        alertElement.classList.add(success ? 'alert-success' : 'alert-danger');// It adds a CSS class ('alert-success' for success or 'alert-danger' for error) to the alertElement based on the value of the success parameter to style the alert box accordingly.
     }
 
-    // Function to submit the form asynchronously
+    // Function to submit the form (with formid participantForm) to the server asynchronously (without reloading the whole page).
     function submitForm() {
     var form = document.getElementById('participantForm');
-    var formData = new FormData(form);
+    var formData = new FormData(form);//•	It creates a FormData object (formData) to collect form data.
 
-    fetch('/submit', {
+    fetch('/submit', { //•	It uses the fetch API to send a POST request to the server ('/submit') with the form data
         method: 'POST',
         body: formData
     })
+// after sending the request and then it will get a response from the server 
+    //	it processes the server's response in the " .then " block, if success it will handling success and displaying a message.
     .then(response => response.text())
     .then(data => {
         var alertType = data.includes('successfully') ? 'alert-success' : 'alert-danger';
@@ -236,6 +238,7 @@
         messageContainer.innerHTML = alertHTML;
         messageContainer.style.display = 'block';
     })
+    //•	In case of an error, it handles it in the .catch block, displaying an error message.
     .catch(error => {
         console.error('Error submitting form:', error);
         var alertHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
@@ -248,27 +251,23 @@
 
 
 $(document).ready(function() {
-    $('#participantForm').submit(function(event) {
+    $('#participantForm').submit(function(event) { //•	It attaches a submit event handler to the participantForm to handle form submissions.
         event.preventDefault(); // Prevent the default form submission
 
-        if (!validateRegistrationForm()) {
-            return false; // Prevent submitting if form validation is fails
+        if (!validateRegistrationForm()) { //•	It validates the form using the validateRegistrationForm function, and if validation fails, it prevents submission.
+            return false; // Prevent submitting if form validation is fails,
         }
-
-        var formData = new FormData(this); //In short, this line creates a data structure (formData) that collects and organizes information from an HTML form.
-
-
-
-
-
-
+        // creating a FormData object to collect form data.
+        var formData = new FormData(this); //this line creates a data structure (formData) that collects and organizes information from an HTML form.
+         
+        // sends an AJAX post request to the server ('/submit') with the form data using jQuery's $.ajax method.
         $.ajax({
             url: '/submit',
             method: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            success: function(data) {
+            success: function(data) {  // After the request, it processes the server's response in the success and error callbacks, handling success and displaying messages.
                 var message = data;
                 $('#messageAlert').removeClass('alert-danger').addClass('alert-success').text(message).show();
                 setTimeout(function() {
@@ -293,6 +292,10 @@ $(document).ready(function() {
            
             {% include 'navbar.html' %}
 
+            <br>
+            <br>
+            <br>
+            <br>
     <div class="container">
         <h1>Participant Form</h1>
         <form id="participantForm" action="/submit" method="POST" onsubmit="return validateRegistrationForm();">
