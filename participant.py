@@ -41,7 +41,6 @@ def participant_form():
     except Exception as e:
         return f"Error: {str(e)}"
 
-
 # Route to handle form submission
 @participant_bp.route('/submit', methods=['POST'])
 def submit_form():
@@ -100,7 +99,6 @@ def submit_form():
 
         # Return an error message
         return f"Error: {str(e)}"
-
 
 # Route to view the participant form table
 

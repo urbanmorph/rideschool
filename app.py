@@ -6,6 +6,8 @@ from participant import participant_bp
 from trainer import trainer_bp
 from sessions import sessions_bp
 from signup import signup_bp
+from training_locations_list import training_locations_list_bp
+
 
 
 
@@ -17,6 +19,7 @@ Session(app)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['DATABASE'] = 'Pedal_Shaale'
 app.config['UPLOAD_FOLDER'] = 'static/uploaded_image'
+app.config['TRAINING_LOCATION_PICTURES_FOLDER'] = 'static/training_location_pictures'
 app.secret_key = os.urandom(24)  # Generate a random secret key
 # Ensure Flask serves static files correctly
 app.static_folder = 'static'
@@ -50,6 +53,12 @@ app.register_blueprint(signup_bp)
 
 # Register your blueprint
 app.register_blueprint(logins_bp)
+
+
+# Register the training locations Blueprint
+
+
+app.register_blueprint(training_locations_list_bp)
 
 
 

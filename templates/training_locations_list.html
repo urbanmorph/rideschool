@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .training-list-container {
+            margin: 20px;
+        }
+
+        .training-list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .training-list-table th {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+        }
+
+        .training-list-table th, .training-list-table td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .training-list-table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .delete-selected-btn {
+            margin-top: 10px;
+        }
+    </style>
+    <title>Training Locations</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+    <h1>Training Locations List</h1>
+<div class="container">
+    <div class="training-list-container">
+        
+
+        <form action="/delete_location" method="post" id="training-locations-form">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Training Location</th>
+                        <th>Location</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Trainer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in training_location %}
+                        <tr>
+                            <td><input type="checkbox" name="selected_locations" value="{{ location[4] }}"></td> 
+
+                            <td>{{ location[4] }}</td>
+                            <td class="location" data-address="{{ location[1] }}" data-latitude="{{ location[2] }}" data-longitude="{{ location[3] }}" data-picture="{{ location[6]}}">{{ location[0] }}</td>
+                            <td><a href="{{ location[6] }}" target="_blank"><img src="{{ location[6] }}" style="height: 50px; width: 50px;"></a></td>
+                            <td class="address"></td> 
+                            <td class="latitude"></td> 
+                            <td class="longitude"></td> 
+                            <td class="picture"></td>
+                            <td>{{ location[5] }}</td>
+                            
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <input type="submit" value="Delete Selected" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">Add a new training location</h2>
+        <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="training_location_id">Location ID:</label>
+                <input type="text" class="form-control" id="training_location_id" name="training_location_id" required>
+            </div>
+            <div class="form-group">
+                <label for="training_location">Training Location:</label>
+                <input type="text" class="form-control" id="training_location" name="training_location" required>
+            </div>
+            <div class="form-group">
+                <label for="training_location_address">Address:</label>
+                <input type="text" class="form-control" id="training_location_address" name="training_location_address" required>
+            </div>
+            <div class="form-group">
+                <label for="training_location_latitude">Latitude:</label>
+                <input type="text" class="form-control" id="training_location_latitude" name="training_location_latitude" required>
+            </div>
+            <div class="form-group">
+                <label for="training_location_longitude">Longitude:</label>
+                <input type="text" class="form-control" id="training_location_longitude" name="training_location_longitude" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="location_picture">Location Picture:</label>
+                <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*"  required>
+            </div>
+
+           
+
+            <input type="submit" class="btn btn-primary" value="Add Location">
+        </form>
+    </div>
+</div>
+<div id="message-container"></div>
+</div>
+<script>
+    $(document).ready(function () {
+    $('#training-locations-form').on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/delete_location',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('alert-success', response.message);
+                    $('input[name="selected_locations"]:checked').closest('tr').remove();
+                } else if (response.status === 'error') {
+                    showAlert('alert-danger', response.message);
+                }
+            },
+            error: function () {
+                showAlert('alert-danger', 'An error occurred. Please try again later.');
+            }
+        });
+    });
+
+    $('#add-location-form').on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/add_location',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.status === 'success') {
+                    showAlert('alert-success', response.message);
+                    // Add code here to update the table
+                } else if (response.status === 'error') {
+                    showAlert('alert-danger', response.message);
+                }
+            },
+            error: function () {
+                showAlert('alert-danger', 'An error occurred. Please try again later.');
+            }
+        });
+    });
+    
+    // Handle click event for the Training Location name
+//$('td.location').on('click', function () {
+  //  var address = $(this).data('address');
+    //$(this).closest('tr').find('.address').text('Address: ' + address);
+//});
+
+ // Handle click event for the Training Location name
+$('td.location').on('click', function () {
+    var address = $(this).data('address');
+    var latitude = $(this).data('latitude');
+    var longitude = $(this).data('longitude');
+    var picture = $(this).data('picture');
+    var row = $(this).closest('tr');
+    
+    row.find('.address').text('Address: ' + address);
+    row.find('.latitude').text('Latitude: ' + latitude);
+    row.find('.longitude').text('Longitude: ' + longitude);
+    row.find('.picture').text('Picture' + picture );
+});
+
+
+    
+
+    function showAlert(alertClass, message) {
+        var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            message +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+            '<span aria-hidden="true">&times;</span>' +
+            '</button>' +
+            '</div>';
+        $('#message-container').html(alertHTML);
+        $('#message-container').show();
+    }
+});
+
+</script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 # Import required modules at the top of your Flask application
 import bcrypt
 import psycopg2
-from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify 
-from flask import current_app
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
 
-logins_bp = Blueprint('logins', __name__)  # Fix the Blueprint constructor
+logins_bp = Blueprint('logins', __name__)
 
 # Initialize db_connection to None initially
 db_connection = None
@@ -21,15 +20,15 @@ def get_db_connection():
         )
     return db_connection
 
-@logins_bp.route('/logins')  # Change the route to /logins
+@logins_bp.route('/logins')
 def index():
     return render_template('logins.html')
 
-@logins_bp.route('/check_logins', methods=['POST'])  # Change the route to /check_logins
+@logins_bp.route('/check_logins', methods=['POST'])
 def check_logins():
-    db_cursor = None  # Initialize db_cursor to None
+    db_cursor = None
     try:
-        db_connection = get_db_connection()  # Get or create a database connection
+        db_connection = get_db_connection()
         db_cursor = db_connection.cursor()
 
         contact = request.form['contact']
@@ -39,16 +38,14 @@ def check_logins():
         print("Received form data - Contact:", contact)
         print("Received form data - Password:", user_password)
 
-        # Check if the contact is registered in the users_signup table
         db_cursor.execute("SELECT * FROM users_signup WHERE contact_no=%s", (contact,))
         user_data = db_cursor.fetchone()
 
         if user_data:
-            hashed_password = user_data[2]  # Assuming the hashed password is the third column (index 2) in the users_signup table.
+            hashed_password = user_data[2]
 
-            # Verify the password using bcrypt
             if bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8')):
-                role = user_data[3]  # Assuming the role is the fourth column (index 3) in the users_signup table.
+                role = user_data[3]
 
                 if role == 'trainer':
                     # Fetch trainer details from the trainers table using contact number
@@ -58,23 +55,39 @@ def check_logins():
                     if trainer_data:
                         trainer_id, trainer_name, trainer_status = trainer_data
 
-                        session['trainer_name'] = trainer_name  # Store the trainer's name in the session
+                        session['trainer_name'] = trainer_name
 
                         if trainer_status == 'CERTIFIED':
                             session['logged_in'] = True
                             session['role'] = role
                             session['trainer_id'] = trainer_id
                             session['trainer_name'] = trainer_name
-                            
-                            # Fetch training_location_id based on the logged-in trainer's trainer_id
-                            db_cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id=%s", (trainer_id,))
-                            training_location_id = db_cursor.fetchone()[0]
 
-                            # Fetch participant data based on the training_location_id
-                            db_cursor.execute("SELECT participant_id, participant_name, participant_contact, participant_status FROM participants WHERE training_location_id=%s AND (participant_status='ONGOING' OR participant_status='NEW')", (training_location_id,))
-                            participant_data = db_cursor.fetchall()
+                            db_cursor.execute("""
+                                SELECT 
+                                    COALESCE(s.actual_datetime, 0) AS actual_datetime, 
+                                    COALESCE(s.picture_path, 0) AS picture_path, 
+                                    COALESCE(s.video_path, 0) AS video_path,
+                                    t.trainer_name, 
+                                    t.trainer_contact, 
+                                    tl.training_location_address
+                                FROM 
+                                    participants p
+                                LEFT JOIN sessions s ON p.participant_id = s.participant_id
+                                LEFT JOIN trainer t ON t.training_location_id = p.training_location_id
+                                INNER JOIN training_locations_list tl ON tl.training_location_id = p.training_location_id
+                                WHERE 
+                                    p.participant_id = %s;
+                            """, (session['trainer_id'],))
 
-                            return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=participant_data)
+                            session_trainer_data = db_cursor.fetchall()
+
+                            if session_trainer_data:
+                                session['session_trainer_data'] = session_trainer_data
+
+                                return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=session_trainer_data)
+                            else:
+                                return "Session and Trainer data not found."
                         else:
                             return "Trainer is not certified. Please complete your certification."
 
@@ -82,119 +95,100 @@ def check_logins():
                     # Fetch participant details from the participants table using contact number
                     db_cursor.execute("SELECT participant_id, participant_name, participant_status, training_location_id FROM participants WHERE participant_contact=%s", (contact,))
                     participant_data = db_cursor.fetchone()
-                    # Debugging: Print participant_data to check if it's retrieved correctly
-                    print("Participant Data:", participant_data)
 
                     if participant_data:
                         session['logged_in'] = True
                         session['role'] = role
                         session['participant_id'] = participant_data[0]
                         session['participant_name'] = participant_data[1]
-                        session['participant_status'] = participant_data[2]  # Store participant data in the session
+                        session['participant_status'] = participant_data[2]
 
-                        # Fetch training_location_id based on the participant's training_location_id
                         training_location_id = participant_data[3]
-                        print("Training Location ID:", training_location_id)  # Debugging statement
 
-                        # Fetch training_location_address based on the participant's training_location_id
                         db_cursor.execute("SELECT training_location_address FROM training_locations_list WHERE training_location_id = %s", (training_location_id,))
                         training_location_address = db_cursor.fetchone()
-                        print("Training Location Address Query Result:", training_location_address)  # Debugging statement
 
                         if training_location_address:
-                            training_location_address = training_location_address[0]  # Extract the value from the tuple
-                            # Store the training location address in the session
+                            training_location_address = training_location_address[0]
                             session['participant_training_location'] = training_location_address
                         else:
-                            print("Training Location Address not found in the database")  # Debugging statement
+                            print("Training Location Address not found in the database")
 
-                        # Check the participant's status
-                        if participant_data[2] == 'NEW':
-                            # Fetch data for 'NEW' participants from different tables
-                            db_cursor.execute("SELECT t.trainer_name, t.trainer_contact, tl.training_location_address, p.participant_status FROM participants p INNER JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id INNER JOIN trainer t ON t.training_location_id = tl.training_location_id WHERE p.participant_id = %s", (session['participant_id'],))
-                            participant_data_new = db_cursor.fetchone()
+                        db_cursor.execute("""
+                            SELECT 
+    COALESCE(s.actual_datetime, '1970-01-01'::timestamp) AS actual_datetime, 
+    COALESCE(s.picture_path, '') AS picture_path, 
+    COALESCE(s.video_path, '') AS video_path,
+    t.trainer_name, 
+    t.trainer_contact, 
+    tl.training_location_address
+FROM 
+    participants p
+LEFT JOIN sessions s ON p.participant_id = s.participant_id
+LEFT JOIN trainer t ON t.training_location_id = p.training_location_id
+INNER JOIN training_locations_list tl ON tl.training_location_id = p.training_location_id
+WHERE 
+    p.participant_id = %s;
 
-                            if participant_data_new:
-                                # Store the relevant data in the session
-                                session['trainer_name'] = participant_data_new[0]
-                                session['trainer_contact'] = participant_data_new[1]
-                                session['training_location_address'] = participant_data_new[2]
-                                session['participant_status'] = participant_data_new[3]
+                        """, (session['participant_id'],))
 
-                            # Render the 'participant_display.html' template
-                            return render_template('participant_display_new.html', role=role)
-                        else:
-                            # Fetch session data and corresponding trainer data using inner join for 'ONGOING' or 'COMPLETED' participants
-                            db_cursor.execute("SELECT s.actual_datetime, s.picture_path, s.video_path, t.trainer_name, t.trainer_contact, tl.training_location_address FROM sessions s INNER JOIN trainer t ON s.trainer_id = t.trainer_id INNER JOIN participants p ON s.participant_id = p.participant_id INNER JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id WHERE s.participant_id = %s", (session['participant_id'],))
-                            session_trainer_data = db_cursor.fetchall()
-                            # Print the fetched data
-                            print("Session Trainer Data:", session_trainer_data)
+                        session_trainer_data = db_cursor.fetchall()
 
-                            if session_trainer_data:
-                                # Store combined session and trainer data in the session
-                                session['session_trainer_data'] = session_trainer_data
+                        if session_trainer_data:
+                            session['session_trainer_data'] = session_trainer_data
 
-                            # Render the 'participant_display.html' template
                             return render_template('participant_display.html', role=role)
+                        else:
+                            return "Session and Trainer data not found."
                     else:
                         return "Participant details not found."
+                    
+                else:
+                        return "contact not found ."
 
-                elif role == 'admin' and contact == '9999999999':
+            elif role == 'admin' and contact == '9999999999':
                     session['logged_in'] = True
                     session['role'] = role
                     return render_template('admin_display.html', role=role)
-                else:
-                    return "Invalid role."
             else:
+                    return "Invalid role."
+        else:
                 return "Incorrect password."
 
     except Exception as e:
         print("An error occurred during database query:", str(e))
         return f"An error occurred: {str(e)}"
     finally:
-        # Close the cursor and connection here, after you're done using them
         if db_cursor is not None:
             db_cursor.close()
 
 @logins_bp.route('/update_participant_statuses', methods=['POST'])
 def update_participant_statuses():
     try:
-        updates = request.get_json()  # ( requesting to get what ever data is present inside the updates arra in the json format )Parse JSON data from the request , updates = request.get_json(): This line retrieves the JSON data from the POST request sent by the client. It expects the client to send an array of updates.
-
-        # Initialize db_cursor
+        updates = request.get_json()
         db_cursor = get_db_connection().cursor()
 
-        # Iterate through the received updates and update the database, For each update, it extracts the participant ID and the new status. It also validates that the participant ID is a valid intege
         for update in updates:
             participant_id = update.get('participantId')
             new_status = update.get('newStatus')
 
-            # Validate that participant_id is a valid integer
             try:
                 participant_id = int(participant_id)
             except ValueError:
                 return f"Invalid participant ID: {update.get('participantId')}"
 
-            # Perform database update using the retrieved data
             db_cursor.execute("UPDATE participants SET participant_status = %s WHERE participant_id = %s", (new_status, participant_id))
 
-        # Commit the changes to the database
         db_connection.commit()
-
-        #If any errors occur during this process, it logs the error and rolls back the changes to maintain data consistency.
 
         return jsonify({"success": True, "participantId": participant_id, "newStatus": new_status})
 
     except Exception as e:
-        # Log the error
         current_app.logger.error("An error occurred during database update: %s", str(e))
-
-        # Rollback changes if any error occurs
         db_connection.rollback()
 
         return jsonify({"success": False, "error": "An error occurred. Please check the logs for more information."})
     finally:
-        # Close the cursor and connection here, after you're done using them
         if db_cursor is not None:
             db_cursor.close()
 
@@ -202,7 +196,6 @@ def update_participant_statuses():
 def logout():
     role = session.get('role')
     if role == 'participant':
-        # remove the username from the session if it is there
         session.pop('participant_id', None)
         session.pop('participant_name', None)
         session.pop('role', None)
@@ -211,10 +204,9 @@ def logout():
         session.pop('trainer_name', None)
         session.pop('role', None)
     elif role == 'admin':
-        session.pop('role', None)
-        # Log out an admin when role is None and contact is None
+        session['role'] = None
         if role is None and session.get('contact') is None:
-            session.clear()  # Clear all session variables
+            session.clear()
             return "Logged out successfully."
 
     return redirect(url_for('logins.index'))
@@ -223,27 +215,23 @@ def logout():
 def trainer_details():
     role = session.get('role')
     if role != 'trainer':
-        return redirect(url_for('logins.index'))  # Redirect to the login page if not a trainer
+        return redirect(url_for('logins.index'))
 
     try:
-        db_connection = get_db_connection()  # Get or create a database connection
+        db_connection = get_db_connection()
         db_cursor = db_connection.cursor()
 
-        trainer_id = session.get('trainer_id')  # Get trainer_id from session
+        trainer_id = session.get('trainer_id')
 
-        # Fetch trainer details
         db_cursor.execute("SELECT trainer_name, trainer_status FROM trainer WHERE trainer_id = %s", (trainer_id,))
         trainer_data = db_cursor.fetchone()
 
         if trainer_data:
             trainer_name, trainer_status = trainer_data
 
-            # Fetch participant data based on the trainer's training location
             db_cursor.execute("SELECT participant_id, participant_name, participant_contact, participant_status FROM participants WHERE training_location_id = (SELECT training_location_id FROM trainer WHERE trainer_id = %s) AND (participant_status = 'ONGOING' OR participant_status = 'NEW')", (trainer_id,))
             participant_data = db_cursor.fetchall()
 
-            # populating  the dropdown list from the database that is from the constraints that i have set that only i am making as options , Fetch valid status values from the database constraint
-            db_cursor.execute("SELECT unnest(enum_range(NULL::participant_status))")
             valid_status_values = [status[0] for status in db_cursor.fetchall()]
 
             return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=participant_data, valid_status_values=valid_status_values)
@@ -254,6 +242,56 @@ def trainer_details():
         print("An error occurred during trainer details retrieval:", str(e))
         return f"An error occurred: {str(e)}"
     finally:
-        # Close the cursor and connection here, after you're done using them
         if db_cursor is not None:
             db_cursor.close()
+
+# ... Existing code ...
+
+@logins_bp.route('/participants-display')
+def participants_display():
+    role = session.get('role')
+    if role != 'participant':
+        return redirect(url_for('logins.index'))
+
+    db_cursor = None
+    error_message = None
+
+    try:
+        db_connection = get_db_connection()
+        db_cursor = db_connection.cursor()
+
+        participant_id = session.get('participant_id')
+        db_cursor.execute("""
+            SELECT 
+                COALESCE(s.actual_datetime, 0) AS actual_datetime, 
+                COALESCE(s.picture_path, 0) AS picture_path, 
+                COALESCE(s.video_path, 0) AS video_path,
+                t.trainer_name, 
+                t.trainer_contact, 
+                tl.training_location_address
+            FROM 
+                participants p
+            LEFT JOIN sessions s ON p.participant_id = s.participant_id
+            LEFT JOIN trainer t ON t.training_location_id = p.training_location_id
+            INNER JOIN training_locations_list tl ON tl.training_location_id = p.training_location_id
+            WHERE 
+                p.participant_id = %s;
+        """, (participant_id,))
+
+        session_trainer_data = db_cursor.fetchall()
+
+        if session_trainer_data:
+            session['session_trainer_data'] = session_trainer_data
+
+        else:
+            error_message = "Participant details not found."
+
+    except Exception as e:
+        print("An error occurred during participant display:", str(e))
+        error_message = "An error occurred during participant display."
+
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()
+
+    return render_template('participant_display.html', role=role, error_message=error_message)

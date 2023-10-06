@@ -64,7 +64,6 @@
 
    
 
-
     <!-- ... (other menu items) ... -->
 
     {% if session['role'] == 'trainer' %}
@@ -74,7 +73,7 @@
     </li>
     
     <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>
-    <li class="nav-item"><a class="nav-link" href="/participant-form"><i class="fa fa-fw fa-comments"></i> Feedback</a></li>
+    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-fw fa-comments"></i> Feedback</a></li>
     <!-- Logout button always displayed -->
     <li class="nav-item">
       <form action="{{ url_for('logins.logout') }}" method="post">
@@ -84,9 +83,10 @@
     {% elif session['role'] == 'participant' %}
     <!-- Participant-specific links -->
     <li class="nav-item">
-      <a class="nav-link" href="#"><i class="fa fa-fw fa-user"></i> {{ session['participant_name'] }}</a>
+      <a class="nav-link" href="{{ url_for('logins.participants_display') }}"><i class="fa fa-fw fa-user"></i> {{ session['participant_name'] }}</a>
     </li>
     
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('logins.participants_display') }}"><i class="fa fa-fw fa-comments"></i> Participants Display</a></li>
     <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Participants Info</a></li>
     
     <!-- Logout button always displayed -->
@@ -109,6 +109,7 @@
           <li><a class="dropdown-item" href="/trainer-info">Trainer </a></li>
           <li><a class="dropdown-item" href="/participant-info">Participant </a></li>
           <li><a class="dropdown-item" href="/sessions_info">sessions </a></li>
+          <li><a class="dropdown-item" href="/training_locations_list">Training Locations</a></li>
       </ul>
   </li>
   
@@ -119,7 +120,6 @@
     </form>
   </li>
 
-
     {% else %}
     <!-- Default links for unauthenticated users -->
     <li class="nav-item">
@@ -127,7 +127,6 @@
     </li>
     {% endif %}
   </ul>
-
 
 <!-- ... (the rest of the HTML code for other pages admin, instructor ) ... -->
 
