@@ -40,6 +40,7 @@ def check_logins():
 
         db_cursor.execute("SELECT * FROM users_signup WHERE contact_no=%s", (contact,))
         user_data = db_cursor.fetchone()
+        print("User Data:", user_data) 
 
         if user_data:
             hashed_password = user_data[2]
@@ -63,31 +64,15 @@ def check_logins():
                             session['trainer_id'] = trainer_id
                             session['trainer_name'] = trainer_name
 
-                            db_cursor.execute("""
-                                SELECT 
-                                    COALESCE(s.actual_datetime, 0) AS actual_datetime, 
-                                    COALESCE(s.picture_path, 0) AS picture_path, 
-                                    COALESCE(s.video_path, 0) AS video_path,
-                                    t.trainer_name, 
-                                    t.trainer_contact, 
-                                    tl.training_location_address
-                                FROM 
-                                    participants p
-                                LEFT JOIN sessions s ON p.participant_id = s.participant_id
-                                LEFT JOIN trainer t ON t.training_location_id = p.training_location_id
-                                INNER JOIN training_locations_list tl ON tl.training_location_id = p.training_location_id
-                                WHERE 
-                                    p.participant_id = %s;
-                            """, (session['trainer_id'],))
+                            # Fetch training_location_id based on the logged-in trainer's trainer_id
+                            db_cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id=%s", (trainer_id,))
+                            training_location_id = db_cursor.fetchone()[0]
 
-                            session_trainer_data = db_cursor.fetchall()
+                            # Fetch participant data based on the training_location_id
+                            db_cursor.execute("SELECT participant_id, participant_name, participant_contact, participant_status FROM participants WHERE training_location_id=%s AND (participant_status='ONGOING' OR participant_status='NEW')", (training_location_id,))
+                            participant_data = db_cursor.fetchall()
 
-                            if session_trainer_data:
-                                session['session_trainer_data'] = session_trainer_data
-
-                                return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=session_trainer_data)
-                            else:
-                                return "Session and Trainer data not found."
+                            return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=participant_data)
                         else:
                             return "Trainer is not certified. Please complete your certification."
 
@@ -143,16 +128,15 @@ WHERE
                     else:
                         return "Participant details not found."
                     
-                else:
-                        return "contact not found ."
+                
 
-            elif role == 'admin' and contact == '9999999999':
+                elif role == 'admin' and contact == '9999999999':
                     session['logged_in'] = True
                     session['role'] = role
                     return render_template('admin_display.html', role=role)
-            else:
+                else:
                     return "Invalid role."
-        else:
+            else:
                 return "Incorrect password."
 
     except Exception as e:
