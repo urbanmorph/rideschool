@@ -58,6 +58,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                       
                         <th>Trainer</th>
                     </tr>
                 </thead>
@@ -69,10 +70,13 @@
                             <td>{{ location[4] }}</td>
                             <td class="location" data-address="{{ location[1] }}" data-latitude="{{ location[2] }}" data-longitude="{{ location[3] }}" data-picture="{{ location[6]}}">{{ location[0] }}</td>
                             <td><a href="{{ location[6] }}" target="_blank"><img src="{{ location[6] }}" style="height: 50px; width: 50px;"></a></td>
+                            
                             <td class="address"></td> 
                             <td class="latitude"></td> 
                             <td class="longitude"></td> 
                             <td class="picture"></td>
+                            
+
                             <td>{{ location[5] }}</td>
                             
                         </tr>
@@ -91,7 +95,12 @@
 <div class="card">
     <div class="card-body">
         <h2 class="card-title">Add a new training location</h2>
-        <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
+       
+        
+            
+
+            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
+
             <div class="form-group">
                 <label for="training_location_id">Location ID:</label>
                 <input type="text" class="form-control" id="training_location_id" name="training_location_id" required>
@@ -116,7 +125,13 @@
 
             <div class="form-group">
                 <label for="location_picture">Location Picture:</label>
-                <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*"  required>
+                
+                
+                <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*" required>
+
+                
+
+           
             </div>
 
            
@@ -149,26 +164,32 @@
         });
     });
 
+
     $('#add-location-form').on('submit', function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: '/add_location',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                if (response.status === 'success') {
-                    showAlert('alert-success', response.message);
-                    // Add code here to update the table
-                } else if (response.status === 'error') {
-                    showAlert('alert-danger', response.message);
-                }
-            },
-            error: function () {
-                showAlert('alert-danger', 'An error occurred. Please try again later.');
-            }
-        });
-    });
+    event.preventDefault();
     
+    var formData = new FormData(this); // Create a FormData object to send the file
+    
+    $.ajax({
+        url: '/add_location',
+        type: 'POST',
+        data: formData, // Use the FormData object to send the file
+        contentType: false, // Set content type to false to let the browser handle it
+        processData: false, // Set processData to false to prevent jQuery from processing data
+        success: function (response) {
+            if (response.status === 'success') {
+                showAlert('alert-success', response.message);
+                // Add code here to update the table
+            } else if (response.status === 'error') {
+                showAlert('alert-danger', response.message);
+            }
+        },
+        error: function () {
+            showAlert('alert-danger', 'An error occurred. Please try again later.');
+        }
+    });
+});
+
     // Handle click event for the Training Location name
 //$('td.location').on('click', function () {
   //  var address = $(this).data('address');

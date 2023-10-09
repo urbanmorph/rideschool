@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory
 import psycopg2
 import os
+import time 
+
 
 
 training_locations_list_bp = Blueprint('training_locations_list', __name__)
@@ -44,7 +46,7 @@ def show_training_location():
 
     conn = get_db_connection()
     db_cursor = conn.cursor()
-    db_cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
+    db_cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
 
     training_location = db_cursor.fetchall()
     conn.close()
@@ -74,8 +76,14 @@ def delete_location():
 
 
 
+
+
+
+
+
 @training_locations_list_bp.route('/add_location', methods=['POST'])
 def add_location():
+    print("add_location route called")  # Add this line
     try:
         # Get the form data
         training_location_id = request.form['training_location_id']
@@ -88,14 +96,31 @@ def add_location():
         if 'location_picture' in request.files:
             location_picture = request.files['location_picture']
             if location_picture.filename != '':
-                # Ensure the folder exists, to create the folder if it doesn't exist:
-                os.makedirs(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], exist_ok=True)
-                # Save the image to the folder
-                picture_filename = location_picture.filename
-                training_location_picture = os.path.join(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], picture_filename)
-                location_picture.save(os.path.join(current_app.root_path, training_location_picture))
+                # Ensure the folder exists, or create it if it doesn't exist
+                pictures_folder = current_app.config['TRAINING_LOCATION_PICTURES_FOLDER']
+
+              
+                os.makedirs(pictures_folder, exist_ok=True)
+
+
+                # Generate a unique filename using uuid
+                   # Generate a timestamp
+                timestamp = int(time.time() * 1000)
+
+                # Extract the file extension from the original filename
+                _, extension = os.path.splitext(location_picture.filename)
+
+                # Construct the unique filename
+                picture_filename = f"t_location_image_{timestamp}{extension}"
+
+                # Add the directory name "t_l_picture" to the path
+                picture_path = os.path.join(pictures_folder, picture_filename)
+
+                location_picture.save(picture_path)
+
+                print("Picture Path:", picture_path)
                 # Store the image path in the database
-                image_path = training_location_picture
+                image_path = picture_path
             else:
                 image_path = None
         else:
@@ -111,7 +136,8 @@ def add_location():
         cursor = connection.cursor()
 
         cursor.execute("INSERT INTO training_locations_list (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, image_path))
+               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, image_path))
+
 
         # Commit the transaction
         connection.commit()
@@ -122,12 +148,16 @@ def add_location():
 
         # Return a success message
         return jsonify({'status': 'success', 'message': 'Location added to the database'})
+        
 
     except Exception as e:
+        print(f"Error while saving image: {str(e)}")
         return jsonify({'status': 'error', 'message': f'Error: {str(e)}'})
+
+
 
 # The following route serves images from the TRAINING_LOCATION_PICTURES_FOLDER directory.
 # It allows you to access and display images in the application.
-@training_locations_list_bp.route('/training_location_pictures/<filename>')
+@training_locations_list_bp.route('/static/training_location_pictures/<filename>')
 def display_image(filename):
     return send_from_directory(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)
