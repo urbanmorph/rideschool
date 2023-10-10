@@ -71,7 +71,9 @@ def check_logins():
                             # Fetch participant data based on the training_location_id
                             db_cursor.execute("SELECT participant_id, participant_name, participant_contact, participant_status FROM participants WHERE training_location_id=%s AND (participant_status='ONGOING' OR participant_status='NEW')", (training_location_id,))
                             participant_data = db_cursor.fetchall()
-
+                            
+                            # Commit the transaction if everything is successful
+                            db_connection.commit()
                             return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=participant_data)
                         else:
                             return "Trainer is not certified. Please complete your certification."
@@ -124,7 +126,7 @@ WHERE
 
                             return render_template('participant_display.html', role=role)
                         else:
-                            return "Session and Trainer data not found."
+                            return "Incorrect contact no or password"
                     else:
                         return "Participant details not found."
                     
@@ -141,6 +143,11 @@ WHERE
 
     except Exception as e:
         print("An error occurred during database query:", str(e))
+
+        # Roll back the transaction to undo any changes made before the error
+        db_connection.rollback()
+
+
         return f"An error occurred: {str(e)}"
     finally:
         if db_cursor is not None:
