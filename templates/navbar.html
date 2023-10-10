@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedalಶಾಲೆ</title>
+  <title>AltMo Ride School</title>
   <!-- Bootstrap core CSS links -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome CSS -->
@@ -35,9 +35,9 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="\static\Image\pedalshaale-bgblack.png" alt="logo" class="image-logo">
+        <img src="\static\Image\AltMo - Ride school.png" alt="logo" class="image-logo"> 
       </a>
-      <a class="navbar-brand" href="#">Pedal Shaale</a>
+      <a class="navbar-brand" href="#">AltMO Ride School</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -73,7 +73,7 @@
     </li>
     
     <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>
-    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-fw fa-comments"></i> Feedback</a></li>
+    
     <!-- Logout button always displayed -->
     <li class="nav-item">
       <form action="{{ url_for('logins.logout') }}" method="post">
@@ -86,8 +86,8 @@
       <a class="nav-link" href="{{ url_for('logins.participants_display') }}"><i class="fa fa-fw fa-user"></i> {{ session['participant_name'] }}</a>
     </li>
     
-    <li class="nav-item"><a class="nav-link" href="{{ url_for('logins.participants_display') }}"><i class="fa fa-fw fa-comments"></i> Participants Display</a></li>
-    <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Participants Info</a></li>
+    
+    <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Session</a></li>
     
     <!-- Logout button always displayed -->
     <li class="nav-item">
@@ -107,6 +107,7 @@
       </a>
       <ul class="dropdown-menu" aria-labelledby="viewDropdown">
           <li><a class="dropdown-item" href="/trainer-info">Trainer </a></li>
+          
           <li><a class="dropdown-item" href="/participant-info">Participant </a></li>
           <li><a class="dropdown-item" href="/sessions_info">sessions </a></li>
           <li><a class="dropdown-item" href="/training_locations_list">Training Locations</a></li>

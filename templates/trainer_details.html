@@ -52,6 +52,9 @@
         tbody tr:nth-child(even) {
             background-color: #f2f2f2; /* Alternate row background color */
         }
+
+
+        
         form button {
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -78,14 +81,14 @@
     <br>
 <form method="POST" id="update-form">
     <table border="1">
-        <tr><th>Participant Id</th>
+        <tr>
             <th>Participant Name</th>
             <th>Participant Contact</th>
             <th>Participant Status</th>
         </tr>
         {% for participant in participants %}
         <tr>
-            <td>{{ participant[0] }}</td>
+            
             <td>{{ participant[1] }}</td>
             <td>{{ participant[2] }}</td>
             <td>
@@ -139,31 +142,39 @@ $(document).ready(function () {
 //If the server responds with success, it displays a success message in the "message-div" element.
 //If there's an error during the request, it logs the error and displays an error message.
             success: function (response) {
+
+                var messageDiv = $("#message-div"); // alert 1
+                        messageDiv.empty(); // alert 1
+
                 // Handle the response
-                console.log("Response from server:", response);
+                console.log("Response from server:", response);  //  is used for debugging and logging the server response to the browser console. It's typically used during development and debugging to inspect the response data.we  can keep or remove this line 
 
                 // Check if the response contains a success message
                 if (response.success) {
-                    // Display success message with participant details
-                    $("#message-div").text("Participant status updated Successfully.");
+                    // Display a success message in an alert box  
+                    //alert 2
+                    messageDiv.html('<div class="alert alert-success" role="alert">Participant status updated successfully.</div>');
                 } else {
-                    // Display an error message
-                    $("#message-div").text("Unable to update participant status.");
+                    // Display an error message in an alert box
+                    // alert 3
+                    messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>');
                 }
             },
             error: function () {
                 // Handle errors
-                console.error("Error occurred during AJAX request");
-                // Display an error message
-                $("#message-div").text("Unable to update participant status. An error occurred.");
+                console.error("Error occurred during AJAX request");// used for logging an error message to the browser console when there's an error during the AJAX request. This can be helpful for debugging and diagnosing issues when something goes wrong with the request. we can keep or remove these lines based on your preference.
+
+                var messageDiv = $("#message-div");// alert 4
+                messageDiv.empty(); // alert 5
+                // Display an error message in an alert box
+                messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>'); // alert 6
             },
         });
     });
 });
 
 </script>
-
-<div id="message-div"></div>
-
+<!--alert 1-->
+<div class="alert-message" id="message-div"></div>  <!--// alert 7-->
 </body>
 </html>
