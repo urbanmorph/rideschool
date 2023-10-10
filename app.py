@@ -20,9 +20,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['DATABASE'] = 'Pedal_Shaale'
 app.config['UPLOAD_FOLDER'] = 'static/uploaded_image'
 # Update the 'TRAINING_LOCATION_PICTURES_FOLDER' to the new path
-
-
-# Set the path for uploaded images
+# Set the path where training location pictures will be stored
 app.config['TRAINING_LOCATION_PICTURES_FOLDER'] = 'static/t_l_picture'
 
 
