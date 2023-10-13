@@ -9,15 +9,17 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length
+from config.config import get_config_value 
 
 signup_bp = Blueprint('signup', __name__)
-
+#create a store it in a
+#  config file , pool
 # PostgreSQL database connection
 db_connection = psycopg2.connect(
-    host='127.0.0.1',
-    database='Pedal_Shaale',
-    user='postgres',
-    password='root'
+    host=get_config_value('db_host'),
+    database=get_config_value('db_name'),
+    user=get_config_value('db_user'),
+    password=get_config_value('db_password')
 )
 db_cursor = db_connection.cursor()
 

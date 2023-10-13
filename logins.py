@@ -2,7 +2,11 @@
 import bcrypt
 import psycopg2
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
-
+from config.config import get_config_value  
+#is a Python import statement that allows you to access the get_config_value function from the config module located within the config directory.
+#import get_config_value: This part of the statement specifies that you want to import the get_config_value function from the config module( config.py).which is inside the config directory/folder 
+#this line of code is saying, "From the config package, go into the config module and import the get_config_value function so that I can use it in this current module (e.g., your Flask application or script)." This allows you to use the get_config_value function to access configuration values stored in the config module from within your application.
+ # Import the config dictionary/ folder
 logins_bp = Blueprint('logins', __name__)
 
 # Initialize db_connection to None initially
@@ -13,10 +17,13 @@ def get_db_connection():
     if db_connection is None:
         # PostgreSQL database connection
         db_connection = psycopg2.connect(
-            host='127.0.0.1',
-            database='Pedal_Shaale',
-            user='postgres',
-            password='root'
+            host=get_config_value('db_host'),
+            database=get_config_value('db_name'),
+            user=get_config_value('db_user'),
+            password=get_config_value('db_password')
+    #In Python, when you call a function, you should use parentheses () 
+    # as in the corrected code examples I provided. The square brackets [] 
+    # are used for accessing elements in lists or dictionaries.
         )
     return db_connection
 
@@ -33,21 +40,49 @@ def check_logins():
 
         contact = request.form['contact']
         user_password = request.form['password']
-
         # Debugging: Log the received form data
         print("Received form data - Contact:", contact)
         print("Received form data - Password:", user_password)
 
+        # Check if the provided contact and password match the admin's fixed values
+        if contact == get_config_value('admin_contact') and user_password == get_config_value('admin_password'):
+
+            # Admin login: If the contact and password match, set the session as an admin
+            session['logged_in'] = True
+            session['role'] = 'admin'
+            return render_template('admin_display.html', role='admin')
+
         db_cursor.execute("SELECT * FROM users_signup WHERE contact_no=%s", (contact,))
         user_data = db_cursor.fetchone()
-        print("User Data:", user_data) 
+        print("User Data:", user_data)
+
+
+##
+        ##
+        # Check if the provided contact and password match the admin's fixed values
+        #if contact == '9999999999' and user_password == 'Pedal_shaale@2024':
+            # Admin login: If the contact and password match, set the session as an admin
+            #session['logged_in'] = True
+           # session['role'] = 'admin'
+            #return render_template('admin_display.html', role='admin')
+
+        # If the contact and password do not match admin's, continue with user authentication going to the database  users_signu table which is not required 
+        #db_cursor.execute("SELECT * FROM users_signup WHERE contact_no=%s", (contact,))
+        #user_data = db_cursor.fetchone()  # Retrieve user data from the database
+        #print("User Data:", user_data)
+
+        ##
 
         if user_data:
-            hashed_password = user_data[2]
+            hashed_password = user_data[2]  # Get the hashed password from the user data
 
             if bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8')):
-                role = user_data[3]
+                # Passwords match, so the user is authenticated
+                role = user_data[3]  # Get the user's role from the user data
 
+
+
+# rest of the code for trainer and participant login.
                 if role == 'trainer':
                     # Fetch trainer details from the trainers table using contact number
                     db_cursor.execute("SELECT trainer_id, trainer_name, trainer_status FROM trainer WHERE trainer_contact=%s", (contact,))
@@ -132,14 +167,16 @@ WHERE
                     
                 
 
-                elif role == 'admin' and contact == '9999999999':
-                    session['logged_in'] = True
-                    session['role'] = role
-                    return render_template('admin_display.html', role=role)
-                else:
-                    return "Invalid role."
-            else:
-                return "Incorrect password."
+            #if role == 'admin' and contact == '9999999999' and user_password == 'Pedal_shaale@2024':
+                   #session['logged_in'] = True
+                   #session['role'] = 'admin'
+                   #return render_template('admin_display.html', role=role)
+                #else:
+                   #return "Invalid role."
+            #else:
+                #return "Incorrect password."
+        else:
+            return "User not found."
 
     except Exception as e:
         print("An error occurred during database query:", str(e))

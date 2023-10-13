@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, request, session
 import psycopg2
 from datetime import datetime
+from config.config import get_config_value  
 
 participant_bp = Blueprint('participant_bp', __name__)
-
+# Retrieve database connection parameters from the configuration
 # Configure database connection
-db_host = '127.0.0.1'
-db_user = 'postgres'
-db_password = 'root'
-db_name = 'Pedal_Shaale'
+db_host = get_config_value('db_host')
+db_user = get_config_value('db_user')
+db_password = get_config_value('db_password')
+db_name = get_config_value('db_name')
 
 # Function to generate the participant code
 def generate_participant_code(participant_id):

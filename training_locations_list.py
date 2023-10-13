@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 import psycopg2
 import os
 import time 
+from config.config import get_config_value  
 
 
 
@@ -20,12 +21,18 @@ def delete_training_location_from_database(training_location_id):
 
 # Initialize a database connection
 def get_db_connection():
+    db_host = get_config_value('db_host')
+    db_name = get_config_value('db_name')
+    db_user = get_config_value('db_user')
+    db_password = get_config_value('db_password')
+    db_port = get_config_value('db_port')  # Add a new configuration for the database port
+
     conn = psycopg2.connect(
-        dbname='Pedal_Shaale',
-        user='postgres',
-        password='root',
-        host='127.0.0.1',
-        port='5432'
+        dbname=db_name,
+        user=db_user,
+        password=db_password,
+        host=db_host,
+        port=db_port  # Use the configured port
     )
     return conn
 

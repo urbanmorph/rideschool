@@ -2,16 +2,17 @@ from flask import Blueprint, render_template, request, session, url_for, current
 
 import psycopg2
 import json
+from config.config import get_config_value  
 
 # Create a Blueprint for the trainer module
 
 trainer_bp = Blueprint('trainer_bp', __name__)
 
 # Configure database connection
-db_host = 'localhost'
-db_user = 'postgres'
-db_password = 'root'
-db_name = 'Pedal_Shaale'
+db_host = get_config_value('db_host')
+db_user = get_config_value('db_user')
+db_password = get_config_value('db_password')
+db_name = get_config_value('db_name')
 
 # Function to generate the trainer code
 def generate_trainer_code(trainer_id):

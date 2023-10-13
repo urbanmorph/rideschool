@@ -3,17 +3,18 @@ import os
 import psycopg2
 import logging
 from datetime import datetime
+from config.config import get_config_value 
 
 sessions_bp = Blueprint('sessions', __name__)
 
 # Create a database connection
 def get_db_connection():
     conn = psycopg2.connect(
-        host='127.0.0.1',
-        port='5432',
-        database='Pedal_Shaale',
-        user='postgres',
-        password='root'
+        host=get_config_value('db_host'),
+        port=get_config_value('db_port'),  # If port is a configuration value
+        database=get_config_value('db_name'),
+        user=get_config_value('db_user'),
+        password=get_config_value('db_password')
     )
     conn.set_session(autocommit=True)
     return conn
@@ -23,11 +24,11 @@ def get_db_connection():
 # Initialize the database if it does not exist
 def create_database():
     conn = psycopg2.connect(
-        host='127.0.0.1',
-        port='5432',
-        database='Pedal_Shaale',
-        user='postgres',
-        password='root'
+        host=get_config_value('db_host'),
+        port=get_config_value('db_port'),  # If port is a configuration value
+        database=get_config_value('db_name'),
+        user=get_config_value('db_user'),
+        password=get_config_value('db_password')
     )
     conn.autocommit = True
     cursor = conn.cursor()
