@@ -131,7 +131,7 @@ def trainer_table():
           # Set the success or error message based on the registration result
         success_message = "Trainer registered successfully!"
         error_message = "Error registering trainer. Please try again later."
-        message = success_message if success else error_message
+        message = success_message if success_message else error_message  ##### changes success to success_message
 
         # Render the trainer table template with the trainers and message
         return render_template('trainer_table.html', trainers=trainers, message=message)
