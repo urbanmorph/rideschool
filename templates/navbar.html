@@ -96,7 +96,9 @@
       </form>
     </li>
 
-    {% elif session['role'] == 'admin'%}
+    
+    {% elif session['role'] == 'admin' %}
+
     <li class="nav-item">
       <a class="nav-link" href="#"><i class="fa fa-fw fa-user"></i> {{ session['role'] }}</a> 
     </li>
