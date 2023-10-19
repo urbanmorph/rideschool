@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .star-rating {
+            font-size: 24px;
+            display: inline-block;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            float: right;
+        }
+
+        .star-rating label:before {
+            content: "\2605";
+            margin: 5px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .star-rating input:checked ~ label:before {
+            content: "\2605";
+            color: gold;
+        }
+
+        /* Blue color for trainer evaluation stars */
+        .star-rating input:checked[name="trainer_evaluation"] ~ label:before {
+            color: hwb(44 0% 0%);
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+        
+        
+    </style>
+  
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+    <h1>Feedback Form</h1>
+    <form action="/feedback-form" method="post" id="feedback-form">
+        <div class="form-group">
+            <label for="participant_name">Participant Name:</label>
+            <input type="text" id="participant_name" name="participant_name" value="{{ result[0] }}" required><br>
+        </div>
+
+        <div class="form-group">
+            <label for="participant_code">Participant Code:</label>
+            <input type="text" id="participant_code" name="participant_code" value="{{ result[1] }}" required><br>
+        </div>
+        <div class="form-group">
+            <label for="participant_updated_at">Training Completion Date and time:</label>
+            <input type="text" id="participant_updated_at" name="participant_updated_at" value="{{ result[2] }}" required><br>
+        </div>
+        <div class="form-group">
+            <label for="session_duration">Session Enrolled:</label>
+            <input type="text" id="session_duration" name="session_duration" value="{{ result[3] }}" required><br>
+        </div>
+        <div class="form-group">
+            <label for="trainer_name">Trainer Name:</label>
+            <input type="text" id="trainer_name" name="trainer_name" value="{{ result[4] }}" required><br>
+        </div>
+        <div class="form-group">
+            <label for="training_rating">Rate your training sessions (1-5 stars):</label>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="training_rating" value="5">
+                <label for="star5"></label>
+                <input type="radio" id="star4" name="training_rating" value="4">
+                <label for="star4"></label>
+                <input type="radio" id="star3" name="training_rating" value="3">
+                <label for="star3"></label>
+                <input type="radio" id="star2" name="training_rating" value="2">
+                <label for="star2"></label>
+                <input type="radio" id="star1" name="training_rating" value="1">
+                <label for="star1"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Did you find the learner's guide useful?</label>
+            <input type="checkbox" id="learner_guide_yes" name="learner_guide" value="yes">Yes
+            <input type="checkbox" id="learner_guide_no" name="learner_guide" value="no">No<br>
+        </div>
+        <div class="form-group">
+            <label for="additional_feedback">Please provide any additional feedback, including what challenges you faced and what you liked about it:</label>
+            <textarea id="additional_feedback" name="additional_feedback" rows="4" cols="50"></textarea><br>
+        </div>
+        <div class="form-group">
+            <label>Do you feel confident to ride a bicycle?</label>
+            <input type="radio" id="confidence_yes" name="confidence" value="yes">Yes
+            <input type="radio" id="confidence_no" name="confidence" value="no">No<br>
+        </div>
+        <div class="form-group">
+            <label for="trainer_evaluation">How will you evaluate our trainer?</label>
+            <div class="star-rating">
+                <input type="radio" id="trainer_star5" name="trainer_evaluation" value="5">
+                <label for="trainer_star5"></label>
+                <input type="radio" id="trainer_star4" name="trainer_evaluation" value="4">
+                <label for="trainer_star4"></label>
+                <input type="radio" id="trainer_star3" name="trainer_evaluation" value="3">
+                <label for="trainer_star3"></label>
+                <input type="radio" id="trainer_star2" name="trainer_evaluation" value="2">
+                <label for="trainer_star2"></label>
+                <input type="radio" id="trainer_star1" name="trainer_evaluation" value="1">
+                <label for="trainer_star1"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="trainer_feedback">Please provide feedback for the trainer:</label>
+            <textarea id="trainer_feedback" name="trainer_feedback" rows="4" cols="50"></textarea><br>
+        </div>
+
+        
+        
+        <button type="submit">Submit Feedback</button>
+        <div id="message-container">
+            <!-- This is where the success or error message will be displayed -->
+        </div>
+
+    </form>
+
+    
+    <script>
+        // JavaScript code for handling form submission and displaying custom alerts
+        $(document).ready(function () {
+    $('#feedback-form').on('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        $.ajax({
+            url: '/feedback-form',
+            type: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (response) {
+    alert('Feedback submitted successfully');  // Display an alert message
+    if (response.status === 'success') {
+        // Handle success...
+    } else if (response.status === 'error') {
+        // Handle error...
+    }
+},
+
+
+
+
+            error: function () {
+                showAlert('error', 'An error occurred. Please try again later.');
+            }
+        });
+    });
+
+    // Custom showAlert function to display messages in the message-container
+    function showAlert(type, message) {
+        var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+                        message +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>';
+                        $('#message-container').html(alertHTML);
+$('#message-container').show();
+
+    }
+});
+
+    </script>
+</body>
+</html>
