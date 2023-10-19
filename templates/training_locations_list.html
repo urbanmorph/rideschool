@@ -196,20 +196,31 @@
     //$(this).closest('tr').find('.address').text('Address: ' + address);
 //});
 
- // Handle click event for the Training Location name
+// Handle click event for the Training Location name
 $('td.location').on('click', function () {
-    var address = $(this).data('address');
-    var latitude = $(this).data('latitude');
-    var longitude = $(this).data('longitude');
-    var picture = $(this).data('picture');
-    var row = $(this).closest('tr');
-    
-    row.find('.address').text('Address: ' + address);
-    row.find('.latitude').text('Latitude: ' + latitude);
-    row.find('.longitude').text('Longitude: ' + longitude);
-    row.find('.picture').text('Picture' + picture );
-});
+            var address = $(this).data('address');
+            var latitude = $(this).data('latitude');
+            var longitude = $(this).data('longitude');
+            var picture = $(this).data('picture');
+            var row = $(this).closest('tr');
 
+            if (row.hasClass('info-displayed')) {
+                // Information is already displayed, hide it
+                row.removeClass('info-displayed');
+                row.find('.address').text('');
+                row.find('.latitude').text('');
+                row.find('.longitude').text('');
+                row.find('.picture').text('');
+            } else {
+                // Information is not displayed, show it
+                row.addClass('info-displayed');
+                row.find('.address').text('Address: ' + address);
+                row.find('.latitude').text('Latitude: ' + latitude);
+                row.find('.longitude').text('Longitude: ' + longitude);
+                row.find('.picture').text('Picture: ' + picture);
+            }
+        });
+    
 
     
 
