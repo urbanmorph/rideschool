@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
+  
 
   <title>AltMO Ride School </title>
 
@@ -48,14 +49,17 @@
 <img src="\static\Image\banner-img.jpg" alt="home-banner"  >
         
 <div class="container">
-    <div class="alert alert-primary text-center mt-3" role="alert">
-      <a href="/signup" class="text-decoration-none">Create an account.</a>
-
+  <div class="d-grid">
+      <a href="/signup" class=" btn btn-success btn-block   ">Create an account.</a>
+    </div>
 
     </div>
 
   <div class="row text-justify mt-5">
-    <div class="col-lg-8">
+    <div class="col-lg-6">
+      <br>
+      <br>
+      <br>
       <div class="text-center py-1 rounded-3"><h2 style="font-family: 'Baloo 2', cursive;">What is <img src="\static\Image\AltMo - Ride school.png" height="40" class="d-inline-block align-center" alt="altmo" class="img-thumbnail">?</h2></div>
       <div class="py-3 mx-auto rounded-3">
         <p class="lead" style="text-indent: 30px; text-align: justify;">
@@ -63,15 +67,18 @@
         </p>
       </div>
     </div>
-    <div class="col-lg-4">
-      <div class="text-center py-1 bg-warning rounded-3"><h2 style="font-family: 'Baloo 2', cursive;">Vision</h2></div>
+    <div class="col-lg-6">
+      <div class="text-center py-1 bg-warning rounded-3">
+        
+      </div>
       <div class="px-5 py-3 mx-auto rounded-3 bg-warning">
-          <p class="lead" style="text-indent: 30px; text-align: justify;">
-            Instilling confidence in people so they can make a choice of bicycling and prepare the participants to confidently pedal on Indian streets
-          </p>
+        <div id="summary-data">
+          <!-- Data from the 'summary' route will be displayed here -->
+        </div>
       </div>
     </div>
-  </div>
+    
+    
 
     <div class="row mt-4 justify-content-md-center"> <!-- why row -->
       <div class="col-lg-8">
@@ -253,7 +260,24 @@
   <!-- Bootstrap core JavaScript -->
   <script src="static/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
 
+  <!--start summary that is displayed on the screen is being the includ of summary.html so i am giving the summary.py that is the python code rout over here to fetch the data from the  database and display here an in the form i a, giving the id  that is this code  <div id="summary-data"> -->
+  <script>
+    // Use AJAX to fetch data from the 'summary' route
+    fetch('/summary')
+      .then(response => response.text())
+      .then(data => {
+        // Update the content of the 'summary-data' div with the received data
+        document.getElementById('summary-data').innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+
+  <!--end  summary -->
   
+
+
 
 </body>
 

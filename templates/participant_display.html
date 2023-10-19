@@ -5,7 +5,10 @@
     <!-- Include the CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
+
 <body>
     {% include 'navbar.html' %}
 
@@ -21,7 +24,7 @@
     <p>Your Current Status: {{ session['participant_status'] }}</p>
 
 
-    
+     
   
     <h2>Session Details</h2>
     
@@ -43,7 +46,34 @@
                 </tr>
             {% endfor %}
         </tbody>
+
     </table>
+
+    <!-- Existing code -->
+
+<!-- Check if the participant status is COMPLETED -->
+{% if session['participant_status'] == 'COMPLETED' %}
+<button id="show-feedback-form" class="btn btn-primary" >Show Feedback Form</button>
+
+{% endif %}
+ 
+
+<script>
+<!-- Existing code -->
+$(document).ready(function () {
+    // When the "Show Feedback Form" button is clicked
+    $('#show-feedback-form').on('click', function () {
+        console.log("Button clicked!");  // Add this line to log the click event
+        // Redirect to the feedback form page
+        window.location.href = "/feedback-form";
+    });
+});
+
+</script>
+
+
+<!-- Existing code -->
+
     
 </body>
 </html>

@@ -7,8 +7,7 @@ from trainer import trainer_bp
 from sessions import sessions_bp
 from signup import signup_bp
 from training_locations_list import training_locations_list_bp
-
-
+from summary import summary_bp
 
 
 app = Flask(__name__)
@@ -66,7 +65,8 @@ app.register_blueprint(logins_bp)
 app.register_blueprint(training_locations_list_bp)
 
 
-
+# Register the summary blueprint
+app.register_blueprint(summary_bp)
 
 
 

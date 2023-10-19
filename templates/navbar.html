@@ -73,7 +73,7 @@
     </li>
     
     <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>
-    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-fw fa-comments"></i> Feedback</a></li>
+    <li class="nav-item"><a class="nav-link" href="/summary"><i class="fa fa-fw fa-comments"></i> Summary </a></li>
     <!-- Logout button always displayed -->
     <li class="nav-item">
       <form action="{{ url_for('logins.logout') }}" method="post">
@@ -88,6 +88,8 @@
     
     
     <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Session</a></li>
+   
+
     
     <!-- Logout button always displayed -->
     <li class="nav-item">
@@ -100,7 +102,7 @@
     {% elif session['role'] == 'admin' %}
 
     <li class="nav-item">
-      <a class="nav-link" href="#"><i class="fa fa-fw fa-user"></i> {{ session['role'] }}</a> 
+      <a class="nav-link" href="{{ url_for('logins.admin_display') }}"><i class="fa fa-fw fa-user"></i> {{ session['role'] }}</a> 
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="viewDropdown" role="button" data-bs-toggle="dropdown"

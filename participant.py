@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, session
+from flask import Blueprint, render_template, request, session , redirect, url_for, jsonify
 import psycopg2
 from datetime import datetime
 from config.config import get_config_value  
 
 participant_bp = Blueprint('participant_bp', __name__)
+
 # Retrieve database connection parameters from the configuration
 # Configure database connection
 db_host = get_config_value('db_host')
@@ -133,7 +134,7 @@ def participant_table():
      
 
 #end rout 
-
+# participant sessions details this page will be displayed whn i login as a partcipant 
 @participant_bp.route('/participant_session_info', methods=['GET'])
 def participant_session_info():
     try:
@@ -222,3 +223,100 @@ def participant_info():
         return render_template('participant_info.html', participants=participants)
     except Exception as e:
         return f"Error: {str(e)}"
+
+# Route to display the feedback form and handle form submission
+@participant_bp.route('/feedback-form', methods=['GET', 'POST'])
+def feedback_form():
+    try:
+        # Check if a participant is logged in
+        if session.get('role') == 'participant':
+            participant_id = session.get('participant_id')
+
+            # Connect to the database
+            connection = psycopg2.connect(
+                host=db_host,
+                user=db_user,
+                password=db_password,
+                dbname=db_name
+            )
+            cursor = connection.cursor()
+
+            # Fetch participant details for the logged-in participant
+            cursor.execute("SELECT * FROM participants WHERE participant_id = %s", (participant_id,))
+            participant = cursor.fetchone()
+            print("Participant Status:", participant[10])  # Debug statement
+
+            if request.method == 'POST':
+                # This block handles the form submission (POST request)
+                rate_training_sessions = request.form['training_rating']
+                learner_guide_useful = request.form.get('learner_guide', 'No')
+                feedback = request.form['additional_feedback']
+                confident_to_ride = request.form.get('confidence', 'No')
+                trainer_evaluation = request.form.get('trainer_evaluation', '1')  # Default to 1 if not provided
+                trainer_feedback = request.form['trainer_feedback']
+                
+
+                
+
+                # Insert the feedback data into the "feedback" table
+                insert_query = """
+                    INSERT INTO feedback (participant_id, rate_training_sessions, learner_guide_useful, feedback, confident_to_ride, trainer_evaluation, trainer_feedback)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """
+                values = (participant_id, rate_training_sessions, learner_guide_useful, feedback, confident_to_ride, trainer_evaluation, trainer_feedback)
+                cursor.execute(insert_query, values)
+
+                # Commit the transaction
+                connection.commit()
+                cursor.close()
+                connection.close()
+
+                 # Return a success message
+                response = {"status": "success", "message": "Feedback submitted successfully!"}
+                return jsonify(response)
+
+
+            elif request.method == 'GET':
+                if participant:
+                    print("Participant Status:", participant[10])
+
+                # This block handles the initial form display (GET request)
+                    if participant[10] == 'COMPLETED':
+                        sql_query = """
+                        SELECT
+                            p.participant_name,
+                            p.participant_code,
+                            p.participant_updated_at,
+                            COUNT(s.hours_trained) AS session_count,  -- Calculate the count of sessions
+                            t.trainer_name
+                        FROM
+                            participants p
+                        JOIN
+                            sessions s ON p.participant_id = s.participant_id
+                        JOIN
+                            trainer t ON s.trainer_id = t.trainer_id
+                        WHERE
+                            p.participant_status = 'COMPLETED'
+                        AND
+                            p.participant_id = %s
+                        GROUP BY
+                            p.participant_name, p.participant_code, p.participant_updated_at, t.trainer_name
+                    """    
+                    
+
+                    cursor.execute(sql_query, (participant_id,))
+                    result = cursor.fetchone()
+
+                    return render_template('feedback.html', participant=participant, result=result)
+                    
+
+                else:
+                    return "You must be logged in as a participant with 'COMPLETED' status to access the feedback form."
+            else:
+                return "Participant not found."
+        else:
+            return "You must be logged in as a participant to access the feedback form."
+    except Exception as e:
+         response = {"status": "error", "message": "An error occurred."}
+         return jsonify(response)
+    #flash is commonly used when you want to display messages as alerts or notifications that appear at the top of the page and may disappear after a while or when the user interacts with them. It's often used for non-intrusive notifications.

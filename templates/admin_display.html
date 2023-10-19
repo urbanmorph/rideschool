@@ -14,7 +14,35 @@
     <div class="container">
     
     <h1>Welcome Admin</h1>
-    <p>Welcome to the admin page!</p>
+    <div class="container">
+    <div class="col-lg-7">
+    <div class="px-5 py-3 mx-auto rounded-3 bg-warning">
+        <div id="summary-data">
+          <!-- Data from the 'summary' route will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+      <br>
+      <br> 
+
+
+     <!--start summary that is displayed on the screen is being the includ of summary.html so i am giving the summary.py that is the python code rout over here to fetch the data from the  database and display here an in the form i a, giving the id  that is this code  <div id="summary-data"> -->
+  <script>
+    // Use AJAX to fetch data from the 'summary' route
+    fetch('/summary')
+
+      .then(response => response.text())
+      .then(data => {
+        // Update the content of the 'summary-data' div with the received data
+        document.getElementById('summary-data').innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+
+  <!--end  summary -->
 
 </body>
 </html>

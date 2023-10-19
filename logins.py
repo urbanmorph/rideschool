@@ -323,3 +323,12 @@ def participants_display():
             db_cursor.close()
 
     return render_template('participant_display.html', role=role, error_message=error_message)
+
+
+
+@logins_bp.route('/admin-display')
+def admin_display():
+    role = session.get('role')
+    if role != 'admin':
+        return redirect(url_for('logins.index'))
+    return render_template('admin_display.html', role=role)
