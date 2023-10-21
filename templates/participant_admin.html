@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainer Admin Page</title>
+    <title>Participant Admin Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cbtp.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
@@ -33,6 +34,7 @@
             width: 100%;
         }
     </style>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -40,28 +42,155 @@
     <br>
     <br>
 
-    <h1>participant Details</h1>
+    <h1>Participant Details</h1>
 
-    <!-- Display trainer details as paragraphs -->
-    <p><strong> Name:</strong> {{ participant_name }}</p>
-    <p><strong> Email:</strong> {{ participant_email }}</p>
-    <p><strong> Contact:</strong> {{ participant_contact }}</p>
-    <p><strong> Age:</strong> {{participant_contact }}</p>
-    <p><strong> Gender:</strong> {{ participant_gender }}</p>
-    <p><strong> Address:</strong> {{ participant_address }}</p>
-    <p><strong>Training Location Address:</strong> {{ training_location_address }}</p>
-    <p><strong> Registered On </strong> {{ participant_created_at }}</p>
-    <p><strong>Status:</strong> {{ participant_status }}</p>
-    <p><strong>Participant Code:</strong> {{ participant_code }}</p>
+    <!-- Display participant details as paragraphs -->
+    <form method="POST" id="update-status-form"></form>
+    <table>
+        <tr>
+            <td><strong>Name:</strong></td>
+            <td>{{ participant_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Status:</strong></td>
+            <td>
+                <!-- Select element for Participant Status -->
+                <select class="status-select" name="participant_status" data-participant-id="{{ participant_id }}" data-initial-status="{{ participant_status }}">
+                    <option value="{{ participant_status }}" selected>{{ participant_status }}</option>
+                    <option value="CERTIFIED">CERTIFIED</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Contact:</strong></td>
+            <td>{{ participant_contact }}</td>
+        </tr>
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{ participant_email }}</td>
+        </tr>
+        <tr>
+            <td><strong>Age:</strong></td>
+            <td>{{ participant_age }}</td>
+        </tr>
+        <tr>
+            <td><strong>Gender:</strong></td>
+            <td>{{ participant_gender }}</td>
+        </tr>
+        <tr>
+            <td><strong>Address:</strong></td>
+            <td>{{ participant_address }}</td>
+        </tr>
+        <tr>
+            <td><strong>Training Location Address:</strong></td>
+            <td>{{ training_location_address }}</td>
+        </tr>
+        <tr>
+            <td><strong>Registered On:</strong></td>
+            <td>{{ participant_created_at }}</td>
+        </tr>
+        <tr>
+            <td><strong>Participant Code:</strong></td>
+            <td>{{ participant_code }}</td>
+        </tr>
+        <tr>
+            <td><strong>Hours Trained:</strong></td>
+            <td>{{ total_hours_trained }} hours</td>
+        </tr>
+        <tr>
+            <td><strong>Sessions Attended:</strong></td>
+            <td>{{ session_count }}</td>
+        </tr>
+    </table>
+    <center><button type="button" id="update-button">Update</button></center>
+    </form>
 
-    <p><strong>Hours Trained:</strong> {{ total_hours_trained }} hours</p>
-    <p><strong>Sessions Attended:</strong> {{ session_count }}</p>
+    <!-- Check if there is feedback data and render the feedback section -->
+    {% if feedback_data %}
+    <h2>Feedback Information</h2>
+    <table>
+        {% for feedback_item in feedback_data %}
+        <tr>
+            <td><strong>Rate Training Sessions:</strong></td>
+            <td>{{ feedback_item[2] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Learner Guide Useful:</strong></td>
+            <td>{{ feedback_item[3] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Feedback:</strong></td>
+            <td>{{ feedback_item[4] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Confident to Ride:</strong></td>
+            <td>{{ feedback_item[5] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Trainer Evaluation:</strong></td>
+            <td>{{ feedback_item[6] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Trainer Feedback:</strong></td>
+            <td>{{ feedback_item[7] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Feedback Created At:</strong></td>
+            <td>{{ feedback_item[8] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No feedback data available for this participant.</p>
+    {% endif %}
 
 
 
+    <script>
+        $(document).ready(function () {
+            $("#update-button").click(function () {
+                // Create an array to store updates
+                var updates = [];
     
+                // Loop through all select elements with class "status-select"
+                $(".status-select").each(function () {
+                    var participantId = $(this).data("participant-id");
+                    var newStatus = $(this).val();
+                    var initialStatus = $(this).data("initial-status");
+    
+                    if (newStatus !== initialStatus) {
+                        // If the status has changed, add the update to the "updates" array
+                        updates.push({
+                            "participantId": participantId,
+                            "newStatus": newStatus,
+                        });
+                    }
+                });
+    
+                // Send an AJAX request to update the statuses
+                $.ajax({
+    type: "POST",
+    url: "/update_participant_statuses_admin",
+    contentType: "application/json",
+    data: JSON.stringify(updates),
+    success: function (response) {
+    console.log(response); // Log the response to the browser console
+    if (response.success) {
+        alert("Participant status updated successfully.");
+    } else {
+        alert("An error occurred while updating the status: " + response.error);
+    }
 
+
+    },
+    error: function (xhr, status, error) {
+        alert("An error occurred during the update: " + error);
+    },
+});
+
+            });
+        });
+        </script>
+    
 </body>
-
-    
 </html>

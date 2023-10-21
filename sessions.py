@@ -375,11 +375,26 @@ def trainer_details(trainer_id):
         return 'Error fetching trainer details. Please try again later.'
     
 
+
+
+# Helper function to fetch feedback data for a specific participant with COMPLETED or CERTIFIED status
+def fetch_feedback_data(participant_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM feedback WHERE participant_id = %s", (participant_id,))
+    feedback_data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    return feedback_data
+
     #participant admin 
+# ... Other imports and code ...
 @sessions_bp.route('/participant_admin/<int:participant_id>')
 def participant_admin(participant_id):
     try:
-        # Fetch participant details based on participant_id from the database
+        # Fetch participant details based on participant_id from the database (same as before)
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -396,18 +411,16 @@ def participant_admin(participant_id):
                 p.participant_created_at,
                 p.participant_status,
                 p.participant_code,
-                SUM(s.hours_trained) AS total_hours_trained,  -- Calculate the total hours trained
-                COUNT(s.hours_trained) AS session_count  -- Calculate the count of sessions
+                SUM(s.hours_trained) AS total_hours_trained,
+                COUNT(s.hours_trained) AS session_count
             FROM participants p
             JOIN sessions s ON p.participant_id = s.participant_id
             LEFT JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
             WHERE p.participant_id = %s
-            GROUP BY p.participant_id, tl.training_location_address
+            GROUP BY p.participant_id, p.participant_name, p.participant_email, p.participant_contact, p.participant_age, p.participant_gender, p.participant_address, tl.training_location_address, p.participant_created_at, p.participant_status, p.participant_code
         """, (participant_id,))
 
         participant_data = cursor.fetchone()
-        cursor.close()
-        conn.close()
 
         if participant_data:
             (
@@ -423,27 +436,90 @@ def participant_admin(participant_id):
                 participant_status,
                 participant_code,
                 total_hours_trained,
-                session_count  # Added session_count field
+                session_count
             ) = participant_data
 
-            return render_template(
-                'participant_admin.html',
-                participant_id=participant_id,
-                participant_name=participant_name,
-                participant_email=participant_email,
-                participant_contact=participant_contact,
-                participant_age=participant_age,
-                participant_gender=participant_gender,
-                participant_address=participant_address,
-                training_location_address=training_location_address,
-                participant_created_at=participant_created_at,
-                participant_status=participant_status,
-                participant_code=participant_code,
-                total_hours_trained=total_hours_trained,
-                session_count=session_count  # Pass session_count to the template
-            )
+            # Check if the participant's status is "COMPLETED" or "CERTIFIED"
+            if participant_status in ['COMPLETED', 'CERTIFIED']:
+                # Fetch feedback data only for the specific participant with "COMPLETED" or "CERTIFIED" status
+                feedback_data = fetch_feedback_data(participant_id)
+
+                # Pass both participant and feedback data to the HTML template
+                return render_template(
+                    'participant_admin.html',
+                    participant_name=participant_name,
+                    participant_email=participant_email,
+                    participant_contact=participant_contact,
+                    participant_age=participant_age,
+                    participant_gender=participant_gender,
+                    participant_address=participant_address,
+                    training_location_address=training_location_address,
+                    participant_created_at=participant_created_at,
+                    participant_status=participant_status,
+                    participant_code=participant_code,
+                    total_hours_trained=total_hours_trained,
+                    session_count=session_count,
+                    feedback_data=feedback_data
+                )
+
+            else:
+                feedback_data = None
+
         else:
-            return 'Participant not found'
+            feedback_data = None
+
+        cursor.close()
+        conn.close()
+
+        return render_template(
+            'participant_admin.html',
+            participant_name=participant_name,
+            participant_email=participant_email,
+            participant_contact=participant_contact,
+            participant_age=participant_age,
+            participant_gender=participant_gender,
+            participant_address=participant_address,
+            training_location_address=training_location_address,
+            participant_created_at=participant_created_at,
+            participant_status=participant_status,
+            participant_code=participant_code,
+            total_hours_trained=total_hours_trained,
+            session_count=session_count,
+            feedback_data=feedback_data
+        )
+
     except Exception as e:
         logging.error("An error occurred:", exc_info=True)
         return 'Error fetching participant details. Please try again later.'
+
+
+
+@sessions_bp.route('/update_participant_statuses_admin', methods=['POST'])
+def update_participant_statuses_admin():
+    try:
+        updates = request.get_json()
+        db_cursor = get_db_connection().cursor()
+
+        for update in updates:
+            participant_id = update.get('participantId')
+            new_status = update.get('newStatus')
+
+            try:
+                participant_id = int(participant_id)
+            except ValueError:
+                return f"Invalid participant ID: {update.get('participantId')}"
+
+            db_cursor.execute("UPDATE participants SET participant_status = %s WHERE participant_id = %s", (new_status, participant_id))
+        get_db_connection().commit()
+        
+
+        return jsonify({"success": True, "participantId": participant_id, "newStatus": new_status})
+
+    except Exception as e:
+        current_app.logger.error("An error occurred during database update: %s", str(e))
+        get_db_connection().rollback()
+
+        return jsonify({"success": False, "error": "An error occurred. Please check the logs for more information."})
+    finally:
+        if db_cursor is not None:
+            db_cursor.close()
