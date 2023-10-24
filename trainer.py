@@ -145,51 +145,8 @@ def trainer_table():
 
 ## Existing code for trainer-related routes...
 
-# Route to display trainer information for all trainers
-@trainer_bp.route('/trainer-info', methods=['GET'])
-def trainer_info():
-    try:
-        # Connect to the database
-        connection = psycopg2.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            dbname=db_name
-        )
-        cursor = connection.cursor()
 
-        # Fetch trainer details for all trainers
-        cursor.execute("""
-            SELECT
-                t.trainer_id,
-                t.trainer_name,
-                t.trainer_email,
-                t.trainer_contact,
-                tl.training_location_address,
-                t.trainer_address,
-                t.trainer_gender,
-                t.trainer_aadhar_no,
-                t.trainer_created_at,
-                t.trainer_training_completion_date,
-                
-                o.organisation_name,
-               
-                t.trainer_status,
-                t.trainer_code
-            FROM trainer t
-            JOIN training_locations_list tl ON t.training_location_id = tl.training_location_id
-            JOIN organisation o ON t.organisation_id = o.organisation_id
-        """)
 
-        trainers = cursor.fetchall()
 
-        # Close the database connection
-        cursor.close()
-        connection.close()
-
-        # Render the trainer_info.html template with the list of trainers
-        return render_template('trainer_info.html', trainers=trainers)
-    except Exception as e:
-        return f"Error: {str(e)}"
 
 

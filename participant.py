@@ -184,45 +184,11 @@ def participant_session_info():
         print(f"Error: {str(e)}")  # Print the error for debugging
         return f"Error: {str(e)}"
     
-    # Route to display trainer information for all trainers
-@participant_bp.route('/participant-info', methods=['GET'])
-def participant_info():
-    try:
-        # Connect to the database
-        connection = psycopg2.connect(
-            host=db_host,
-            user=db_user,
-            password=db_password,
-            dbname=db_name
-        )
-        cursor = connection.cursor()
 
-        # Fetch trainer details for all participants
-        cursor.execute("""
-            SELECT
-                p.participant_id,
-                p.participant_name,
-                p.participant_email,
-                p.participant_contact,
-                tl.training_location_address,
-                p.participant_status,
-                p.participant_created_at,
-                p.participant_code
-            FROM participants p
-            JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
-            
-        """)
 
-        participants = cursor.fetchall()
 
-        # Close the database connection
-        cursor.close()
-        connection.close()
 
-        # Render the trainer_info.html template with the list of trainers
-        return render_template('participant_info.html', participants=participants)
-    except Exception as e:
-        return f"Error: {str(e)}"
+    
 
 # Route to display the feedback form and handle form submission
 @participant_bp.route('/feedback-form', methods=['GET', 'POST'])

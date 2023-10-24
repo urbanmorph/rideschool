@@ -8,6 +8,7 @@ from sessions import sessions_bp
 from signup import signup_bp
 from training_locations_list import training_locations_list_bp
 from summary import summary_bp
+from admin import admin_bp  
 
 
 app = Flask(__name__)
@@ -68,7 +69,8 @@ app.register_blueprint(training_locations_list_bp)
 # Register the summary blueprint
 app.register_blueprint(summary_bp)
 
-
+# Register the admin blueprint
+app.register_blueprint(admin_bp)
 
 if __name__ == '__main__':
     from sessions import create_database
