@@ -5,7 +5,7 @@ from altmo_utils.db import  get_db_pool, close_db_pool, get_db_connection, get_d
 import bcrypt
 ##import psycopg2
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
-from .config.config import get_config_value 
+#from .config.config import get_config_value 
 from .forms import YourLoginForm  # Import your login form 
 #is a Python import statement that allows you to access the get_config_value function from the config module located within the config directory.
 #import get_config_value: This part of the statement specifies that you want to import the get_config_value function from the config module( config.py).which is inside the config directory/folder 

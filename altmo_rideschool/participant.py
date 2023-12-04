@@ -2,7 +2,7 @@ print("import feane/ participant.py")
 from flask import Blueprint, render_template, request, session , redirect, url_for, jsonify
 ##import psycopg2
 from datetime import datetime
-from .config.config import get_config_value  
+#from .config.config import get_config_value  
 from altmo_utils.db  import get_db_pool  # Import the get_db_pool function
 
 participant_bp = Blueprint('participant_bp', __name__)

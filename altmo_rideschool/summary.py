@@ -1,7 +1,7 @@
 print("import feane/ summary.py")
 from flask import Blueprint, render_template
 ##import psycopg2
-from .config.config import get_config_value   # Import your configuration function
+#from .config.config import get_config_value   # Import your configuration function
 from altmo_utils.db  import get_db_connection 
 summary_bp = Blueprint('summary', __name__)
 

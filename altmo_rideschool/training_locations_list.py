@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 ##import psycopg2
 import os
 import time 
-from .config.config import get_config_value  
+#from .config.config import get_config_value  
 from altmo_utils.db  import get_db_connection, get_db_pool
 
 

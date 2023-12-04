@@ -4,7 +4,7 @@ import os
 #import psycopg2
 import logging
 from datetime import datetime
-from .config.config import get_config_value 
+#from .config.config import get_config_value 
 from altmo_utils.db  import get_db_connection, get_db_pool
 
 

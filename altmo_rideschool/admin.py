@@ -3,7 +3,7 @@ print("import feane/ admin.py")
 from flask import Blueprint, render_template, request, jsonify, current_app
 ##import psycopg2  # Import psycopg2 if you're using it for database connections
 
-from .config.config import get_config_value
+#from .config.config import get_config_value
 
 import logging # Import the logging module
 from altmo_utils.db import get_db_connection

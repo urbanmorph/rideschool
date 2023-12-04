@@ -12,7 +12,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length
 from altmo_utils.db import get_db_cursor
-from .config.config import get_config_value 
+#from .config.config import get_config_value 
 
 signup_bp = Blueprint('signup', __name__)
 
