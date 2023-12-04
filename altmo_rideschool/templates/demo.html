@@ -1,61 +1,4 @@
 
-<label for="coordinator-contact">Coordinator Contact:</label>
-<input type="text" id="coordinator-contact" name="coordinator-contact" required>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var organizationForm = document.getElementById('organization-form');
-
-        organizationForm.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            // Add any form validation if needed
-            var contactValue = document.getElementById('organization-contact').value;
-            var emailValue = document.getElementById('organization-email').value;
-            var coordinatorContactValue = document.getElementById('coordinator-contact').value;
-
-            // Your existing validation logic here...
-
-            if (!/^\d{10}$/.test(coordinatorContactValue)) {
-                displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
-                return;
-            } else {
-                hideError('coordinator-contact');
-            }
-
-            const formData = new FormData(this);
-
-            try {
-                const response = await fetch('/submit_organization', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    displayMessage('alert-success', result.message);
-                    // Additional logic after successful form submission
-                } else if (result.status === 'error') {
-                    displayMessage('alert-danger', result.message);
-                }
-            } catch (error) {
-                displayMessage('alert-danger', 'An error occurred. Please try again.');
-            }
-        });
-    });
-</script>
-
-
-dont do 
-
-ALTER TABLE public.trainer
-DROP CONSTRAINT trainer_trainer_status_check,
-ADD CONSTRAINT trainer_trainer_status_check CHECK (
-    trainer_status::text = ANY (ARRAY['NOT CERTIFIED'::character varying, 'ONGOING CERTIFICATION'::character varying, 'CERTIFIED'::character varying, 'TERMINATED'::character varying]::text[])
-);
-
 
 
 
@@ -156,21 +99,7 @@ ADD CONSTRAINT trainer_trainer_status_check CHECK (
     
     </style>
 
-<style>
-    /* Your existing styles */
 
-    .alert-success {
-        background-color: #D4EDDA;
-        border: 1px solid #C3E6CB;
-        color: #155724;
-    }
-
-    .alert-danger {
-        background-color: #F8D7DA;
-        border: 1px solid #F5C6CB;
-        color: #721C24;
-    }
-</style>
 </head>
 <body>
     {% include 'navbar.html' %}

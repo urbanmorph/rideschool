@@ -28,13 +28,7 @@ def generate_trainer_code(trainer_id):
 @trainer_bp.route('/trainer-form', methods=['GET'])
 def trainer_form():
     try:
-        # Connect to the database
-        ##connection = psycopg2.connect(
-            ##host=db_host,
-            ##user=db_user,
-            ##password=db_password,
-            ##dbname=db_name
-        ##)
+        
         with get_db_connection() as connection:
             cursor = connection.cursor()
 
@@ -43,10 +37,7 @@ def trainer_form():
             organisation_names = cursor.fetchall()
             organisation_names = [name[0] for name in organisation_names]
 
-        # Close the database connection
-        #cursor.close()
-        #connection.close()
-
+       
         # Render the form template with the training locations
         return render_template('trainer_form.html', organisation_names=organisation_names)
     except Exception as e:

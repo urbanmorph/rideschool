@@ -159,15 +159,14 @@
       </div>
 
        
-<div class="form-group">
-
-  <label for="participant-name">Participant Name:</label>
-    <select name="participant-name" id="participant_name" class="form-control">
-
-        <option value="">Select Participant</option>
-    </select>
-    <input type="hidden" name="training_location_id" id="participant_training_location_id">
-</div>
+      <div class="form-group">
+        <label for="participant-name">Participant Name:</label>
+        <select name="participant-name" id="participant_name" class="form-control">
+            <option value="">Select Participant</option>
+        </select>
+        <input type="hidden" name="training_location_id" id="participant_training_location_id">
+    </div>
+    
 
     <div class="form-group">
       <label for="scheduled-datetime">Scheduled Date and Time:</label>
@@ -217,77 +216,69 @@
 <div id="message-container" style="display: none;"></div>
 </div>
 
-
 <script>
   $(document).ready(function () {
-    //(participant name is populated here )
-    // Fetch participants for the logged-in trainer and populate the participant select element (participant name is populated here )
-    $.get('/participants/{{ session["trainer_id"] }}', function (participantsData) {
-      var participantSelect = $('#participant_name');
-      participantSelect.empty(); // Clear previous options
-
-      participantsData.forEach(function (participant) {
-        if (participant.participant_status !== "COMPLETED") {
-          var option = $('<option></option>').attr('value', participant.participant_id ).text(participant.participant_name);
-          participantSelect.append(option);
-        }
+      // Fetch participants for the logged-in trainer and populate the participant select element
+      $.get('/participants/{{ session["trainer_id"] }}', function (participantsData) {
+          var participantSelect = $('#participant_name');
+          participantSelect.empty(); // Clear previous options
+  
+          participantsData.forEach(function (participant) {
+              if (participant.participant_status !== "COMPLETED") {
+                  var option = $('<option></option>').attr('value', participant.participant_id).text(participant.participant_name);
+                  participantSelect.append(option);
+              }
+          });
       });
-    });
-
-    // When a participant is selected, fetch the corresponding training_location_id and update the hidden input
-    $('#participant_name').on('change', function () {
-      var participantId = $(this).val();
-      $.get('/participant/' + participantId, function (data) {
-        $('#participant_training_location_id').val(data.training_location_id);
+  
+      // When a participant is selected, fetch the corresponding training_location_id and update the hidden input
+      $('#participant_name').on('change', function () {
+          var participantId = $(this).val();
+          $.get('/participant/' + participantId, function (data) {
+              $('#participant_training_location_id').val(data.training_location_id);
+          });
       });
-    });
-
-    // Set the logged-in trainer's name under the Participants label
-    var loggedInTrainerName = '{{ session["trainer_name"] }}';
-    $('#logged-in-trainer-name').text(loggedInTrainerName);
-    $('#trainer_training_location_id').val('{{ session["trainer_id"] }}');
   
-     // Handle form submission (alert messages code: returns the return messages in the form of allert message )
-     $('#training-session-form').on('submit', function (event) {
-      event.preventDefault(); // Prevent the form from submitting normally
-      
-      $.ajax({
-        url: '/submit_form',
-        type: 'POST',
-        data: new FormData(this),
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          if (response.status === 'success') {
-            showAlert('success', response.message);
-            
-          } else if (response.status === 'error') {
-            showAlert('error', response.message);
-          }
-        },
-        error: function () {
-          showAlert('error', 'An error occurred. Please try again later.');
-        }
+      // Set the logged-in trainer's name under the Participants label
+      var loggedInTrainerName = '{{ session["trainer_name"] }}';
+      $('#logged-in-trainer-name').text(loggedInTrainerName);
+      $('#trainer_training_location_id').val('{{ session["trainer_id"] }}');
+  
+      // Handle form submission
+      $('#training-session-form').on('submit', function (event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+  
+          $.ajax({
+              url: '/submit_form',
+              type: 'POST',
+              data: new FormData(this),
+              processData: false,
+              contentType: false,
+              success: function (response) {
+                  if (response.status === 'success') {
+                      showAlert('success', response.message);
+                  } else if (response.status === 'error') {
+                      showAlert('error', response.message);
+                  }
+              },
+              error: function () {
+                  showAlert('error', 'An error occurred. Please try again later.');
+              }
+          });
       });
-    });
-
-    function showAlert(type, message) {
-  var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-  var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
-                  message +
-                  '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                  '<span aria-hidden="true">&times;</span>' +
-                  '</button>' +
-                  '</div>';
-  $('#message-container').html(alertHTML);
-  $('#message-container').show();
-}
   
-  
-  
+      function showAlert(type, message) {
+          var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+          var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+              message +
+              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+              '<span aria-hidden="true">&times;</span>' +
+              '</button>' +
+              '</div>';
+          $('#message-container').html(alertHTML);
+          $('#message-container').show();
+      }
   });
-
-</script>
-
+  </script>
 </body>
 </html>

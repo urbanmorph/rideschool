@@ -18,27 +18,39 @@ from .organization import organization_bp
 #from .db import init_app, DB_URL
 #from .altmo_utils import db
 
-
 from altmo_utils import db 
 import atexit # Close DB pool 
+import json 
 ##db.init
-
-
-
 
 # In your __init__.py, the create_app function sets up the Flask application
 
-
-
-
 _version_ = '1.0.0'
+
+
+def create_app(test_config=None):
+    """Initialize and create the app and return it (factory pattern)"""
+
+    app = Flask(__name__, instance_relative_config=True)
+
+    if test_config is None:
+        #config_path = os.path.join(app.instance_path, 'config.json')
+
+       
+        #config_path = os.path.join(app.instance_path, 'config.json')
+        #app.config.from_json(config_path)
+        #_app.config.from_pyfile("config.py", silent=True)
+        app.config.from_file("config.json", load=json.load)
+        
+    else:
+        app.config.from_mapping(test_config)
 
 ##def create_app(config_filename='config.py'):
     ##app = Flask(__name__)
-def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+#####def create_app():
+   ##### app = Flask(__name__, instance_relative_config=True)
       # Load configuration from the instance folder
-    app.config.from_pyfile('config.py', silent=True)
+    ######app.config.from_pyfile('config.py', silent=True)
     # Set the secret key using the same name
     app.secret_key = app.config.get('SECRET_KEY', 'default_secret_key')
 

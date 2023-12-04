@@ -11,6 +11,8 @@ from .forms import YourLoginForm  # Import your login form
 #import get_config_value: This part of the statement specifies that you want to import the get_config_value function from the config module( config.py).which is inside the config directory/folder 
 #this line of code is saying, "From the config package, go into the config module and import the get_config_value function so that I can use it in this current module (e.g., your Flask application or script)." This allows you to use the get_config_value function to access configuration values stored in the config module from within your application.
  # Import the config dictionary/ folder
+
+from flask import current_app
 logins_bp = Blueprint('logins', __name__)
 
 # Initialize db_connection to None initially
@@ -65,9 +67,22 @@ def check_logins():
         # Debugging: Log the received form data
         print("Received form data - Contact:", contact)
         print("Received form data - Password:", user_password)
+          # Check if the provided contact and password match the admin's fixed values
+        print("Admin Contact:", current_app.config['ADMIN_CONTACT'])
+        print("Admin Password:", current_app.config['ADMIN_PASSWORD'])
+        print("Contact Comparison:", contact == str(current_app.config['ADMIN_CONTACT']))
+        print("Password Comparison:", user_password == current_app.config['ADMIN_PASSWORD'])
 
         # Check if the provided contact and password match the admin's fixed values
-        if contact == get_config_value('admin_contact') and user_password == get_config_value('admin_password'):
+       #### with current_app.open_instance_resource('config.json') as config_file:
+           #### config = json.load(config_file)
+        # Check if the provided contact and password match the admin's fixed values
+        #if contact == get_config_value('admin_contact') and user_password == get_config_value('admin_password'):
+        
+        #if contact == current_app.config['ADMIN_CONTACT'] and user_password == current_app.config['ADMIN_PASSWORD']:
+        if contact == str(current_app.config['ADMIN_CONTACT']) and user_password == current_app.config['ADMIN_PASSWORD']:
+
+
             # Admin login: If the contact and password match, set the session as an admin
             session['logged_in'] = True
             session['role'] = 'admin'

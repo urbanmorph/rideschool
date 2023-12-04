@@ -63,6 +63,9 @@ def form():
 
           # Get the currently logged-in trainer's name from the session (replace with your actual session data)
             current_trainer_name = session.get('trainer_name', '')  # Use session['trainer_name'] if that's how you access it
+        # Get the currently logged-in trainer's ID from the session
+            current_trainer_id = session.get('trainer_id', '')
+            print("Current Trainer ID:", current_trainer_id)  # Debugging
 
         return render_template('sessions_form.html', trainers=trainers, current_trainer_name=current_trainer_name)
     except Exception as e:
@@ -117,17 +120,23 @@ def get_participants(trainer_id):
                 return jsonify([])  # Return an empty list if no training_location_id found
 
             training_location_id = result[0]
-
+            print("Training Location ID:", training_location_id)
         # Fetch the participants based on the matching training_location_id, participant_status as "NEW" or "ONGOING",
         # and exclude those with participant_status as "COMPLETED"
             cursor.execute(
+                #"SELECT participant_name FROM participants WHERE training_location_id = %s AND participant_status IN ('NEW', 'ONGOING') AND participant_name NOT IN (SELECT participant_name FROM participants WHERE participant_status = 'COMPLETED')",
+                #(training_location_id,))
+                
                 "SELECT participant_name FROM participants WHERE training_location_id = %s AND participant_status IN ('NEW', 'ONGOING') AND participant_name NOT IN (SELECT participant_name FROM participants WHERE participant_status = 'COMPLETED')",
                 (training_location_id,))
+
             participants = [{'participant_name': row[0]} for row in cursor.fetchall()]
         ##cursor.close()
         ##conn.close()
+        print("Fetched Participants:", participants)
 
-            return jsonify(participants)
+
+        return jsonify(participants)
     except Exception as e:
         logging.error("An error occurred:", exc_info=True)
         return jsonify([])
