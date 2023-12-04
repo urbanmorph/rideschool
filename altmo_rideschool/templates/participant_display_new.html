@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participant</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h1>Participant</h1>
+        <br>
+        <h1>Welcome {{ session['participant_name'] }}</h1>
+
+        <p>Your Training Location: {{ session['participant_training_location'] }}</p>
+
+        <p>Trainer Name: {{ session['trainer_name'] }}</p>
+        <p>Trainer Contact: {{ session['trainer_contact'] }}</p>
+        <p>Your Current Status: {{ session['participant_status'] }}</p>
+    </div>
+</body>
+</html>

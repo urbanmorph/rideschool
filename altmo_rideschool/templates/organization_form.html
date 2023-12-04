@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Form</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+       
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea,
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 95%;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #FF0000;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #D4EDDA;
+            border: 1px solid #C3E6CB;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #F8D7DA;
+            border: 1px solid #F5C6CB;
+            color: #721C24;
+        }
+        form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+        background-color: #45a049;
+    }
+    
+    </style>
+
+<style>
+    
+
+    .alert-success {
+        background-color: #D4EDDA;
+        border: 1px solid #C3E6CB;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #F8D7DA;
+        border: 1px solid #F5C6CB;
+        color: #721C24;
+    }
+</style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <h1>Organization Form</h1>
+
+        <form id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
+            <label for="organization-name">Organization Name:</label>
+            <input type="text" id="organization-name" name="organization-name" required>
+            
+            <label for="organization-address">Organization Address:</label>
+            <input type="text" id="organization-address" name="organization-address" required>
+            
+            <label for="organization-contact">Organization Contact:</label>
+            <input type="text" id="organization-contact" name="organization-contact" required>
+            <div class="error-message" id="contact-error-message"></div>
+            
+            <label for="organization-email">Organization Email:</label>
+            <input type="email" id="organization-email" name="organization-email" required>
+            <div class="error-message" id="email-error-message"></div>
+            
+            <label for="organization-type">Organization Type:</label>
+            <select id="organization-type" name="organization-type" required>
+                <option value="" selected disabled>Select Organization Type</option>
+                <option value="Public Limited Company">Public Limited Company</option>
+                <option value="Private Limited Company">Private Limited Company</option>
+                <option value="Registered Trust">Registered Trust</option>
+                <option value="Registered Society">Registered Society</option>
+                <option value="Registered Resident Welfare Association (RWA)">Registered Resident Welfare Association (RWA)</option>
+                <option value="Section 8 Company">Section 8 Company</option>
+                <option value="New Governmental Organization">New Governmental Organization</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label for="organization-activities">Organization Activities:</label>
+            <textarea id="organization-activities" name="organization-activities"></textarea>
+            
+            <label for="organization-legal-status-document">Legal Status Document:</label>
+            <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.doc,.docx">
+            
+            <label for="coordinator-name">Coordinator Name:</label>
+            <input type="text" id="coordinator-name" name="coordinator-name" required>
+            
+            <label for="coordinator-email">Coordinator Email:</label>
+            <input type="email" id="coordinator-email" name="coordinator-email" required>
+            <div class="error-message" id="coordinator-email-error-message"></div>
+            
+            <label for="coordinator-contact">Coordinator Contact:</label>
+            <input type="text" id="coordinator-contact" name="coordinator-contact" required>
+            <div class="error-message" id="coordinator-contact-error-message"></div>
+            
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="alert" id="messageAlert" style="display: none;"></div>
+
+        
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var organizationForm = document.getElementById('organization-form');
+                    var messageAlert = document.getElementById('messageAlert');
+            
+                    organizationForm.addEventListener('submit', async function (event) {
+                        event.preventDefault();
+                        const formData = new FormData(this);
+            
+                        try {
+                            const response = await fetch('/submit_organization', {
+                                method: 'POST',
+                                body: formData,
+                            });
+            
+                            const result = await response.json();
+            
+                            if (result.status === 'success') {
+                                displayMessage('alert-success', result.message);
+                                // Additional logic after successful form submission
+                            } else if (result.status === 'error') {
+                                displayMessage('alert-danger', result.message);
+                            }
+                        } catch (error) {
+                            displayMessage('alert-danger', 'An error occurred. Please try again.');
+                        }
+                    });
+            
+                    // Event listener for organization contact
+                    var organizationContactInput = document.getElementById('organization-contact');
+                    organizationContactInput.addEventListener('input', function () {
+                        var contactValue = organizationContactInput.value;
+                        if (!/^\d{10}$/.test(contactValue)) {
+                            displayError('contact', 'Organization contact should contain 10 digits.');
+                        } else {
+                            hideError('contact');
+                        }
+                    });
+            
+                    // Event listener for coordinator contact
+                    var coordinatorContactInput = document.getElementById('coordinator-contact');
+                    coordinatorContactInput.addEventListener('input', function () {
+                        var coordinatorContactValue = coordinatorContactInput.value;
+                        if (!/^\d{10}$/.test(coordinatorContactValue)) {
+                            displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
+                        } else {
+                            hideError('coordinator-contact');
+                        }
+                    });
+            
+                    // Event listener for organization email
+        var organizationEmailInput = document.getElementById('organization-email');
+        organizationEmailInput.addEventListener('input', function () {
+            var emailValue = organizationEmailInput.value;
+            if (!isValidEmail(emailValue)) {
+                displayError('email', 'Invalid email address.');
+            } else {
+                hideError('email');
+            }
+        });
+            
+                   // Event listener for coordinator email
+        var coordinatorEmailInput = document.getElementById('coordinator-email');
+        coordinatorEmailInput.addEventListener('input', function () {
+            var coordinatorEmailValue = coordinatorEmailInput.value;
+            if (!isValidEmail(coordinatorEmailValue)) {
+                displayError('coordinator-email', 'Invalid email address.');
+            } else {
+                hideError('coordinator-email');
+            }
+        });
+
+        function isValidEmail(email) {
+            // Updated email validation logic to check for '@' and '.'
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+
+          function displayError(fieldId, errorMessage) {
+                    var errorField = document.getElementById(fieldId + '-error-message');
+                    errorField.innerHTML = errorMessage;
+                    errorField.style.display = 'block';
+                }
+
+                function hideError(fieldId) {
+                    var errorField = document.getElementById(fieldId + '-error-message');
+                    errorField.innerHTML = '';
+                    errorField.style.display = 'none';
+                }
+
+          // Hide alert message on input change
+          organizationForm.addEventListener('input', function () {
+                hideAlertMessage();
+            });
+
+            function hideAlertMessage() {
+                messageAlert.style.display = 'none';
+            }
+
+            function displayMessage(type, message) {
+                messageAlert.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
+                messageAlert.style.display = 'block';
+            }
+
+            function displayError(fieldId, errorMessage) {
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = errorMessage;
+                errorField.style.display = 'block';
+            }
+
+            function hideError(fieldId) {
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = '';
+                errorField.style.display = 'none';
+            }
+        });
+    </script>
+   
+
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trainer</title>
+    <!-- Include the CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+
+<style>
+    /* CSS styling for the form */
+    
+    body {
+        
+        text-align: center;
+        background-color: #f4f4f4;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Changed the font */
+    }
+    h1{
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center; /* Added to center the heading */
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Changed the font */
+
+        border-bottom: 2px solid #333;/* this is to add borfer lines after all the headings   */
+            padding-bottom: 10px;
+    }
+    
+
+    
+
+    p {
+            font-size: 18px;
+            color: #666;
+            
+        }
+    </style>
+
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <img src="\static\Image\banner-img.jpg" alt="home-banner"  >
+    <br>
+
+    <h1>Welcome, {{ session['trainer_name'] }}!</h1>
+    <p>As a trainer, you have access to exclusive features and tools.</p>
+<br>
+    <h2>Trainer Details</h2>
+
+    <div class="container">
+        <div class="alert alert-primary text-center mt-3" role="alert">
+         
+          <a href="{{ url_for('trainer_bp.trainer_details') }}" class="text-decoration-none"> Trainer Details </a>
+
+    
+    
+        </div>
+<!-- Update the link to the trainer details route -->
+<br>
+    <!-- Add the button to view session form -->
+    <h3>Session completion Form</h3>
+    <p>You need to fill the session completion form after every class is completed.</p>
+    <div class="container">
+        <div class="alert alert-primary text-center mt-3" role="alert">
+            
+    <a href="/session_form" class="text-decoration-none">Session completion Form</a>
+</div>
+ 
+</body>
+</html>

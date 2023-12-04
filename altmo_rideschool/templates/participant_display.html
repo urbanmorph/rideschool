@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <title>Participant</title>
+    <!-- Include the CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+           
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        h2 {
+            color: #343a40;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        button {
+            margin-top: 20px;
+        }
+
+        thead th {
+            background-color: #008000; /* Set background color to green */
+            color: #ffffff; /* Set text color to white */
+        }
+    </style>
+
+    
+
+    
+
+
+</head>
+
+<body>
+    
+    {% include 'navbar.html' %}
+<br>
+<br>
+<br>
+<br>
+<br>
+
+    <div class="container">
+    
+    <h1>Welcome {{ session['participant_name'] }}</h1>
+
+    <p>Your Training Location: {{ session['participant_training_location'] }}</p>
+   
+    <p>Trainer Name: {{ session['session_trainer_data'][0][3] }}</p>
+    <p>Trainer Contact: {{ session['session_trainer_data'][0][4] }}</p>
+    <p>Your Current Status: {{ session['participant_status'] }}</p>
+
+
+     
+  
+    <h2>Session Details</h2>
+    
+    <table class="table mx-auto">
+        <thead>
+            <tr>
+                <th>Date and time</th>
+                <th>Picture </th>
+                <th>Video </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for session_data in session['session_trainer_data'] %}
+                <tr>
+                    <td>{{ session_data[0] }}</td>
+                    <td><a href="{{ session_data[1] }}" target="_blank"><img src="{{ session_data[1] }}" style="height: 50px; width: 50px"></a></td>
+                    <td><video controls width="100"><source src="{{ session_data[2] }}" type="video/mp4"> </video></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+   
+
+<!-- Check if the participant status is COMPLETED -->
+{% if session['participant_status'] == 'COMPLETED' %}
+<button id="show-feedback-form" class="btn btn-primary" >Show Feedback Form</button>
+
+{% endif %}
+ 
+
+<script>
+<!-- Existing code -->
+$(document).ready(function () {
+    // When the "Show Feedback Form" button is clicked
+    $('#show-feedback-form').on('click', function () {
+        console.log("Button clicked!");  // Add this line to log the click event
+        // Redirect to the feedback form page
+        window.location.href = "/feedback-form";
+    });
+});
+
+</script>
+
+
+
+</div>
+ 
+</body>
+</html>

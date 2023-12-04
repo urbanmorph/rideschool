@@ -1,0 +1,301 @@
+
+<label for="coordinator-contact">Coordinator Contact:</label>
+<input type="text" id="coordinator-contact" name="coordinator-contact" required>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var organizationForm = document.getElementById('organization-form');
+
+        organizationForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // Add any form validation if needed
+            var contactValue = document.getElementById('organization-contact').value;
+            var emailValue = document.getElementById('organization-email').value;
+            var coordinatorContactValue = document.getElementById('coordinator-contact').value;
+
+            // Your existing validation logic here...
+
+            if (!/^\d{10}$/.test(coordinatorContactValue)) {
+                displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
+                return;
+            } else {
+                hideError('coordinator-contact');
+            }
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/submit_organization', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    displayMessage('alert-success', result.message);
+                    // Additional logic after successful form submission
+                } else if (result.status === 'error') {
+                    displayMessage('alert-danger', result.message);
+                }
+            } catch (error) {
+                displayMessage('alert-danger', 'An error occurred. Please try again.');
+            }
+        });
+    });
+</script>
+
+
+dont do 
+
+ALTER TABLE public.trainer
+DROP CONSTRAINT trainer_trainer_status_check,
+ADD CONSTRAINT trainer_trainer_status_check CHECK (
+    trainer_status::text = ANY (ARRAY['NOT CERTIFIED'::character varying, 'ONGOING CERTIFICATION'::character varying, 'CERTIFIED'::character varying, 'TERMINATED'::character varying]::text[])
+);
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Form</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+       
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea,
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 95%;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #FF0000;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #D4EDDA;
+            border: 1px solid #C3E6CB;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #F8D7DA;
+            border: 1px solid #F5C6CB;
+            color: #721C24;
+        }
+        form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+        background-color: #45a049;
+    }
+    
+    </style>
+
+<style>
+    /* Your existing styles */
+
+    .alert-success {
+        background-color: #D4EDDA;
+        border: 1px solid #C3E6CB;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #F8D7DA;
+        border: 1px solid #F5C6CB;
+        color: #721C24;
+    }
+</style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <h1>Organization Form</h1>
+
+        <form id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
+            <label for="organization-name">Organization Name:</label>
+            <input type="text" id="organization-name" name="organization-name" required>
+            
+            <label for="organization-address">Organization Address:</label>
+            <input type="text" id="organization-address" name="organization-address" required>
+            
+            <label for="organization-contact">Organization Contact:</label>
+            <input type="text" id="organization-contact" name="organization-contact" required>
+            <div class="error-message" id="contact-error-message"></div>
+            
+            <label for="organization-email">Organization Email:</label>
+            <input type="email" id="organization-email" name="organization-email" required>
+            <div class="error-message" id="email-error-message"></div>
+            
+            <label for="organization-type">Organization Type:</label>
+            <select id="organization-type" name="organization-type" required>
+                <option value="" selected disabled>Select Organization Type</option>
+                <option value="Public Limited Company">Public Limited Company</option>
+                <option value="Private Limited Company">Private Limited Company</option>
+                <option value="Registered Trust">Registered Trust</option>
+                <option value="Registered Society">Registered Society</option>
+                <option value="Registered Resident Welfare Association (RWA)">Registered Resident Welfare Association (RWA)</option>
+                <option value="Section 8 Company">Section 8 Company</option>
+                <option value="New Governmental Organization">New Governmental Organization</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label for="organization-activities">Organization Activities:</label>
+            <textarea id="organization-activities" name="organization-activities"></textarea>
+            
+            <label for="organization-legal-status-document">Legal Status Document:</label>
+            <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.doc,.docx">
+            
+            <label for="coordinator-name">Coordinator Name:</label>
+            <input type="text" id="coordinator-name" name="coordinator-name" required>
+            
+            <label for="coordinator-email">Coordinator Email:</label>
+            <input type="email" id="coordinator-email" name="coordinator-email" required>
+
+            <label for="coordinator-contact">Coordinator Contact:</label>
+<input type="text" id="coordinator-contact" name="coordinator-contact" required>
+            
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="alert" id="messageAlert" style="display: none;"></div>
+
+        <script>
+            function displayMessage(type, message) {
+                var messageAlert = document.getElementById('messageAlert');
+                messageAlert.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
+                messageAlert.style.display = 'block';
+            }
+
+            function displayError(fieldId, errorMessage) {
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = errorMessage;
+                errorField.style.display = 'block';
+            }
+
+            function hideError(fieldId) {
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = '';
+                errorField.style.display = 'none';
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var organizationForm = document.getElementById('organization-form');
+
+                organizationForm.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+
+                    // Add any form validation if needed
+                    var contactValue = document.getElementById('organization-contact').value;
+                    var emailValue = document.getElementById('organization-email').value;
+                    
+
+                    if (!/^\d{10}$/.test(contactValue)) {
+                        displayError('contact', 'Contact should contain 10 digits.');
+                        return;
+                    } else {
+                        hideError('contact');
+                    }
+
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+                        displayError('email', 'Invalid email format.');
+                        return;
+                    } else {
+                        hideError('email');
+                    }
+
+                    const formData = new FormData(this);
+
+                    try {
+                        const response = await fetch('/submit_organization', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        const result = await response.json();
+
+                        if (result.status === 'success') {
+                            displayMessage('alert-success', result.message);
+                            // Additional logic after successful form submission
+                        } else if (result.status === 'error') {
+                            displayMessage('alert-danger', result.message);
+                        }
+                    } catch (error) {
+                        displayMessage('alert-danger', 'An error occurred. Please try again.');
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
