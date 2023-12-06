@@ -109,27 +109,30 @@
     <br>
     <h1>Feedback Form</h1>
     <form action="/feedback-form" method="post" id="feedback-form">
-        <div class="form-group">
-            <label for="participant_name">Participant Name:</label>
-            <input type="text" id="participant_name" name="participant_name" value="{{ result[0] }}" required><br>
-        </div>
+        
+        
+<div class="form-group">
+    <label for="participant_name">Participant Name:</label>
+    <input type="text" id="participant_name" name="participant_name" value="{{ result['participant_name'] }}" required><br>
+</div>
 
-        <div class="form-group">
-            <label for="participant_code">Participant Code:</label>
-            <input type="text" id="participant_code" name="participant_code" value="{{ result[1] }}" required><br>
-        </div>
-        <div class="form-group">
-            <label for="participant_updated_at">Training Completion Date and time:</label>
-            <input type="text" id="participant_updated_at" name="participant_updated_at" value="{{ result[2] }}" required><br>
-        </div>
-        <div class="form-group">
-            <label for="session_duration">Session Enrolled:</label>
-            <input type="text" id="session_duration" name="session_duration" value="{{ result[3] }}" required><br>
-        </div>
-        <div class="form-group">
-            <label for="trainer_name">Trainer Name:</label>
-            <input type="text" id="trainer_name" name="trainer_name" value="{{ result[4] }}" required><br>
-        </div>
+<div class="form-group">
+    <label for="participant_code">Participant Code:</label>
+    <input type="text" id="participant_code" name="participant_code" value="{{ result['participant_code'] }}" required><br>
+</div>
+<div class="form-group">
+    <label for="participant_updated_at">Training Completion Date and time:</label>
+    <input type="text" id="participant_updated_at" name="participant_updated_at" value="{{ result['participant_updated_at'] }}" required><br>
+</div>
+<div class="form-group">
+    <label for="session_duration">Session Enrolled:</label>
+    <input type="text" id="session_duration" name="session_duration" value="{{ result['session_count'] }}" required><br>
+</div>
+<div class="form-group">
+    <label for="trainer_name">Trainer Name:</label>
+    <input type="text" id="trainer_name" name="trainer_name" value="{{ result['trainer_name'] }}" required><br>
+</div>
+
         <div class="form-group">
             <label for="training_rating">Rate your training sessions (1-5 stars):</label>
             <div class="star-rating">

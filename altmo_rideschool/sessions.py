@@ -11,18 +11,6 @@ from altmo_utils.db  import get_db_connection, get_db_pool
 
 sessions_bp = Blueprint('sessions', __name__)
 
-# Create a database connection
-##def get_db_connection():
-  ##  conn = psycopg2.connect(
-    ##    host=get_config_value('db_host'),
-      ##  port=get_config_value('db_port'),  # If port is a configuration value
-        ##database=get_config_value('db_name'),
-        ##user=get_config_value('db_user'),
-        ##password=get_config_value('db_password')
-    ##)
-    ##conn.set_session(autocommit=True)
-    ##return conn
-
 
 
 # Initialize the database if it does not exist
@@ -265,7 +253,7 @@ def sessions_table():
     except Exception as e:
         logging.error("An error occurred:", exc_info=True)
         return 'Error fetching session data. Please try again later.'
-
+#to display the image 
 #@sessions_bp.route('/uploaded_image/<filename>')
 @sessions_bp.route('/uploaded_images/<filename>')
 

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -15,7 +18,7 @@
         }
 
         .training-list-table th {
-            background-color: #007BFF;
+            background-color: #222529;
             color: #fff;
             text-align: center;
         }
@@ -41,53 +44,46 @@
     <br>
     <br>
     <h1>Training Locations List</h1>
-<div class="container">
-    <div class="training-list-container">
-        
-
-        <form action="/delete_location" method="post" id="training-locations-form">
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>ID</th>
-                        <th>Training Location</th>
-                        <th>Location</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                       
-                        <th>Trainer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for location in training_location %}
+    <div class="container">
+        <div class="training-list-container">
+            <form action="/delete_location" method="post" id="training-locations-form">
+                <table class="training-list-table">
+                    <thead>
                         <tr>
-                            <td><input type="checkbox" name="selected_locations" value="{{ location[4] }}"></td> 
-
-                            <td>{{ location[4] }}</td>
-                            <td class="location" data-address="{{ location[1] }}" data-latitude="{{ location[2] }}" data-longitude="{{ location[3] }}" data-picture="{{ location[6]}}">{{ location[0] }}</td>
-                            <td><a href="{{ location[6] }}" target="_blank"><img src="{{ location[6] }}" style="height: 50px; width: 50px;"></a></td>
-                            
-                            <td class="address"></td> 
-                            <td class="latitude"></td> 
-                            <td class="longitude"></td> 
-                            <td class="picture"></td>
-                            
-
-                            <td>{{ location[5] }}</td>
-                            
+                            <th>Select</th>
+                            <th>ID</th>
+                            <th>Training Location</th>
+                            <th>Trainer</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <!--<th>Location Picture</th>-->
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for location in training_location %}
+                            <tr>
+                                <td><input type="checkbox" name="selected_locations" value="{{ location['training_location_id'] }}"></td>
+                                <td>{{ location['training_location_id'] }}</td>
+                                <td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" >{{ location['training_location'] }}</td>
+                                <!--<td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" data-picture="{{ location['training_location_picture'] }}">{{ location['training_location'] }}</td>-->
+                                <td>{{ location['trainer_name'] }}</td>
+                              <!--  <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>-->
+                              
+                                <td class="address"></td>
+                                <td class="latitude"></td>
+                                <td class="longitude"></td>
+                               <!--<td class="picture"></td>-->
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-            <input type="submit" value="Delete Selected" class="btn btn-primary">
-        </form>
+                <input type="submit" value="Delete Selected" class="btn btn-primary">
+            </form>
+        </div>
     </div>
-</div>
 
 <br>
 <br>
@@ -190,13 +186,7 @@
     });
 });
 
-    // Handle click event for the Training Location name
-//$('td.location').on('click', function () {
-  //  var address = $(this).data('address');
-    //$(this).closest('tr').find('.address').text('Address: ' + address);
-//});
-
-// Handle click event for the Training Location name
+ 
 $('td.location').on('click', function () {
             var address = $(this).data('address');
             var latitude = $(this).data('latitude');

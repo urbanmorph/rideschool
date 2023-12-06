@@ -49,22 +49,24 @@
 
         <tr>
             <td><strong>id:</strong></td>
-            <td>{{ participant_id }}</td>
+            <td>{{ participant_data['participant_id'] }}</td>
         </tr>
         
         <tr>
             <td><strong>Name:</strong></td>
-            <td>{{ participant_name }}</td>
+            <td>{{ participant_data['participant_name'] }}</td>
         </tr>
         <tr>
             <td><strong>Status:</strong></td>
             <td>
                 
                 
-                <select class="status-select" name="participant_status" data-participant-id="{{ participant_id }}" data-initial-status="{{ participant_status }}">
+                <!--<select class="status-select" name="participant_status" data-participant-id="{{ participant_id }}" data-initial-status="{{ participant_status }}">
 
                 
-                    <option value="{{ participant_status }}" selected>{{ participant_status }}</option>
+                    <option value="{{ participant_status }}" selected>{{ participant_status }}</option>-->
+                    <select class="status-select" name="participant_status" data-participant-id="{{ participant_data['participant_id'] }}" data-initial-status="{{ participant_data['participant_status'] }}">
+                        <option value="{{ participant_data['participant_status'] }}" selected>{{ participant_data['participant_status'] }}</option>
                     <option value="COMPLETED">COMPLETED</option>
                     <option value="CERTIFIED">CERTIFIED</option>
                     <option value="DROP-OUT">DROP-OUT</option>
@@ -76,43 +78,44 @@
         </tr>
         <tr>
             <td><strong>Contact:</strong></td>
-            <td>{{ participant_contact }}</td>
+            <!--<td>{{ participant_contact }}</td>-->
+            <td>{{ participant_data['participant_contact'] }}</td>
         </tr>
         <tr>
             <td><strong>Email:</strong></td>
-            <td>{{ participant_email }}</td>
+            <td>{{ participant_data['participant_email'] }}</td>
         </tr>
         <tr>
             <td><strong>Age:</strong></td>
-            <td>{{ participant_age }}</td>
+            <td>{{ participant_data['participant_age'] }}</td>
         </tr>
         <tr>
             <td><strong>Gender:</strong></td>
-            <td>{{ participant_gender }}</td>
+            <td>{{ participant_data['participant_gender'] }}</td>
         </tr>
         <tr>
             <td><strong>Address:</strong></td>
-            <td>{{ participant_address }}</td>
+            <td>{{ participant_data['participant_address'] }}</td>
         </tr>
         <tr>
             <td><strong>Training Location Address:</strong></td>
-            <td>{{ training_location_address }}</td>
+            <td>{{ participant_data['training_location_address'] }}</td>
         </tr>
         <tr>
             <td><strong>Registered On:</strong></td>
-            <td>{{ participant_created_at }}</td>
+            <td>{{ participant_data['participant_created_at'] }}</td>
         </tr>
         <tr>
             <td><strong>Participant Code:</strong></td>
-            <td>{{ participant_code }}</td>
+            <td>{{ participant_data['participant_code'] }}</td>
         </tr>
         <tr>
             <td><strong>Hours Trained:</strong></td>
-            <td>{{ total_hours_trained }} hours</td>
+            <td>{{ participant_data['total_hours_trained'] }} hours</td>
         </tr>
         <tr>
             <td><strong>Sessions Attended:</strong></td>
-            <td>{{ session_count }}</td>
+            <td>{{ participant_data['session_count'] }}</td>
         </tr>
     </table>
     <center><button type="button" id="update-button">Update</button></center>

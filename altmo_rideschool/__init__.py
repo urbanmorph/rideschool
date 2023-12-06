@@ -86,9 +86,13 @@ def create_app(test_config=None):
     ##app.static_folder = 'static'
     #app.config['STATIC_FOLDER'] = 'static'
     # Set the upload folder configuration
-    app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, app.config.get('UPLOAD_FOLDER', 'static/uploaded_images'))
-    app.config['TRAINING_LOCATION_PICTURES_FOLDER'] = os.path.join(app.instance_path, app.config.get('TRAINING_LOCATION_PICTURES_FOLDER', 'static/t_l_pictures'))
-    app.config['ORGANIZATION_FOLDER'] = os.path.join(app.instance_path, app.config.get('ORGANIZATION_FOLDER', 'static/organization_image'))
+    #####
+   # app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, app.config.get('UPLOAD_FOLDER', 'static/uploaded_images'))
+    app.config['UPLOAD_FOLDER'] =  app.config.get('UPLOAD_FOLDER', 'static/uploaded_images')
+    #app.config['TRAINING_LOCATION_PICTURES_FOLDER'] = os.path.join(app.instance_path, app.config.get('TRAINING_LOCATION_PICTURES_FOLDER', 'static/t_l_pictures'))
+    app.config['TRAINING_LOCATION_PICTURES_FOLDER'] = app.config.get('TRAINING_LOCATION_PICTURES_FOLDER', 'static/training_location_pictures')
+    #app.config['ORGANIZATION_FOLDER'] = os.path.join(app.instance_path, app.config.get('ORGANIZATION_FOLDER', 'static/organization_image'))
+    app.config['ORGANIZATION_FOLDER'] = app.config.get('ORGANIZATION_FOLDER', 'static/organization_image')
     # Update this line in create_app function
     #app.config['ORGANIZATION_FOLDER'] = 'static/organization_image'
 

@@ -228,3 +228,112 @@
     </div>
 </body>
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #084d0b;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <br>
+    <br>
+    <br>
+    <h1>Organization </h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+               
+                <th>Organization Name</th>
+                <th>Organization Address</th>
+                <th>Organization Contact</th>
+                <th>Organization Email</th>
+                <th>Organization Type</th>
+                <th>Organization Activities</th>
+                <th>Legal Status Document</th>
+                <th>Coordinator Name</th>
+                <th>Coordinator Email</th>
+                <th>Coordinator Contact</th>
+                <th>Created At</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            {% if organizations %}
+                {% for org in organizations %}
+                    <tr>
+                       
+                        <td>{{ org[1] }}</td>
+                        <td>{{ org[2] }}</td>
+                        <td>{{ org[3] }}</td>
+                        <td>{{ org[4] }}</td>
+                        <td>{{ org[5] }}</td>
+                        <td>{{ org[6] }}</td>
+                        <td>
+                            {% if org[7] %}
+                                <a href="{{ url_for('organization.display_image', filename=full_path) }}" target="_blank">
+                                    {{ org[7].split(os.path.sep)[-1] }}
+                                </a>
+                            {% else %}
+                                No legal status document available
+                            {% endif %}
+                        </td>
+                        
+                        <td>{{ org[7] }}</td>
+                        <td>{{ org[8] }}</td>
+                        <td>{{ org[9] }}</td>
+                        <td>{{ org[10] }}</td>
+                        <td>{{ org[11] }}</td>
+                        
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="12">No organizations found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    
+    <p>Data Count: {{ organizations|length }}</p>
+    
+</body>
+</html>

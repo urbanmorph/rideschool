@@ -69,16 +69,16 @@
             {% for session in sessions %}
                 <tr>
                     <!-- Link to trainer_details route for trainer details -->
-                    <td><a href="{{ url_for('admin.trainer_details', trainer_id=session[0]) }}">{{ session[1] }}</a></td>
+                    <td><a href="{{ url_for('admin.trainer_details', trainer_id=session['trainer_id']) }}">{{ session['trainer_name'] }}</a></td>
                    
 
-                    <td>  <a href="{{ url_for('admin.participant_admin', participant_id=session[9]) }}">  {{ session[2] }}</a> </td>
-                    <td>{{ session[3] }}</td>
-                    <td>{{ session[4] }}</td>
-                    <td><a href="{{ session[5] }}" target="_blank"><img src="{{ session[5] }}" style="height: 50px; width: 50px;"></a></td>
-                    <td><video controls width="100"><source src="{{ session[6] }}" type="video/mp4"></video></td>
-                    <td>{{ session[7] }}</td>
-                    <td>{{ session[8] }}</td>
+                    <td>  <a href="{{ url_for('admin.participant_admin', participant_id=session['participant_id']) }}">  {{ session['participant_name'] }}</a> </td>
+                    <td>{{ session['actual_datetime'] }}</td>
+                    <td>{{ session['hours_trained'] }}</td>
+                    <td><a href="{{ session['picture_path'] }}" target="_blank"><img src="{{ session['picture_path'] }}" style="height: 50px; width: 50px;"></a></td>
+                    <td><video controls width="100"><source src="{{ session['video_path'] }}" type="video/mp4"></video></td>
+                    <td>{{ session['description'] }}</td>
+                    <td>{{ session['session_current_date'] }}</td>
                     
                 </tr>
             {% endfor %}

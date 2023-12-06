@@ -1,7 +1,7 @@
 # organization.py
 
 print("import feane/ organization.py")
-
+import traceback
 from flask import Blueprint, render_template, request, current_app, send_from_directory, jsonify
 import os
 import uuid
@@ -88,6 +88,7 @@ def submit_organization():
         return jsonify({'status': 'success', 'message': message})
 
     except Exception as e:
+        traceback.print_exc()
         # Log the exception for debugging purposes
         print(f"An error occurred: {e}")
 

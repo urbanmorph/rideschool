@@ -54,8 +54,7 @@
                 <th>Organization Email</th>
                 <th>Organization Type</th>
                 <th>Organization Activities</th>
-                <th>Legal Status Document</th>
-                <th>Coordinator Name</th>
+               <!-- <th>Legal Status Document</th>-->
                 <th>Coordinator Email</th>
                 <th>Coordinator Contact</th>
                 <th>Created At</th>
@@ -67,18 +66,19 @@
                 {% for org in organizations %}
                     <tr>
                        
-                        <td>{{ org[1] }}</td>
-                        <td>{{ org[2] }}</td>
-                        <td>{{ org[3] }}</td>
-                        <td>{{ org[4] }}</td>
-                        <td>{{ org[5] }}</td>
-                        <td>{{ org[6] }}</td>
+                        <td>{{ org.organisation_name }}</td>
+                        <td>{{ org.organisation_address }}</td>
+                        <td>{{ org.organisation_contact }}</td>
+                        <td>{{ org.organisation_email }}</td>
+                        <td>{{ org.organisation_activities }}</td>
+                        <!--<td>{{ org.organisation_legal_status_document }}</td>
+                       <td><a href="{{ org.organisation_legal_status_document }}" target="_blank">View Document</a></td>--> 
 
-                        <td>{{ org[7] }}</td>
-                        <td>{{ org[8] }}</td>
-                        <td>{{ org[9] }}</td>
-                        <td>{{ org[10] }}</td>
-                        <td>{{ org[11] }}</td>
+
+                        <td>{{ org.coordinator_name }}</td>
+                        <td>{{ org.coordinator_email }}</td>
+                        <td>{{ org.coordinator_contact }}</td>
+                        <td>{{ org.organisation_created_at }}</td>
                         
                     </tr>
                 {% endfor %}

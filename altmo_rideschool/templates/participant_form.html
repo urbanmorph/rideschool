@@ -322,13 +322,23 @@ $(document).ready(function() {
                 <option value="Female">Female</option>
                 <option value="Others">Others</option>
             </select>
-            <label for="training_location">Training Location:</label>
+            <!--<label for="training_location">Training Location:</label>
             <select id="training_location" name="training_location" onchange="showAddress()" required>
                 <option value="">Select a location</option>
                 {% for location, address in training_locations %}
                     <option value="{{ location }}" data-address="{{ address }}">{{ location }}</option>
                 {% endfor %}
             </select>
+        -->
+        <label for="training_location">Training Location:</label>
+<select id="training_location" name="training_location" onchange="showAddress()" required>
+    <option value="">Select a location</option>
+    {% for training_location in training_locations %}
+        <option value="{{ training_location.training_location }}" data-address="{{ training_location.training_location_address }}">{{ training_location.training_location }}</option>
+    {% endfor %}
+</select>
+
+            
             <p id="training_location_address"></p>
 
             <input type="submit" value="Register" onclick="submitForm()">

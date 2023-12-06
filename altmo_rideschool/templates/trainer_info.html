@@ -80,10 +80,10 @@
         <tbody>
             {% for trainer in trainers %}
             <tr>
-                <td>{{ trainer[0] }}</td>
-                <td>{{ trainer[1] }}</td>
-                <td>{{ trainer[2] }}</td>
-                <td>{{ trainer[3] }}</td>
+                <td>{{ trainer['trainer_id'] }}</td>
+                <td>{{ trainer['trainer_name'] }}</td>
+                <td>{{ trainer['trainer_email'] }}</td>
+                <td>{{ trainer['trainer_contact'] }}</td>
                 <!-- Display current training location for each trainer 
                 <td> <label for="location-select-{{ trainer[0] }}">Current Location: {{ trainer[4] }}</label><select class="location-select" id="location-select-{{ trainer[0] }}">
                     {% for location in training_locations %}
@@ -91,29 +91,41 @@
                     {% endfor %}
                 </select></td>
             -->
-                <td>
-                    <label for="location-select-{{ trainer[0] }}">Current Location: {{ trainer[4] }} {{ trainer[4][1] }}</label>
-                    <select class="location-select" id="location-select-{{ trainer[0] }}">
+            <td>
+                <label for="location-select-{{ trainer['trainer_id'] }}">Current Location: {{ trainer['training_location'] }}</label>
+                <select class="location-select" id="location-select-{{ trainer['trainer_id'] }}">
+                    {% for location in training_locations %}
+                        <option value="{{ location['training_location_id'] }}">{{ location['training_location'] }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            
+               <!-- <td>
+                   
+                    <label for="location-select-{{ trainer['trainer_id'] }}">Current Location: {{ trainer['training_location'] }}</label>
+
+
+                    <select class="location-select" id="location-select-{{ trainer['trainer_id'] }}">
                         {% for location_id, location in training_locations %}
                             <option value="{{ location_id }}">{{ location }}</option>
                         {% endfor %}
                     </select>
-                </td>
+                </td>-->
                 <td>
-                    <select class="status-select" name="trainer_status" trainer-id="{{ trainer[0] }}" data-initial-status="{{ trainer[11] }}">
-                        <option value="{{ trainer[11] }}" selected>{{ trainer[11] }}</option>
+                    <select class="status-select" name="trainer_status" trainer-id="{{ trainer['trainer_id'] }}" data-initial-status="{{ trainer['trainer_status'] }}">
+                        <option value="{{ trainer['trainer_status'] }}" selected>{{ trainer['trainer_status'] }}</option>
                         <option value="CERTIFIED">CERTIFIED</option>
                         <option value="NOT CERTIFIED">NOT CERTIFIED</option>
                     </select>
                 </td>
-                <td>{{ trainer[6] }}</td>
-                <td>{{ trainer[7] }}</td>
-                <td>{{ trainer[8] }}</td>
-                <td>{{ trainer[9] }}</td>
-                <td>{{ trainer[10] }}</td>
-                <td>{{ trainer[12] }}</td>
+                <td>{{ trainer['trainer_gender'] }}</td>
+                <td>{{ trainer['trainer_aadhar_no'] }}</td>
+                <td>{{ trainer['trainer_created_at'] }}</td>
+                <td>{{ trainer['trainer_training_completion_date'] }}</td>
+                <td>{{ trainer['organisation_name'] }}</td>
+                <td>{{ trainer['trainer_code'] }}</td>
                 <td>
-                    <button class="update-button btn btn-primary" trainer-id="{{ trainer[0] }}">Update</button>
+                    <button class="update-button btn btn-primary" trainer-id="{{ trainer['trainer_id'] }}">Update</button>
                 </td>
             </tr>
             {% endfor %}

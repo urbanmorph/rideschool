@@ -60,36 +60,36 @@
           </li>
           
 
-   
+    <!-- Commenting out the dynamic navbar content -->
 
 
-    {% if session['role'] == 'trainer' %}
+     <!--{% if session['role'] == 'trainer' %}-->
     <!-- Trainer-specific links -->
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('logins.trainer_details') }}"><i class="fa fa-fw fa-user"></i> {{ session['trainer_name'] }}</a>
+  <!--<li class="nav-item">-->
+       <!--<a class="nav-link" href="{{ url_for('logins.trainer_details') }}"><i class="fa fa-fw fa-user"></i> {{ session['trainer_name'] }}</a>
     </li>
     
-    <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>
+    <li class="nav-item"><a class="nav-link" href="/session_form"><i class="fa fa-fw fa-user"></i> Session Form</a></li>-->
     <!-- <li class="nav-item"><a class="nav-link" href="/summary"><i class="fa fa-fw fa-comments"></i> Summary </a></li>-->
     <!-- Logout button always displayed -->
-    <li class="nav-item">
+     <!--<li class="nav-item">
       <form action="{{ url_for('logins.logout') }}" method="post">
         <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
       </form>
     </li>
-    {% elif session['role'] == 'participant' %}
+    {% elif session['role'] == 'participant' %}-->
     <!-- Participant-specific links -->
-    <li class="nav-item">
+     <!--<li class="nav-item">
       <a class="nav-link" href="{{ url_for('logins.participants_display') }}"><i class="fa fa-fw fa-user"></i> {{ session['participant_name'] }}</a>
     </li>
     
     
-    <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Session</a></li>
+    <li class="nav-item"><a class="nav-link" href="/participant_session_info"><i class="fa fa-fw fa-comments"></i> Session</a></li>-->
    
 
     
     <!-- Logout button always displayed -->
-    <li class="nav-item">
+     <!--<li class="nav-item">
       <form action="{{ url_for('logins.logout') }}" method="post">
         <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
       </form>
@@ -114,22 +114,23 @@
           <li><a class="dropdown-item" href="/training_locations_list">Training Locations</a></li>
           <li><a class="dropdown-item" href="/organisation-info">Organization</a></li>
       </ul>
-  </li>
-  
+  </li>-->
+   
    <!-- Logout button always displayed -->
-   <li class="nav-item">
+    <!--<li class="nav-item">
     <form action="{{ url_for('logins.logout') }}" method="post">
       <button type="submit" class="btn btn-link nav-link"><i class="fa fa-fw fa-sign-out"></i> Logout</button>
     </form>
   </li>
 
-    {% else %}
+    {% else %}-->
     <!-- Default links for unauthenticated users -->
-    <li class="nav-item">
+     <!--<li class="nav-item">
       <a class="nav-link" href="logins"><i class="fa fa-fw fa-user"></i> Login</a>
     </li>
     {% endif %}
-  </ul>
+  </ul> -->
+    <!-- End of navbar links -->
 
     </div>
   </nav>

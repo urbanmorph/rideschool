@@ -6,6 +6,6 @@ db_port=5432
 admin_contact=9999999999
 admin_password=Pedal_shaale@2024
 SECRET_KEY=Ped_Sh@2023
-UPLOAD_FOLDER=static/uploaded_image
+UPLOAD_FOLDER=static/uploaded_images
 TRAINING_LOCATION_PICTURES_FOLDER=static/training_location_pictures
 ORGANIZATION_FOLDER=static/organization_image
