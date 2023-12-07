@@ -5,7 +5,7 @@ import os
 print("Current working directory:", os.getcwd())
 
 from werkzeug.serving import run_simple
-from altmo_rideschool import create_app
+from altmo_rideschool import rideschool_app
 
 import logging
 
@@ -18,8 +18,7 @@ sys.path.insert(0, root_path)
 
 print('here')
 if __name__ == "__main__":
-    app = create_app()
-    app.logger.setLevel(logging.DEBUG)
+    rideschool_app.logger.setLevel(logging.DEBUG)
     print("Starting the development server ")
-    run_simple("localhost", 5000, app, use_reloader=True)
+    run_simple("localhost", 5000, rideschool_app, use_reloader=True)
     
