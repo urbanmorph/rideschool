@@ -107,8 +107,8 @@ def create_app(test_config=None):
 
 
 
-
-    @app.route('/index.html')
+    @app.route('/')
+    #@app.route('/index.html')
     def index():
         return render_template('index.html')
 
