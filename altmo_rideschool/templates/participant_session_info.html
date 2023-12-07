@@ -56,7 +56,7 @@
     <table>
         <thead>
             <tr>
-                <th>Date and Time</th>
+               <!-- <th>Date and Time</th>-->
                 <th>Hours Trained</th>
                 <th>Picture</th>
                 <th>Video</th>
@@ -67,12 +67,18 @@
         <tbody>
             {% for session in session_details %}
                 <tr>
-                    <td>{{ session[0] }}</td>
-                    <td>{{ session[1] }}</td>
-                    <td><a href="{{ session[2] }}" target="_blank"><img src="{{ session[2] }}" style="height: 50px; width: 50px;"></a></td>
-                    <td><video controls width="100"><source src="{{ session[3] }}" type="video/mp4"></video></td>
-                    <td>{{ session[4] }}</td>
-                    <td>{{ session[5] }}</td>
+                   <!-- <td>{{ session['scheduled_datetime'] }}</td>-->
+                   
+
+                    <td>{{ session['hours_trained'] }}</td>
+                   <!--<td><a href="{{ session[2] }}" target="_blank"><img src="{{ session[2] }}" style="height: 50px; width: 50px;"></a></td>
+                    <td><video controls width="100"><source src="{{ session[3] }}" type="video/mp4"></video></td>--> 
+                    <td><a href="{{ session['picture_path'] }}" target="_blank"><img
+                        src="{{ session['picture_path'] }}" style="height: 50px; width: 50px;"></a></td>
+            <td><video controls width="100"><source src="{{ session['video_path'] }}"
+                        type="video/mp4"></video></td>
+                    <td>{{ session['description'] }}</td>
+                    <td>{{ session['trainer_name'] }}</td>
                 </tr>
             {% endfor %}
         </tbody>

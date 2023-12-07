@@ -249,3 +249,120 @@ def display_image(filename):
     relative_path = filename.replace(os.path.sep, '/').split(os.path.sep)[-1]
     full_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], relative_path)
     return send_from_dire
+
+
+
+
+###########################
+# 
+# 
+# 
+
+# training_location_list.py
+import os
+from flask import Blueprint, render_template, request, current_app, jsonify
+from werkzeug.utils import secure_filename
+
+# Assuming you have a Blueprint for training locations
+training_location_list_bp = Blueprint('training_location_list', __name__)
+
+@training_location_list_bp.route('/training_location_list')
+def training_location_list():
+    # Your existing code for rendering the training location list page goes here
+    return render_template('training_location_list.html')
+
+@training_location_list_bp.route('/add_location', methods=['POST'])
+def add_location():
+    try:
+        # Retrieve form data
+        training_location_id = request.form['training_location_id']
+        training_location = request.form['training_location']
+        training_location_address = request.form['training_location_address']
+        training_location_latitude = request.form['training_location_latitude']
+        training_location_longitude = request.form['training_location_longitude']
+        location_picture = request.files['location_picture']
+
+        # Handle file upload
+        if location_picture:
+            filename = secure_filename(location_picture.filename)
+            relative_picture_path = os.path.join('training_location_pictures', filename)
+            picture_path_full = os.path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(picture_path_full), exist_ok=True)
+
+            # Save the picture
+            location_picture.save(picture_path_full)
+
+        # Perform database insertion or any other necessary operations
+        # Your database insertion code goes here
+
+        # Display success message
+        message = f"Training location {training_location} added successfully!"
+        return jsonify({'status': 'success', 'message': message})
+
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"An error occurred: {e}")
+
+        # Display error message
+        return jsonify({'status': 'error', 'message': 'An error occurred. Please try again.'})
+@app.route('/display_location_picture/<filename>')
+def display_location_picture(filename):
+    return send_from_directory(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)
+
+
+#####################
+# training_location_list.py
+import os
+from flask import Blueprint, render_template, request, current_app, jsonify
+from werkzeug.utils import secure_filename
+
+# Assuming you have a Blueprint for training locations
+training_location_list_bp = Blueprint('training_location_list', __name__)
+
+@training_location_list_bp.route('/training_location_list')
+def training_location_list():
+    # Your existing code for rendering the training location list page goes here
+    return render_template('training_location_list.html')
+
+@training_location_list_bp.route('/add_location', methods=['POST'])
+def add_location():
+    try:
+        # Retrieve form data
+        training_location_id = request.form['training_location_id']
+        training_location = request.form['training_location']
+        training_location_address = request.form['training_location_address']
+        training_location_latitude = request.form['training_location_latitude']
+        training_location_longitude = request.form['training_location_longitude']
+        location_picture = request.files['location_picture']
+
+        # Handle file upload
+        if location_picture:
+            filename = secure_filename(location_picture.filename)
+            relative_picture_path = os.path.join('training_location_pictures', filename)
+            picture_path_full = os.path.join(current_app.root_path, current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)
+
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(picture_path_full), exist_ok=True)
+
+            # Save the picture
+            location_picture.save(picture_path_full)
+
+        # Perform database insertion or any other necessary operations
+        # Your database insertion code goes here
+
+        # Display success message
+        message = f"Training location {training_location} added successfully!"
+        return jsonify({'status': 'success', 'message': message})
+
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"An error occurred: {e}")
+
+        # Display error message
+        return jsonify({'status': 'error', 'message': 'An error occurred. Please try again.'})
+
+@training_location_list_bp.route('/display_location_picture/<filename>')
+def display_location_picture(filename):
+    return send_from_directory(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)

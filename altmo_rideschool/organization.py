@@ -30,34 +30,46 @@ def submit_organization():
         coordinator_contact = request.form['coordinator-contact']
 
         # Handle file upload
-        legal_status_document = request.files['organization-legal-status-document']
-        file_path = None
+        #legal_status_document = request.files['organization-legal-status-document']
+        #file_path = None
 
         #if legal_status_document:
             # Generate a unique filename using UUID and save to the upload folder
          #   filename = str(uuid.uuid4()) + secure_filename(legal_status_document.filename)
           #  file_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], filename)
            # legal_status_document.save(file_path)
-        if legal_status_document:
+        #if legal_status_document:
             # Ensure the directory exists
-            if not os.path.exists(current_app.config['ORGANIZATION_FOLDER']):
-                os.makedirs(current_app.config['ORGANIZATION_FOLDER'])
+            #if not os.path.exists(current_app.config['ORGANIZATION_FOLDER']):
+               # os.makedirs(current_app.config['ORGANIZATION_FOLDER'])
 
             # Generate a unique filename using UUID and save to the upload folder
-            filename = str(uuid.uuid4()) + secure_filename(legal_status_document.filename)
+            #filename = str(uuid.uuid4()) + secure_filename(legal_status_document.filename)
             #file_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], filename)
             ##file_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], filename.replace('/', '\\'))
             # Print the generated file path for debugging
-            file_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], filename)
-            file_path = file_path.replace('/', os.path.sep)
-            print("Generated file path:", file_path)
+           # file_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], filename)
+            #file_path = file_path.replace('/', os.path.sep)
+           ## print("Generated file path:", file_path)
 
-            legal_status_document.save(file_path)
+            #legal_status_document.save(file_path)
+        
+        organization_legal_status_document = request.files['organization-legal-status-document']
+        if organization_legal_status_document:
+            document_filename = secure_filename(organization_legal_status_document.filename)
+            relative_document_path = os.path.join('static', 'organization_image', document_filename)
+            document_path_full = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
+
+    # Ensure the directory exists
+            os.makedirs(os.path.dirname(document_path_full), exist_ok=True)
+
+    # Save the document
+            organization_legal_status_document.save(document_path_full)
 
 
         # Perform database insertion or any other necessary operations
-        with get_db_cursor(commit=True) as cursor:
-            cursor.execute("""
+            with get_db_cursor(commit=True) as cursor:
+                cursor.execute("""
                 INSERT INTO public.organisation (
                     organisation_name, 
                     organisation_address, 
@@ -77,7 +89,7 @@ def submit_organization():
                 organization_email,
                 organization_type,
                 organization_activities,
-                file_path,
+                relative_document_path, 
                 coordinator_name,
                 coordinator_email,
                 coordinator_contact
@@ -96,8 +108,15 @@ def submit_organization():
         return jsonify({'status': 'error', 'message': 'An error occurred. Please try again.'})
 
 
-@organization_bp.route('/organization_image/<filename>')
-def display_image(filename):
-    return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)
+#@organization_bp.route('/organization_image/<filename>')
+#def display_image(filename):
+ #   return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)
 
 ##"D:\job\urban_morph\pedal_shaale_project\altmo_rideschool\static\organization_image"
+#@organization_bp.route('/display_legal_document/<filename>')
+#def display_legal_document(filename):
+   
+ #   return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)
+@organization_bp.route('/display_legal_document/<filename>')
+def display_legal_document(filename):
+    return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)

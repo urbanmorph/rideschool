@@ -128,31 +128,32 @@
         {% for feedback_item in feedback_data %}
         <tr>
             <td><strong>Rate Training Sessions:</strong></td>
-            <td>{{ feedback_item[2] }}</td>
+            <!--<td>{{ feedback_item[2] }}</td>-->
+            <td>{{ feedback_item['rate_training_sessions'] }}</td>
         </tr>
         <tr>
             <td><strong>Learner Guide Useful:</strong></td>
-            <td>{{ feedback_item[3] }}</td>
+            <td>{{ feedback_item['learner_guide_useful'] }}</td>
         </tr>
         <tr>
             <td><strong>Feedback:</strong></td>
-            <td>{{ feedback_item[4] }}</td>
+            <td>{{ feedback_item['feedback'] }}</td>
         </tr>
         <tr>
             <td><strong>Confident to Ride:</strong></td>
-            <td>{{ feedback_item[5] }}</td>
+            <td>{{ feedback_item['confident_to_ride'] }}</td>
         </tr>
         <tr>
             <td><strong>Trainer Evaluation:</strong></td>
-            <td>{{ feedback_item[6] }}</td>
+            <td>{{ feedback_item['trainer_evaluation'] }}</td>
         </tr>
         <tr>
             <td><strong>Trainer Feedback:</strong></td>
-            <td>{{ feedback_item[7] }}</td>
+            <td>{{ feedback_item['trainer_feedback'] }}</td>
         </tr>
         <tr>
             <td><strong>Feedback Created At:</strong></td>
-            <td>{{ feedback_item[8] }}</td>
+            <td>{{ feedback_item['feedback_created_at'] }}</td>
         </tr>
         {% endfor %}
     </table>
