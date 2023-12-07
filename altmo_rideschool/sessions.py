@@ -5,11 +5,24 @@ import os
 import logging
 from datetime import datetime
 #from .config.config import get_config_value 
-from altmo_utils.db  import get_db_connection, get_db_pool
-
+#from altmo_utils.db  import get_db_connection, get_db_pool
+from altmo_utils.db import get_db_cursor
+import traceback
 
 
 sessions_bp = Blueprint('sessions', __name__)
+
+# Create a database connection
+##def get_db_connection():
+  ##  conn = psycopg2.connect(
+    ##    host=get_config_value('db_host'),
+      ##  port=get_config_value('db_port'),  # If port is a configuration value
+        ##database=get_config_value('db_name'),
+        ##user=get_config_value('db_user'),
+        ##password=get_config_value('db_password')
+    ##)
+    ##conn.set_session(autocommit=True)
+    ##return conn
 
 
 
@@ -24,10 +37,11 @@ def create_database():
     ##)
 
     ##conn.autocommit = True
-    db_pool = get_db_pool()
-    with db_pool.getconn() as conn:
+    #db_pool = get_db_pool()
+    #with db_pool.getconn() as conn:
+    with get_db_cursor() as cursor:
             
-        cursor = conn.cursor()
+        #cursor = conn.cursor()
         cursor.execute("SELECT datname FROM pg_database WHERE datname='Pedal_Shaale'")
         if not cursor.fetchone():
             cursor.execute('CREATE DATABASE Pedal_Shaale')
@@ -42,18 +56,27 @@ def index():
 def form():
     try:
         # Fetch the certified trainer names from the database
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+       # with get_db_connection() as conn:
+       with get_db_cursor() as cursor:
+            #cursor = conn.cursor()
             cursor.execute("SELECT trainer_id, trainer_name FROM trainer WHERE trainer_status = %s", ('CERTIFIED',))
-            trainers = [{'trainer_id': row[0], 'trainer_name': row[1]} for row in cursor.fetchall()]
+            #trainers = [{'trainer_id': row[0], 'trainer_name': row[1]} for row in cursor.fetchall()]
+            rows = cursor.fetchall()
+
+            # Print the rows for debugging
+            print("Rows from database:", rows)
+
+            # Construct the trainers list
+            trainers = [{'trainer_id': row['trainer_id'], 'trainer_name': row['trainer_name']} for row in rows]
         #cursor.close()
         #conn.close()
 
           # Get the currently logged-in trainer's name from the session (replace with your actual session data)
             current_trainer_name = session.get('trainer_name', '')  # Use session['trainer_name'] if that's how you access it
 
-        return render_template('sessions_form.html', trainers=trainers, current_trainer_name=current_trainer_name)
+            return render_template('sessions_form.html', trainers=trainers, current_trainer_name=current_trainer_name)
     except Exception as e:
+        traceback.print_exc
         logging.error("An error occurred:", exc_info=True)
         #return 'Error fetching certified trainer names. Please try again later.'
         return f'Error fetching certified trainer names. Error details: {str(e)}'
@@ -62,10 +85,12 @@ def form():
 def get_trainers():
     try:
         # Fetch the trainer names and statuses from the database
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        with get_db_cursor() as cursor:
+        #with get_db_connection() as conn:
+         #   cursor = conn.cursor()
             cursor.execute("SELECT trainer_id, trainer_name, trainer_status FROM trainer")
-            trainers = [{'trainer_id': row[0], 'trainer_name': row[1], 'trainer_status': row[2]} for row in cursor.fetchall()]
+           # trainers = [{'trainer_id': row[0], 'trainer_name': row[1], 'trainer_status': row[2]} for row in cursor.fetchall()]
+            trainers = [{'trainer_id': row['trainer_id'], 'trainer_name': row['trainer_name'], 'trainer_status': row['trainer_status']} for row in cursor.fetchall()]
         ##cursor.close()
         ##conn.close()
 
@@ -78,10 +103,12 @@ def get_trainers():
 def get_trainer(trainer_id):
     try:
         # Fetch the training_location_id for the selected trainer
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        with get_db_cursor() as cursor:
+        #with get_db_connection() as conn:
+            #cursor = conn.cursor()
             cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id = %s", (trainer_id,))
-            training_location_id = cursor.fetchone()[0]
+#########training_location_id = cursor.fetchone()[0]
+            training_location_id = cursor.fetchone().get('training_location_id', None)
         ##cursor.close()
         ##conn.close()
 
@@ -96,37 +123,49 @@ def get_participants(trainer_id):
         print("Fetching participants for Trainer ID:", trainer_id)  #  debugging
 
         # Fetch the training_location_id for the selected trainer
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        #with get_db_connection() as conn:
+        with get_db_cursor() as cursor:
+            #cursor = conn.cursor()
             cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id = %s", (trainer_id,))
             result = cursor.fetchone()
 
             if result is None:
                 return jsonify([])  # Return an empty list if no training_location_id found
 
-            training_location_id = result[0]
+############## training_location_id = result[0]
+            training_location_id = result.get('training_location_id', None)
 
         # Fetch the participants based on the matching training_location_id, participant_status as "NEW" or "ONGOING",
         # and exclude those with participant_status as "COMPLETED"
             cursor.execute(
                 "SELECT participant_name FROM participants WHERE training_location_id = %s AND participant_status IN ('NEW', 'ONGOING') AND participant_name NOT IN (SELECT participant_name FROM participants WHERE participant_status = 'COMPLETED')",
                 (training_location_id,))
-            participants = [{'participant_name': row[0]} for row in cursor.fetchall()]
+        #####participants = [{'participant_name': row[0]} for row in cursor.fetchall()]
+            participants = [{'participant_name': row.get('participant_name')} for row in cursor.fetchall()]
         ##cursor.close()
         ##conn.close()
             print("Fetched Participants:", participants)
 
             return jsonify(participants)
     except Exception as e:
+        traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
         return jsonify([])
+###############################################################################
+
+
+
+
+
+
 
 @sessions_bp.route('/participant/<string:participant_name>')
 def get_participant(participant_name):
     try:
         # Fetch the participant details based on the given participant_name
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        #with get_db_connection() as conn:
+        with get_db_cursor() as cursor:
+            #cursor = conn.cursor()
             cursor.execute("SELECT * FROM participants WHERE participant_name = %s", (participant_name,))
             participant = cursor.fetchone()
         ##cursor.close()
@@ -138,12 +177,15 @@ def get_participant(participant_name):
 
        
             return jsonify({
-                'participant_name': participant[0],
-                'training_location_id': participant[1],
+                #'participant_name': participant[0],
+                #'training_location_id': participant[1],
+                'participant_name': participant['participant_name'],  
+                'training_location_id': participant['training_location_id'], 
            
             })
 
     except Exception as e:
+        traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
         return jsonify({}), 500  # Return an empty response with 500 status for any error
 
@@ -163,8 +205,9 @@ def submit_form():
         description = request.form['session-description']
 
            # Fetch the trainer_id and participant_id based on the names
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        with get_db_cursor(commit=True) as cursor:
+        #with get_db_connection() as conn:
+            #cursor = conn.cursor()
 
  # Fetch participant_id based on participant_name
     
@@ -172,14 +215,16 @@ def submit_form():
             participant_id = cursor.fetchone()
 
             if participant_id is not None:
-                participant_id = participant_id[0]
+                #participant_id = participant_id[0]
+                participant_id = participant_id['participant_id']
             else:
             # Handle the case where the participant is not found
                 return jsonify({'status': 'error', 'message': 'Participant not found'})
 
        # Check if this is the first session entry for the participant
             cursor.execute("SELECT COUNT(*) FROM sessions WHERE participant_id = %s", (participant_id,))
-            session_count = cursor.fetchone()[0]
+            #session_count = cursor.fetchone()[0]
+            session_count = cursor.fetchone()['count']
 
         # If this is the first session, update participant status to 'ONGOING'
             if session_count == 0:
@@ -220,14 +265,15 @@ def submit_form():
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             ''', (trainer_id, participant_id, scheduled_datetime, actual_datetime, hours_trained,
                   picture_path, video_path, description))
-            conn.commit()
+            #conn.commit()
         ##cursor.close()
         ##conn.close()
 
         return jsonify({'status': 'success', 'message': 'Form submitted successfully!'})
     except Exception as e:
+            traceback.print_exc()
         # Handle errors and rollback the transaction if needed
-        if conn:
+        #if conn:
             ##conn.rollback()
             ##conn.close()
             logging.error("An error occurred:", exc_info=True)
@@ -240,8 +286,9 @@ def submit_form():
 def sessions_table():
     try:
         # Fetch session data from the database
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
+        with get_db_cursor() as cursor:
+        #with get_db_connection() as conn:
+           # cursor = conn.cursor()
             cursor.execute('SELECT * FROM sessions')
             sessions = cursor.fetchall()
         ##cursor.close()
@@ -251,9 +298,10 @@ def sessions_table():
             return render_template('sessions_table.html', sessions=sessions)
 
     except Exception as e:
+        traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
         return 'Error fetching session data. Please try again later.'
-#to display the image 
+
 #@sessions_bp.route('/uploaded_image/<filename>')
 @sessions_bp.route('/uploaded_images/<filename>')
 
