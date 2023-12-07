@@ -42,6 +42,8 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
     <h1>Organization </h1>
 
     <table border="1">
@@ -71,8 +73,10 @@
                         <td>{{ org.organisation_contact }}</td>
                         <td>{{ org.organisation_email }}</td>
                         <td>{{ org.organisation_activities }}</td>
-                        <!--<td>{{ org.organisation_legal_status_document }}</td>-->
-                       <td><a href="{{ org.organisation_legal_status_document }}" target="_blank">View Document</a></td>
+                        <!--<td>{{ org.organisation_legal_status_document }}</td>
+                       <td><a href="{{ org.organisation_legal_status_document }}" target="_blank">View Document</a></td>-->
+                       
+                       <td><a href="{{ org.organisation_legal_status_document }}" target="_blank"><img src="{{ org.organisation_legal_status_document }}" style="height: 50px; width: 50px;"></a></td>
 
 
                         <td>{{ org.coordinator_name }}</td>

@@ -43,6 +43,8 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
     <h1>Training Locations List</h1>
     <div class="container">
         <div class="training-list-container">
@@ -54,11 +56,12 @@
                             <th>ID</th>
                             <th>Training Location</th>
                             <th>Trainer</th>
+                            <th>Location Picture</th>
                             <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
-                            <!--<th>Location Picture</th>-->
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -69,7 +72,7 @@
                                 <td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" >{{ location['training_location'] }}</td>
                                 <!--<td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" data-picture="{{ location['training_location_picture'] }}">{{ location['training_location'] }}</td>-->
                                 <td>{{ location['trainer_name'] }}</td>
-                              <!--  <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>-->
+                                <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>
                               
                                 <td class="address"></td>
                                 <td class="latitude"></td>

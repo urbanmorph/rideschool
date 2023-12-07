@@ -7,6 +7,7 @@ import time
 #from altmo_utils.db  import get_db_connection, get_db_pool
 from altmo_utils.db import get_db_cursor
 import traceback
+from werkzeug.utils import secure_filename
 
 training_locations_list_bp = Blueprint('training_locations_list', __name__)
 
@@ -98,64 +99,26 @@ def add_location():
 
         # Check if a file was uploaded
         # Check if a file was uploaded
-        if 'location_picture' in request.files:
-            location_picture = request.files['location_picture']
-            if location_picture.filename != '':
-                # Ensure the folder exists, or create it if it doesn't exist
-                #pictures_folder = r'D:\job\urban_morph\altmo_rideschool\altmo_rideschool\static\training_location_pictures'
-                #pictures_folder = current_app.config['TRAINING_LOCATION_PICTURES_FOLDER']
-                #os.makedirs(pictures_folder, exist_ok=True)
-                # Ensure the folder exists, or create it if it doesn't exist
-                pictures_folder = current_app.config['TRAINING_LOCATION_PICTURES_FOLDER']
-                if not os.path.exists(pictures_folder):
-                    os.makedirs(pictures_folder)
-                    print(f"Folder '{pictures_folder}' created.")
-                else:
-                    print(f"Folder '{pictures_folder}' already exists.")
+        location_picture = request.files['location_picture']
 
-                # Generate a unique filename using uuid
-                timestamp = int(time.time() * 1000)
-                _, extension = os.path.splitext(location_picture.filename)
-                picture_filename = f"t_location_image_{timestamp}{extension}"
+        if location_picture:
+            filename = secure_filename(location_picture.filename)
+            relative_picture_path = os.path.join('static','training_location_pictures', filename)
+            picture_path_full = os.path.join(current_app.root_path, current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)
 
-                # Add the directory name "t_l_picture" to the path
-                picture_path = os.path.join(pictures_folder, picture_filename)
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(picture_path_full), exist_ok=True)
 
-                # Convert the path to an absolute path
-                picture_path = os.path.abspath(picture_path)
-
-                # Print the paths for debugging
-                print("UPLOAD_FOLDER:", current_app.config['UPLOAD_FOLDER'])
-                print("TRAINING_LOCATION_PICTURES_FOLDER:", pictures_folder)
-                print("picture_path:", picture_path)
-
-                location_picture.save(picture_path)
-
-                print("Picture Path:", picture_path)
-                # Store the image path in the database
-                image_path = picture_path
-            else:
-                image_path = None
-        else:
-            image_path = None
+            # Save the picture
+            location_picture.save(picture_path_full)
 
 
         # Connect to the database (replace with your actual connection parameters)
         with get_db_cursor(commit=True) as cursor:
-        #with get_db_connection() as connection:   
-    #conn = get_db_connection()
-        ##cursor = conn.cursor()
-        ##connection = psycopg2.connect(
-          ##  host='127.0.0.1',
-            ##user='postgres',
-            ##password='root',
-            ##dbname='Pedal_Shaale'
-        ##)
-            #cursor = connection.cursor()
-
+        
             cursor.execute("INSERT INTO training_locations_list (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
-               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, image_path))
-
+               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, relative_picture_path))
+            print("Committing changes...")
 
         # Commit the transaction
         #connection.commit()
@@ -175,14 +138,8 @@ def add_location():
 
 
 
-# The following route serves images from the TRAINING_LOCATION_PICTURES_FOLDER directory.
-# It allows you to access and display images in the application.
+
+
 @training_locations_list_bp.route('/training_location_pictures/<filename>')
 def display_image(filename):
     return send_from_directory(current_app.config['TRAINING_LOCATION_PICTURES_FOLDER'], filename)
-
-
-
-
-
-
