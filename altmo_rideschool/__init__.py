@@ -107,6 +107,7 @@ def create_app(test_config=None):
 
 
 
+
     @app.route('/')
     #@app.route('/index.html')
     def index():
@@ -138,3 +139,5 @@ def create_app(test_config=None):
      # Close DB pool before exiting the app
     atexit.register(db.close_db_pool)
     return app
+
+rideschool_app = create_app()
