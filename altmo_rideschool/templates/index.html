@@ -49,7 +49,16 @@
     justify-content: space-between;
     width: 100%; 
   }
+
+  .custom-img{
+    max-width:100%;
+    height:auto;
+    
+    
+  }
 </style>
+
+
 </head>
 
 <body>
@@ -58,8 +67,8 @@
 {% include 'navbar.html' %}
 
 
-<img src="\static\Image\banner-img.jpg" alt="home-banner"  >
-
+<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid"  style="height: 300px; width: 1800px;">
+<div class= "container mx-2 mx-auto">
 <center>
 <div class="container mt-4">
   <div class="btn-group" role="group" aria-label="Registration Forms">
@@ -276,7 +285,7 @@
       </div>
     </div>
   </footer>
-
+</div>
   <!-- Bootstrap core JavaScript -->
   <script src="static/bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
   <!--start summary that is displayed on the screen is being the includ of summary.html so i am giving the summary.py that is the python code rout over here to fetch the data from the  database and display here an in the form i a, giving the id  that is this code  <div id="summary-data"> -->
