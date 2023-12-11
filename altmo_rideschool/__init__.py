@@ -14,6 +14,11 @@ from .summary import summary_bp
 from .trainer import trainer_bp
 from .training_locations_list import training_locations_list_bp
 from .organization import organization_bp
+from .map import map_bp 
+#from map_blueprint import map_bp
+
+
+
 #####from .db import DB_URL
 #from .db import init_app, DB_URL
 #from .altmo_utils import db
@@ -135,7 +140,7 @@ def create_app(test_config=None):
     app.register_blueprint(summary_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(organization_bp)
-
+    app.register_blueprint(map_bp) 
      # Close DB pool before exiting the app
     atexit.register(db.close_db_pool)
     return app
