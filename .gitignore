@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 *.jpg
 *.docx
+demo.py
+demo.html

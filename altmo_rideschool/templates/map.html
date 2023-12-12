@@ -15,6 +15,22 @@
         #map-container {
             height: 500px;
         }
+        body {
+    padding-top: 56px; /* Adjust this value based on your navbar height */
+}
+
+.navbar {
+    z-index: 1000; /* Ensure the navbar is on top */
+    background-color: #111; /* Set the background color of the navbar */
+}
+
+#map-container {
+    z-index: 0; /* Set a lower z-index for the map to be behind the navbar */
+}
+
+
+
+        
     </style>
 </head>
 <body>

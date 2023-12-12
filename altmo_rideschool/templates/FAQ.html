@@ -23,6 +23,13 @@
 
   <!-- Custom styles for this template -->
   <link href="static/css/cbtp.css" rel="stylesheet">
+  <style>
+    /* Adjust the z-index for the navbar */
+    .navbar {
+      z-index: 1000;
+    }
+  </style>
+  
 
 </head>
 
@@ -30,10 +37,15 @@
 
 <!-- Navigation -->
 {% include 'navbar.html' %}
-
+<br>
+<br>
+<br>
   
 <!-- Heading Row -->
-<img src="\static\Image\banner-img.jpg" alt="home-banner"  >
+<!--<img src="\static\Image\banner-img.jpg" alt="home-banner"  >-->
+<div class="container-fluid">
+  <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+  </div>
 <div class="container">
 <h2 class="text-center my-5" style="font-family: 'Baloo 2', cursive;"><img src= "\static\Image\AltMo - Ride school.png" height="40" class="d-inline-block align-center" alt="altmo" class="img-thumbnail">Frequently Asked Questions</h2>
 <div class="accordion accordion-flush" id="accordionFlushExample">

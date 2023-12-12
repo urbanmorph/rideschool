@@ -15,19 +15,78 @@
 
   <style>
      body {margin:0;}
-    /* Adjust the height of the navbar */
-    
+    /* adjust the height of the navbar */
     .navbar { height: 100px; position: fixed; width: 100%; }
     .navbar-brand { display: inline-block; vertical-align: middle; } /* Navbar Styling: This makes sure that the navbar elements stay in one line and are centered vertically within the navbar */
     .navbar-nav { display: inline-block; vertical-align: middle; }/* Navbar Menu Styling: it makes sure that the menu items are in one line and evenly spaced.left margin (margin-left: 20px;) to separate the menu items visually. */ 
     .nav-item { display: inline-block; margin-left: 20px; }
      
+    
+    /* Custom styles for collapsed menu */
+    @media (max-width: 991px) {
+      .navbar-nav {
+        text-align: right;
+        margin-top: 10px;
+      }
+      .navbar-nav .nav-item {
+        display: block;
+        margin: 10px 0;
+      }
+
+      .navbar-collapse {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #111;
+        padding-top: 60px;
+        width: 0;
+        overflow-x: hidden;
+        transition: 0.5s;
+      }
+
+      .navbar-toggler {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+
+      .navbar-toggler:focus {
+        outline: none;
+      }
+
+      .navbar-toggler-icon {
+        background-color: #282626;
+      }
+
+      .navbar-toggler:hover .navbar-toggler-icon {
+        background-color: #383636;
+      }
+      /* Added this style to close the menu when not active */
+      .navbar-collapse:not(.active) {
+        width: 0;
+      }
+
+
+      .navbar-collapse.active {
+        width: 180px;
+      }
+
+      /* Style for the close button inside the collapsed content */
+      .close-collapse-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #353131;
+        cursor: pointer;
+      }
+    
+    }
   </style>
 
  
     </head>
-    <body>
-</head>
+   
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -79,8 +138,7 @@
           <li class="nav-item">
             
             <a class="nav-link" href="{{ url_for('map.show_map') }}">Map</a>
-
-        </li>
+    </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -163,13 +221,33 @@
     {% endif %}
   </ul>
 </ul>
+
+<!-- added the Close button inside the collapsed menu -->
+<button class="close-collapse-btn d-lg-none" onclick="closeNavbar()">
+  <i class="fa fa-times"></i> 
+</button>
+</div>
 </div>
     </div>
   </nav>
   
 
-
   <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Function to close the navbar
+     function closeNavbar() {
+      $(".navbar-collapse").removeClass("active");
+    }
+    
+  
+    $(document).ready(function(){
+      $(".navbar-toggler").click(function(){
+        $(".navbar-collapse").toggleClass("active");
+      });
+    });
+  </script>
+  
 </body>
 </html>

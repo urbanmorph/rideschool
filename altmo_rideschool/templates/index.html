@@ -56,6 +56,28 @@
   
 </style>
 
+<style>
+  /* Add this style to set a max-width for the banner image */
+  .banner-img {
+    max-width: 100%; /* Adjust this value as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Adjust the height of the navbar to make space for the image */
+  .navbar {
+    height: 150px; /* Adjust this value as needed */
+  }
+
+  /* Adjust the z-index of the collapsed navbar */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      z-index: 1000;
+    }
+  }
+</style>
+
 
 </head>
 
@@ -64,8 +86,9 @@
 <!-- Navigation -->
 {% include 'navbar.html' %}
 
-
-<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+<div class="container-fluid">
+<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+</div>
 <div class= "container mx-2 mx-auto">
 <center>
 <div class="container mt-4">
