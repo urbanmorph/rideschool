@@ -30,6 +30,8 @@
       height: auto; 
       display: block;
       margin: 0 auto; 
+      position: relative;
+      background-size: cover;
     }
   </style>
 
@@ -50,12 +52,8 @@
     width: 100%; 
   }
 
-  .custom-img{
-    max-width:100%;
-    height:auto;
-    
-    
-  }
+  
+  
 </style>
 
 
@@ -67,7 +65,7 @@
 {% include 'navbar.html' %}
 
 
-<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid"  style="height: 300px; width: 1800px;">
+<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
 <div class= "container mx-2 mx-auto">
 <center>
 <div class="container mt-4">
