@@ -72,6 +72,11 @@ def summary():
             total_uncontacted= result.get('count', 0)
             print(result)
 
+            # Calculate the total number of training_location_address
+            cursor.execute("SELECT COUNT(*) FROM training_locations_list")
+            result = cursor.fetchone()
+            total_training_location_address = result.get('count', 0)
+
         except Exception as e:
             traceback.print_exc()
         # Handle any exceptions (e.g., database errors)
@@ -85,4 +90,5 @@ def summary():
         total_completed_certified=total_completed_certified,
         total_ongoing=total_ongoing,
         total_dropouts=total_dropouts,
-        total_uncontacted=total_uncontacted)
+        total_uncontacted=total_uncontacted,
+        total_training_location_address=total_training_location_address)

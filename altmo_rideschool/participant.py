@@ -57,75 +57,69 @@ def submit_form():
         participant_updated_date = participant_created_date  # Update participant_updated_date to participant_created_date initially
 
         # Connect to the database
-        ##connection = psycopg2.connect(
-          ##  host=db_host,
-            ##user=db_user,
-            ##password=db_password,
-            ##dbname=db_name
-        ##)
-        ##cursor = connection.cursor()
-
-        # Get the database connection pool
-        #db_pool = get_db_pool()
-
-        # Use a connection from the pool
-        #with db_pool.getconn() as connection:
-         #   cursor = connection.cursor()
         with get_db_cursor(commit=True) as cursor: 
-            # Fetch the training_location_id based on the selected training_location
-            # Fetch the training_location_id based on the selected training_location
-            select_query = "SELECT training_location_id FROM training_locations_list WHERE training_location = %s"
-            cursor.execute(select_query, (training_location,))
-            result = cursor.fetchone()
+            # Check if the contact number already exists
+            check_contact_query = "SELECT participant_id FROM participants WHERE participant_contact = %s"
+            cursor.execute(check_contact_query, (participant_contact,))
+            existing_participant = cursor.fetchone()
 
-            if result is not None and 'training_location_id' in result:
+            if existing_participant:
+                # Display a message if the contact number is already registered
+               # return jsonify({"message": "Contact number is already registered. Continue to create an account.", "type": "info"})
+                return "Contact number is already registered. Continue to create an account!!!"
+
+          
+            else:# Fetch the training_location_id based on the selected training_location
+                select_query = "SELECT training_location_id FROM training_locations_list WHERE training_location = %s"
+                cursor.execute(select_query, (training_location,))
+                result = cursor.fetchone()
+
+                if result is not None and 'training_location_id' in result:
                 # Use the key 'training_location_id' to access the value
-                training_location_id = result['training_location_id']
-            else:
+                    training_location_id = result['training_location_id']
+                else:
                 # Handle the case when fetchone() returns None (no matching record found)
-                error_message = "Training location not found or missing 'training_location_id' in the result."
-                print(error_message)
-                return error_message
+                    error_message = "Training location not found or missing 'training_location_id' in the result."
+                    print(error_message)
+                    return error_message
 
 
         # Insert participant data into the participants table with participant_created_date and participant_updated_date
-            insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
-            values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
-            cursor.execute(insert_query, values)
+                insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
+                values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
+                cursor.execute(insert_query, values)
 
         # Fetch the newly inserted participant_id
             #new_participant_id = cursor.fetchone()
-            new_participant_row = cursor.fetchone()
+                new_participant_row = cursor.fetchone()
 
-            if new_participant_row:
+                if new_participant_row:
                 # Extract participant_id from the RealDictRow
-                new_participant_id = new_participant_row['participant_id']
+                    new_participant_id = new_participant_row['participant_id']
             
 
         # Generate the code for the participant using the fetched participant_id
-                new_code = generate_participant_code(new_participant_id)
+                    new_code = generate_participant_code(new_participant_id)
 
         # Update the participant's code in the database
-                update_query = "UPDATE participants SET participant_code = %s WHERE participant_id = %s"
-                cursor.execute(update_query, (new_code, new_participant_id))
-            else:
-                error_message = "Error retrieving newly inserted participant_id or result is empty."
-                print(error_message)
-                return error_message
-# No need to commit explicitly; it's handled by the context manager
-        # Commit the transaction
-        #connection.commit()
-        ##cursor.close()
-        ##connection.close()
+                    update_query = "UPDATE participants SET participant_code = %s WHERE participant_id = %s"
+                    cursor.execute(update_query, (new_code, new_participant_id))
+                else:
+                    error_message = "Error retrieving newly inserted participant_id or result is empty."
+                    print(error_message)
+                    return error_message
+                
 
         # Return the success message
-        return "Participant registered successfully!!!"
+                #return jsonify({"message": "Participant registered successfully!!!", "type": "success"})
+                return "Participant registered successfully!!!"
     except Exception as e:
         # Print statement to print the error for debugging
         print(f"Error: {str(e)}")
         traceback.print_exc()
         # Return an error message
         return f"Error: {str(e)}"
+        #return jsonify({"message": f"Error: {str(e)}", "type": "error"})
 
 # Route to view the participant form table
 
