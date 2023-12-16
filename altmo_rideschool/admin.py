@@ -34,6 +34,7 @@ def participant_info():
                     p.participant_name,
                     p.participant_email,
                     p.participant_contact,
+                    tl.training_location,
                     tl.training_location_address,
                     p.participant_status,
                     p.participant_created_at,
@@ -116,7 +117,7 @@ def sessions_info():
                     s.picture_path,
                     s.video_path,
                     s.description,
-                    s.session_current_date,
+                    s.session_update_date,
                     p.participant_id
                 FROM sessions s
                 JOIN trainer t ON s.trainer_id = t.trainer_id
@@ -158,7 +159,7 @@ def trainer_details(trainer_id):
                     SUM(s.hours_trained) AS total_hours_trained,  -- Calculate the total hours trained
                     COUNT(s.hours_trained) AS session_count  -- Calculate the count of sessions
                 FROM trainer t
-                JOIN sessions s ON t.trainer_id = s.trainer_id
+                LEFT JOIN sessions s ON t.trainer_id = s.trainer_id
                 LEFT JOIN training_locations_list tl ON t.training_location_id = tl.training_location_id
                 LEFT JOIN organisation o ON t.organisation_id = o.organisation_id
                 WHERE t.trainer_id = %s
@@ -223,7 +224,7 @@ def participant_admin(participant_id):
                     SUM(s.hours_trained) AS total_hours_trained,
                     COUNT(s.hours_trained) AS session_count
                 FROM participants p
-                JOIN sessions s ON p.participant_id = s.participant_id
+                LEFT JOIN sessions s ON p.participant_id = s.participant_id
                 LEFT JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
                 WHERE p.participant_id = %s
                 GROUP BY p.participant_id, p.participant_name, p.participant_email, p.participant_contact, p.participant_age, p.participant_gender, p.participant_address, tl.training_location_address, p.participant_created_at, p.participant_status, p.participant_code
