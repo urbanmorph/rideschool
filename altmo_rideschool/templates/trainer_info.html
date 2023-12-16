@@ -34,7 +34,10 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd; 
             white-space: pre-wrap; /* Add line divisions */
+            vertical-align: middle; /* Middle align content vertically */
+           /* white-space: pre-wrap;/*helps for middle alignment */ 
         }
 
         /* Adjust the width for the "Training Location" column */
@@ -46,6 +49,8 @@
         thead {
             background-color: #343a40; /* Bootstrap dark background color */
             color: #fff;
+            position: sticky;
+            top: 100px; 
         }
 
         th {
@@ -63,9 +68,9 @@
     <br>
     <br>
     <br>
-    <h1>Trainer Information</h1>
+    <h1 class="mt-5">Trainer Information</h1>
 
-    <table class="table table-striped">
+    <table class="table table-striped table-bordered border-dark">
         <thead>
             <tr>
                 <th>ID</th>
@@ -79,15 +84,17 @@
                 <th>Registered Date</th>
                 <th>Training Completion Date</th>
                 <th>Organisation</th>
-                <th>Trainer Code</th>
+                
                 <th>Update</th>
             </tr>
         </thead>
         <tbody>
             {% for trainer in trainers %}
             <tr>
-                <td>{{ trainer['trainer_id'] }}</td>
-                <td>{{ trainer['trainer_name'] }}</td>
+                <td>{{ trainer['trainer_code'] }}</td>
+               
+                <td><a href="{{ url_for('admin.trainer_details', trainer_id=trainer['trainer_id']) }}">{{ trainer['trainer_name'] }}</a></td>
+                
                 <td>{{ trainer['trainer_email'] }}</td>
                 <td>{{ trainer['trainer_contact'] }}</td>
                 <!-- Display current training location for each trainer 
@@ -121,7 +128,7 @@
                     <select class="status-select" name="trainer_status" trainer-id="{{ trainer['trainer_id'] }}" data-initial-status="{{ trainer['trainer_status'] }}">
                         <option value="{{ trainer['trainer_status'] }}" selected>{{ trainer['trainer_status'] }}</option>
                         <option value="CERTIFIED">CERTIFIED</option>
-                        <option value="NOT CERTIFIED">NOT CERTIFIED</option>
+                       <!-- <option value="NOT CERTIFIED">NOT CERTIFIED</option>-->
                     </select>
                 </td>
                 <td>{{ trainer['trainer_gender'] }}</td>
@@ -129,7 +136,7 @@
                 <td>{{ trainer['trainer_created_at'] }}</td>
                 <td>{{ trainer['trainer_training_completion_date'] }}</td>
                 <td>{{ trainer['organisation_name'] }}</td>
-                <td>{{ trainer['trainer_code'] }}</td>
+                
                 <td>
                     <button class="update-button btn btn-primary" trainer-id="{{ trainer['trainer_id'] }}">Update</button>
                 </td>
