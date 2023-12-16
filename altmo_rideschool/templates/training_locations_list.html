@@ -11,6 +11,8 @@
         /* Adjust the z-index for the navbar */
         .navbar {
           z-index: 1000;
+          position: sticky;
+          top: 0; 
         }
       </style>
     <style>
@@ -27,6 +29,8 @@
             background-color: #222529;
             color: #fff;
             text-align: center;
+            position: sticky;
+            top: 100px; 
         }
 
         .training-list-table th, .training-list-table td {
@@ -36,8 +40,10 @@
 
         .training-list-table tbody tr:nth-child(odd) {
             background-color: #f2f2f2;
+            margin: 0;
+            padding-top: 50px;
         }
-
+        
         .delete-selected-btn {
             margin-top: 10px;
         }
@@ -46,16 +52,13 @@
 </head>
 <body>
     {% include 'navbar.html' %}
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <center><h1>Training Locations List</h1></center>
+    
+    
+    <center><h1  class="mt-5">Training Locations List</h1></center>
     <div class="container">
         <div class="training-list-container">
             <form action="/delete_location" method="post" id="training-locations-form">
-                <table class="training-list-table">
+                <table class="training-list-table ">
                     <thead>
                         <tr>
                             <th>Select</th>
@@ -66,7 +69,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th></th>
+                           
                             
                         </tr>
                     </thead>
