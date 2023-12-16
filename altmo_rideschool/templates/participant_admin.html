@@ -41,7 +41,7 @@
     <br>
     <br>
 
-    <h1>Participant Details</h1>
+    <h1 class="mt-5 ">Participant Details</h1>
 
     <!-- Display participant details as paragraphs -->
     <form method="POST" id="update-status-form"></form>
@@ -67,9 +67,12 @@
                     <option value="{{ participant_status }}" selected>{{ participant_status }}</option>-->
                     <select class="status-select" name="participant_status" data-participant-id="{{ participant_data['participant_id'] }}" data-initial-status="{{ participant_data['participant_status'] }}">
                         <option value="{{ participant_data['participant_status'] }}" selected>{{ participant_data['participant_status'] }}</option>
-                    <option value="COMPLETED">COMPLETED</option>
-                    <option value="CERTIFIED">CERTIFIED</option>
-                    <option value="DROP-OUT">DROP-OUT</option>
+                   <!-- <option value="CERTIFIED">CERTIFIED</option>-->
+                   {% if participant_data['participant_status'] not in ['DROP-OUT'] %}
+                   <option value="CERTIFIED">CERTIFIED</option>
+               {% endif %}
+                 <!--  <option value="COMPLETED">COMPLETED</option>
+                    <option value="DROP-OUT">DROP-OUT</option>--> 
                     <!-- this [[[ value="DROP-OUT"  ]]]value is only getting saved in the database in the table  -->
                     
                 </select>
