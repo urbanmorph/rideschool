@@ -79,7 +79,9 @@
             <tr>
                 <th>Trainer Name</th>
                 <th>Participant Name</th>
-                <th>Actual Datetime</th>
+               <!-- <th>Sessions conducted </th>-->
+                <th>Training Start Date</th>
+                <th>Training End Date </th>
                 <th>Hours Trained</th>
                 <th>Picture Path</th>
                 <th>Video Path</th>
@@ -96,7 +98,9 @@
                    
 
                     <td>  <a href="{{ url_for('admin.participant_admin', participant_id=session['participant_id']) }}">  {{ session['participant_name'] }}</a> </td>
-                    <td>{{ session['actual_datetime'] }}</td>
+                   <!--<td>{{session['actual_datetime']}}</td>-->
+                    <td>{{ session['training_start_date'] }}</td>
+                    <td>{{session['training_end_date']}}</td>
                     <td>{{ session['hours_trained'] }}</td>
                     <td><a href="{{ session['picture_path'] }}" target="_blank"><img src="{{ session['picture_path'] }}" style="height: 50px; width: 50px;"></a></td>
                     <td><video controls width="100"><source src="{{ session['video_path'] }}" type="video/mp4"></video></td>
