@@ -225,10 +225,12 @@ def submit_form():
             cursor.execute("SELECT COUNT(*) FROM sessions WHERE participant_id = %s", (participant_id,))
             #session_count = cursor.fetchone()[0]
             session_count = cursor.fetchone()['count']
+            # Determine the session status
+            session_status = 'ONGOING' if session_count > 0 else 'NEW'
 
         # If this is the first session, update participant status to 'ONGOING'
             if session_count == 0:
-                cursor.execute("UPDATE participants SET participant_status = 'ONGOING' WHERE participant_id = %s", (participant_id,))
+                cursor.execute("UPDATE participants SET participant_status = 'ONGOING', training_start_date = %s WHERE participant_id = %s", (actual_datetime, participant_id,))
             ##conn.commit()
 
 
@@ -260,11 +262,12 @@ def submit_form():
                     hours_trained, 
                     picture_path, 
                     video_path, 
-                    description
+                    description,
+                    session_status
                 ) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
             ''', (trainer_id, participant_id, scheduled_datetime, actual_datetime, hours_trained,
-                  picture_path, video_path, description))
+                  picture_path, video_path, description, session_status))
             #conn.commit()
         ##cursor.close()
         ##conn.close()
@@ -293,8 +296,6 @@ def sessions_table():
             sessions = cursor.fetchall()
         ##cursor.close()
         ##conn.close()
-        
-
             return render_template('sessions_table.html', sessions=sessions)
 
     except Exception as e:
