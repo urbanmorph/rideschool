@@ -1,5 +1,5 @@
 print("import feane/ trainer.py")
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 ##from flask import session, url_for, current_app
 #from .db import get_db_connection
 #from altmo_utils.db import get_db_cursor, get_db_connection
@@ -69,6 +69,20 @@ def submit_form():
         with get_db_cursor(commit=True) as cursor:
         ##with get_db_connection() as connection:
           ##  cursor = connection.cursor()
+             # Check if the contact number already exists
+            check_query = "SELECT trainer_id FROM trainer WHERE trainer_contact = %s"
+            cursor.execute(check_query, (trainer_contact,))
+            existing_trainer = cursor.fetchone()
+
+            if existing_trainer:
+                # Contact number already exists, return a message
+                #return "Trainer with this contact number is already registered. Please continue to create an account."
+                ##error_message = "Trainer with this contact number is already registered. Please continue to create an account."
+                ##print(error_message)
+                ##return error_message
+                print("Trainer with this contact number is already registered.")
+                return jsonify({"status": "error", "message": "Trainer with this contact number is already registered. Please continue to create an account."})
+
 
         # Fetch the organisation_id based on the selected organisation_name
             select_query = "SELECT organisation_id FROM organisation WHERE organisation_name = %s"
@@ -82,7 +96,10 @@ def submit_form():
                 organisation_id = result['organisation_id']
             else:
     # Handle the case where organisation_id is not found
-                return "Organisation not found."
+                #return "Organisation not found."
+                print("Organisation not found.")
+                return jsonify({"status": "error", "message": "Organisation not found."})
+
 
     
        #Note :  admin sets the traing_location
@@ -102,7 +119,10 @@ def submit_form():
                 new_trainer_id = new_trainer_id['trainer_id']
             else:
     # Handle the case where trainer_id is not found
-                return "Trainer ID not found."
+                #return "Trainer ID not found."
+                print("Trainer ID not found.")
+                return jsonify({"status": "error", "message": "Trainer ID not found."})
+
             print("New trainer ID:", new_trainer_id) 
 
         # Generate the code for the trainer
@@ -120,8 +140,10 @@ def submit_form():
         #connection.close()
 
         # Redirect to a success page or any other desired page
-        return "Trainer registered successfully!"
+        return jsonify({"status": "success", "message": "Trainer registered successfully!"})
+       # return "Trainer registered successfully!"
     except Exception as e:
         error_message = f"Error :{repr(e)}"
         traceback.print_exc()
-        return f"Error: {str(e)}"
+        #return f"Error: {str(e)}"
+        return jsonify({"status": "error", "message": f"Error: {str(e)}"})

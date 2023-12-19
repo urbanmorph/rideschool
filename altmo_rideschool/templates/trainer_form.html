@@ -3,7 +3,8 @@
 <head>
 
     <title>Trainer Form</title>
-     
+    <link rel="stylesheet" href="/static/css/cbtp.css">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -197,6 +198,8 @@
     var form = document.getElementById('trainerForm');
     var formData = new FormData(form);
 
+    
+
     $.ajax({
         url: '/register',
         method: 'POST',
@@ -204,9 +207,30 @@
         processData: false,
         contentType: false,
         success: function (data) {
-            var message = data;
-            displayMessage(message, true);
-            $('#trainerForm')[0].reset(); // Reset the form
+           // var message = data;
+            //displayMessage(message, true);
+           // $('#trainerForm')[0].reset(); // Reset the form
+            var message = data.message;
+            var success = data.status === "success";
+            displayMessage(message, success);
+            
+            //$('#trainerForm')[0].reset(); // Reset the form
+            // Check the status for success
+            if (data.status === "success") {
+                // Wait for 3 seconds and then redirect to /signup
+                setTimeout(function() {
+                    window.location.href = '/signup';
+                }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
+            }
+            
+            // Reset the form
+            setTimeout(function() {
+
+            $('#trainerForm')[0].reset();
+            $('#messageAlert').hide();
+            },3000);
+            
+
         },
         error: function () {
             displayMessage('An error occurred. Please try again later.', false);
