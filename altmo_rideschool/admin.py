@@ -249,7 +249,7 @@ def participant_admin(participant_id):
                 feedback_data = fetch_feedback_data(participant_id)
         else:
             feedback_data = None
-
+ 
         ##cursor.close()
         ##conn.close()
 
