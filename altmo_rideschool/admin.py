@@ -112,6 +112,8 @@ def sessions_info():
                     t.trainer_id,  
                     t.trainer_name,
                     p.participant_name,
+                    p.training_start_date,
+                    p.training_end_date,
                     s.actual_datetime,
                     s.hours_trained,
                     s.picture_path,
@@ -121,7 +123,11 @@ def sessions_info():
                     p.participant_id
                 FROM sessions s
                 JOIN trainer t ON s.trainer_id = t.trainer_id
-                JOIN participants p ON s.participant_id = p.participant_id;
+                JOIN participants p ON s.participant_id = p.participant_id
+                
+               ;
+                
+                
             """)
             sessions = cursor.fetchall()
         ##cursor.close()
