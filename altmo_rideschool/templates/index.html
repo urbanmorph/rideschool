@@ -59,8 +59,8 @@
 <style>
   /* Add this style to set a max-width for the banner image */
   .banner-img {
-    max-width: 100%; /* Adjust this value as needed */
-    height: auto;
+   /* max-width: 100%; /* Adjust this value as needed */
+   /* height: auto; */
     display: block;
     margin: 0 auto;
   }
@@ -87,7 +87,7 @@
 {% include 'navbar.html' %}
 
 <div class="container-fluid">
-<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="position: relative; background-size: cover; ">
 </div>
 <div class= "container mx-2 mx-auto">
 <center>
@@ -95,7 +95,7 @@
   <div class="btn-group" role="group" aria-label="Registration Forms">
     <a href="participant-form" class="btn btn-warning">       Participant Registration       </a>
     <a href="trainer-form" class="btn btn-secondary">       Trainer Registration       </a>
-    <a href="organization-form" class="btn btn-info">       Organization Registration       </a>
+    <a href="organization-form" class="btn btn-info">       Organisation Registration       </a>
   </div>
 </div>
 </center>
@@ -109,7 +109,7 @@
     </div>
 
   <div class="row text-justify mt-5">
-    <div class="col-lg-6">
+    <div class="col-lg-5">
       <br>
       <br>
       <br>
@@ -121,7 +121,7 @@
       </div>
     </div>
    
-      <div class="px-5 py-3 mx-auto rounded-3 bg-warning">
+      <div class="col-lg-6 px-5 py-3 mx-auto rounded-3 bg-warning">
         <div id="summary-data">
          
         </div>
