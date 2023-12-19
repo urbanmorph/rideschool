@@ -255,13 +255,14 @@ def update_participant_statuses():
                 except ValueError:
                     return f"Invalid participant ID: {update.get('participantId')}"
 
-                db_cursor.execute("UPDATE participants SET participant_status = %s WHERE participant_id = %s", (new_status, participant_id))
+                db_cursor.execute("UPDATE participants SET participant_status = %s, training_end_date = CURRENT_TIMESTAMP WHERE participant_id = %s", (new_status, participant_id))
 
             #db_connection.commit()
 
             return jsonify({"success": True, "participantId": participant_id, "newStatus": new_status})
 
     except Exception as e:
+        traceback.print_exc
         current_app.logger.error("An error occurred during database update: %s", str(e))
         ##db_connection.rollback()
 
