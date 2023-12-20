@@ -255,7 +255,20 @@ def update_participant_statuses():
                 except ValueError:
                     return f"Invalid participant ID: {update.get('participantId')}"
 
-                db_cursor.execute("UPDATE participants SET participant_status = %s, training_end_date = CURRENT_TIMESTAMP WHERE participant_id = %s", (new_status, participant_id))
+                ###db_cursor.execute("UPDATE participants SET participant_status = %s, training_end_date = CURRENT_TIMESTAMP WHERE participant_id = %s", (new_status, participant_id))
+                # Update only the specific participant_id
+                db_cursor.execute(
+                 "UPDATE participants SET participant_status = %s WHERE participant_id = %s",
+                (new_status, participant_id)
+                    )
+
+                # Update training_end_date only if the new_status is "completed"
+                if new_status == "COMPLETED":
+                    db_cursor.execute(
+                     "UPDATE participants SET training_end_date = CURRENT_TIMESTAMP WHERE participant_id = %s",
+                    (participant_id,)
+                     )
+
 
             #db_connection.commit()
 
