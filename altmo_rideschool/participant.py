@@ -79,13 +79,13 @@ def submit_form():
                     training_location_id = result['training_location_id']
                 else:
                 # Handle the case when fetchone() returns None (no matching record found)
-                    error_message = "Training location not found or missing 'training_location_id' in the result."
-                    print(error_message)
-                    return error_message
+                   # error_message = "Training location not found or missing 'training_location_id' in the result."
+                    #print(error_message)
+                    #return error_message
 
 
         # Insert participant data into the participants table with participant_created_date and participant_updated_date
-                insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
+                    insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
                 values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
                 cursor.execute(insert_query, values)
 
