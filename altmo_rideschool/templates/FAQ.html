@@ -25,9 +25,16 @@
   <link href="static/css/cbtp.css" rel="stylesheet">
   <style>
     /* Adjust the z-index for the navbar */
-    .navbar {
+    /*.navbar {
       z-index: 1000;
-    }
+    }*/
+
+    .banner-img {
+   /* max-width: 100%; /* Adjust this value as needed */
+   /* height: auto; */
+    display: block;
+    margin: 0 auto;
+  }
   </style>
   
 
@@ -37,14 +44,16 @@
 
 <!-- Navigation -->
 {% include 'navbar.html' %}
-<br>
-<br>
-<br>
-  
+<br><br> <br><br><br>
+
+
+
 <!-- Heading Row -->
 <!--<img src="\static\Image\banner-img.jpg" alt="home-banner"  >-->
-<div class="container-fluid">
-  <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+<div class="container-fluid" mt="4">
+
+ <!-- <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">-->
+  <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="position: relative; background-size: cover; ">
   </div>
 <div class="container">
 <h2 class="text-center my-5" style="font-family: 'Baloo 2', cursive;"><img src= "\static\Image\AltMo - Ride school.png" height="40" class="d-inline-block align-center" alt="altmo" class="img-thumbnail">Frequently Asked Questions</h2>
@@ -255,7 +264,7 @@
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#" target="_blank">
+              <a href="https://www.instagram.com/pedalshaale?igshid=OGQ5ZDc2ODk2ZA==" target="_blank">
                 <i class="fab fa-instagram fa-2x fa-fw"  style="color: #E4405F;"></i>
               </a>
             </li>

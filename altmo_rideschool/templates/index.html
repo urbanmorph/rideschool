@@ -64,18 +64,19 @@
     display: block;
     margin: 0 auto;
   }
-
+ /* 
   /* Adjust the height of the navbar to make space for the image */
-  .navbar {
-    height: 150px; /* Adjust this value as needed */
-  }
+   /* .navbar {
+    /*  height: 150px; /* Adjust this value as needed */
+  /* }  */
+ 
 
   /* Adjust the z-index of the collapsed navbar */
-  @media (max-width: 991.98px) {
+  /*@media (max-width: 991.98px) {
     .navbar-collapse {
       z-index: 1000;
     }
-  }
+  }*/
 </style>
 
 
@@ -85,8 +86,9 @@
 
 <!-- Navigation -->
 {% include 'navbar.html' %}
-
+<br><br>
 <div class="container-fluid">
+  <br><br>
 <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="position: relative; background-size: cover; ">
 </div>
 <div class= "container mx-2 mx-auto">
@@ -271,10 +273,12 @@
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#" target="_blank">
+              <a href="https://www.instagram.com/pedalshaale?igshid=OGQ5ZDc2ODk2ZA==" target="_blank">
                 <i class="fab fa-instagram fa-2x fa-fw" style="color: #E4405F;"></i>
               </a>
             </li>
+           
+            
             <li class="list-inline-item">
               <a href="#" target="_blank">
                 <i class="fab fa-telegram-plane fa-2x fa-fw" style="color: #0088CC;"></i>
@@ -319,5 +323,6 @@
         console.error('Error:', error);
       });
   </script>
+  <br><br><br>
 </body>
 </html>
