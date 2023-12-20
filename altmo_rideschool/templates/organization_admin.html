@@ -25,6 +25,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
@@ -48,7 +49,7 @@
     <br>
     <h1>Organization </h1>
 
-    <table class=" table table-bordered border-dark">
+    <table class=" table table-striped table-bordered border-dark">
         <thead>
             <tr>
                
@@ -57,12 +58,11 @@
                 <th>Organization Contact</th>
                 <th>Organization Email</th>
                 <th>Organization Type</th>
-              <!-- <th>Organization Activities</th>--> 
                 <th>Legal Status Document</th>
-                <th>Coordinator Name</th>
+                <th>Co-ordinator Name</th>
                 <th>Coordinator Email</th>
                 <th>Coordinator Contact</th>
-                <th>Registered Date</th>
+                <th>Created At</th>
               
             </tr>
         </thead>
@@ -75,8 +75,9 @@
                         <td>{{ org.organisation_address }}</td>
                         <td>{{ org.organisation_contact }}</td>
                         <td>{{ org.organisation_email }}</td>
-                        <td>{{ org.organisation_activities }}</td>
-                        <!--<td>{{ org.organisation_legal_status_document }}</td>
+                        <td>{{ org.organisation_type}}</td>
+                         <!--<td>{{ org.organisation_activities }}</td>
+                       <td>{{ org.organisation_legal_status_document }}</td>
                        <td><a href="{{ org.organisation_legal_status_document }}" target="_blank">View Document</a></td>-->
                        
                        <td><a href="{{ org.organisation_legal_status_document }}" target="_blank"><img src="{{ org.organisation_legal_status_document }}" style="height: 50px; width: 50px;"></a></td>
