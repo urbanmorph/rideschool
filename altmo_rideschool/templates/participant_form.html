@@ -172,16 +172,7 @@
    
                if (contact.length > 0) { //It checks if the contact number is not empty 
                    if (contact.length !== 10 || !/^\d{10}$/.test(contact)) { // checks whether it consists of exactly 10 digits if it does not contain exactly 10 digit it is considered  invalid.
-                   //!== 10: This part checks if the length of the contact is not equal to 10, if it dont hv  contain  10 digit it is considered  invalid.
-                      //||: This is a logical OR operator. It means that if either of the conditions on its left or right side is true, the whole expression is true.
-                      //    !: This is a logical NOT operator. It negates the result of what follows...,     
-                      //    /: these forward slashes are used to enclose a regular expression pattern in JavaScript. ,,,  
-                      //    ^: it indicates the start of the string.
-                      //   \d: This is a special character in regular expressions that matches any digit (0-9).
-                      //    {10}: It's a quantifier that specifies exactly 10 occurrences of the preceding \d (digits).
-                      //    $: In the regular expression context, it indicates the end of the string.
-                      //   .test(contact): This part is a JavaScript method that tests whether the regular expression pattern matches the contact string. It returns true if there's a match and false if there's no match.
-                      //   !/^\d{10}$/.test(contact): This part checks if the contact consists of exactly 10 digits. The ! at the beginning negates the result, so it means if the contact does not match a pattern of exactly 10 digits, it's considered invalid.
+                 
                        contactError.textContent = "Invalid contact number. Contact number should consist of 10 digits.";
                        contactInput.classList.add("error");
                    } else {
@@ -217,75 +208,54 @@
   
       // Function to submit the form (with formid participantForm) to the server asynchronously (without reloading the whole page).
       function submitForm() {
-      var form = document.getElementById('participantForm');
-      var formData = new FormData(form);//•	It creates a FormData object (formData) to collect form data.
-  
-      fetch('/submit', { //•	uses the fetch API to send a POST request to the server ('/submit') with the form data
-          method: 'POST',
-          body: formData
-      })
-  // after sending the request and then it will get a response from the server 
-      //	it processes the server's response in the " .then " block, if success it will handling success and displaying a message.
-      .then(response => response.text())
-      //.then(response => response.json())
-      .then(data => {
-          var alertType = data.includes('successfully') ? 'alert-success' : 'alert-danger';
-          var message = data;
-          //var alertType = data.type === 'info' ? 'alert-info' : (data.type === 'success' ? 'alert-success' : 'alert-danger');
-          //var message = data.message;  // Extract only the message part
-          var alertHTML = '<div class="alert ' + alertType + '">' + message + '</div>';
-          var messageContainer = document.getElementById('messageAlert');
-          messageContainer.innerHTML = alertHTML;
-          messageContainer.style.display = 'block';
-          // Redirect to /signup if the message is a success after 3 seconds
-        if (alertType === 'alert-success') {
-            setTimeout(function() {
-                window.location.href = '/signup';
-            }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
+            var form = document.getElementById('participantForm');
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: '/submit',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    handleResponse(data);
+                },
+                error: function() {
+                    handleResponse('An error occurred. Please try again later.');
+                }
+            });
         }
-      })
-      //•	In case of an error, it handles it in the .catch block, displaying an error message.
-      .catch(error => {
-          console.error('Error submitting form:', error);
-          var alertHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
-          var messageContainer = document.getElementById('messageAlert');
-          messageContainer.innerHTML = alertHTML;
-          messageContainer.style.display = 'block';
-      });
-  }
-  
-  $(document).ready(function() {
-      $('#participantForm').submit(function(event) { //•	It attaches a submit event handler to the participantForm to handle form submissions.
-          event.preventDefault(); // Prevent the default form submission
-  
-          if (!validateRegistrationForm()) { //•	It validates the form using the validateRegistrationForm function, and if validation fails, it prevents submission.
-              return false; // Prevent submitting if form validation is fails,
-          }
-          // creating a FormData object to collect form data.
-          var formData = new FormData(this); //this line creates a data structure (formData) that collects and organizes information from an HTML form.
-           
-          // sends an AJAX post request to the server ('/submit') with the form data using jQuery's $.ajax method.
-          $.ajax({
-              url: '/submit',
-              method: 'POST',
-              data: formData,
-              processData: false,
-              contentType: false,
-              success: function(data) {  // After the request, it processes the server's response in the success and error callbacks, handling success and displaying messages.
-                  var message = data;
-                  $('#messageAlert').removeClass('alert-danger').addClass('alert-success').text(message).show();
-                  setTimeout(function() {
-                      $('#messageAlert').hide();
-                      $('#participantForm')[0].reset(); // Reset the form
-                  }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
-              },
-              error: function() {
-                  $('#messageAlert').removeClass('alert-success').addClass('alert-danger').text('An error occurred. Please try again later.').show();
-              }
-          });
-      });
-  });
-  
+
+        function handleResponse(message) {
+            var alertType = message.includes('successfully') ? 'alert-success' : 'alert-danger';
+            var alertHTML = '<div class="alert ' + alertType + '">' + message + '</div>';
+            var messageContainer = $('#messageAlert');
+            messageContainer.html(alertHTML).show();
+
+            if (alertType === 'alert-success') {
+                setTimeout(function() {
+                    window.location.href = '/signup';
+                }, 3000);
+            }
+
+            setTimeout(function() {
+                $('#participantForm')[0].reset();
+                messageContainer.hide();
+            }, 3000);
+        }
+
+        $(document).ready(function() {
+            $('#participantForm').submit(function(event) {
+                event.preventDefault();
+
+                if (!validateRegistrationForm()) {
+                    return false;
+                }
+
+                submitForm();
+            });
+        });
+   
    </script>
   </head>
   
