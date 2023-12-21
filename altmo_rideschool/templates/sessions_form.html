@@ -271,6 +271,7 @@
         success: function (response) {
           if (response.status === 'success') {
             showAlert('success', response.message);
+            $('#training-session-form')[0].reset();
             
           } else if (response.status === 'error') {
             showAlert('error', response.message);
@@ -282,6 +283,8 @@
       });
     });
 
+
+    
     function showAlert(type, message) {
   var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
   var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
@@ -292,7 +295,12 @@
                   '</div>';
   $('#message-container').html(alertHTML);
   $('#message-container').show();
+
+  setTimeout(function () {
+    $('#message-container').hide();
+  }, 3000);
 }
+
   
   
   
