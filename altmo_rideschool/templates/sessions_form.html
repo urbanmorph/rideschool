@@ -218,7 +218,7 @@
       </div>
 
       <div class="form-group">
-        <button type="submit">Submit</button>
+        <button type="submit" id="submit-button">Submit</button>
       </div>
 
 </form>
@@ -261,7 +261,10 @@
      // Handle form submission (alert messages code: returns the return messages in the form of allert message )
      $('#training-session-form').on('submit', function (event) {
       event.preventDefault(); // Prevent the form from submitting normally
-      
+     
+      // Disable the submit button to prevent multiple submissions
+      $('#submit-button').prop('disabled', true);
+
       $.ajax({
         url: '/submit_form',
         type: 'POST',
@@ -271,7 +274,6 @@
         success: function (response) {
           if (response.status === 'success') {
             showAlert('success', response.message);
-            $('#training-session-form')[0].reset();
             
           } else if (response.status === 'error') {
             showAlert('error', response.message);
@@ -279,12 +281,16 @@
         },
         error: function () {
           showAlert('error', 'An error occurred. Please try again later.');
-        }
+        },
+        complete: function () {
+                    // Reset the form and enable the submit button after 3 seconds
+                    setTimeout(function () {
+                        resetForm();
+                    }, 3000);
+                }
       });
     });
 
-
-    
     function showAlert(type, message) {
   var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
   var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
@@ -295,14 +301,16 @@
                   '</div>';
   $('#message-container').html(alertHTML);
   $('#message-container').show();
-
-  setTimeout(function () {
-    $('#message-container').hide();
-  }, 3000);
 }
+  
+function resetForm() {
+            // Reset the form
+            $('#training-session-form')[0].reset();
+            $('#message-container').hide();
 
-  
-  
+            // Enable the submit button immediately after the form is reset
+            $('#submit-button').prop('disabled', false);
+        }
   
   });
 

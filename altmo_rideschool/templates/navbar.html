@@ -38,7 +38,7 @@
         top: 0;
         right: 0;
         bottom: 0;
-        background-color: #111;
+        background-color: hsl(0, 0%, 0%);
         padding-top: 60px;
         width: 0;
         overflow-x: hidden;
@@ -56,11 +56,11 @@
       }
 
       .navbar-toggler-icon {
-        background-color: #282626;
+        background-color: #070707;
       }
 
       .navbar-toggler:hover .navbar-toggler-icon {
-        background-color: #383636;
+        background-color: #060606;
       }
       /* Added this style to close the menu when not active */
       .navbar-collapse:not(.active) {
@@ -77,7 +77,7 @@
         position: absolute;
         top: 10px;
         right: 10px;
-        color: #353131;
+        color: #070707;
         cursor: pointer;
       }
     
@@ -141,7 +141,7 @@
     </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
+              aria-expanded="true">
               Register 
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -246,6 +246,26 @@
       $(".navbar-toggler").click(function(){
         $(".navbar-collapse").toggleClass("active");
       });
+
+     // $(document).on('click',function (event) {
+       // var clickover = $(event.target);
+        //var $navbar = $(".navbar-collapse");
+        //var _opened = $navbar.hasClass("active");
+        //if (_opened === true && !clickover.hasClass("navbar-toggler")&& clickover.parents('.navbar-collapse').length === 0) {
+          //$navbar.removeClass("active");
+       // }
+      //});
+   // })
+      // Initialize the dropdown
+      //$(window).on('load', function(){
+        //$('.dropdown-toggle').dropdown();
+
+        // Trigger click on the Register button if it was clicked before
+       // if ($(".navbar-toggler").hasClass("active")) {
+         //       $(".navbar-toggler").trigger("click");
+           // }
+           
+          
     });
   </script>
   
