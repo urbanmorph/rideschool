@@ -153,8 +153,7 @@
             <textarea id="organization-activities" name="organization-activities"></textarea>
             
             <label for="organization-legal-status-document">Legal Status Document:</label>
-           <!-- <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.doc,.docx">-->
-            <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.jpg,.jpeg">
+            <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.jpg,.jpeg">  <!--  accept=".pdf,.doc,.docx">-->
 
             
             <label for="coordinator-name">Coordinator Name:</label>
@@ -168,7 +167,7 @@
             <input type="text" id="coordinator-contact" name="coordinator-contact" required>
             <div class="error-message" id="coordinator-contact-error-message"></div>
             
-            <button type="submit">Submit</button>
+            <button type="submit" id="submitButton">Submit</button>
         </form>
 
         <div class="alert" id="messageAlert" style="display: none;"></div>
@@ -179,14 +178,15 @@
 
                 var organizationForm = document.getElementById('organization-form');
                 var messageAlert = document.getElementById('messageAlert');
-              // var submitButton = document.querySelector('button[type="submit"]');
-
+                var submitButton = document.getElementById('submitButton'); // Gets the submit button
+                // var submitButton = document.querySelector('button[type="submit"]');
+                // this js is used to validate if the document is 1 of these '.pdf', '.jpg', '.jpeg' if it is any thing appart from these it will give an allert that says the uploaded folder should be 1 of those types 
                 var allowedExtensions = ['.pdf', '.jpg', '.jpeg'];
                
                 organizationForm.addEventListener('submit', function (event) {
                     event.preventDefault(); // Prevent default form submission
 
-                //submitButton.addEventListener('click', function () {
+                    //submitButton.addEventListener('click', function () {
                     const formData = new FormData(organizationForm);
 
                     // Check if a file is selected
@@ -205,6 +205,9 @@
                         return;
                     }
 
+                    // Disable the submit button during the AJAX request
+                    submitButton.disabled = true;
+
                     $.ajax({
                 url: '/submit_organization',
                 type: 'POST',
@@ -218,16 +221,23 @@
                     console.error('AJAX Error:', error);
                     displayMessage('alert-danger', 'An error occurred. Please try again.');
                     hideAlertMessage();
+                    // Re-enable the submit button on error
+                    submitButton.disabled = false;
                 }
             });
         });
 
         function handleAjaxResponse(result) {
+            
+           // submitButton.disabled = true;// Disable the submit button
+
             if (result.status === 'success' || result.status === 'error') {
                 displayMessage(result.status === 'success' ? 'alert-success' : 'alert-danger', result.message);
                 setTimeout(function () {
                         organizationForm.reset();
                         hideAlertMessage();
+
+                        submitButton.disabled = false;// Re-enable the submit button after form reset
                     }, 3000);
                 hideError('contact');
                 hideError('email');
@@ -243,6 +253,8 @@
             } else {
                 
                 hideAlertMessage();
+                // Re-enable the submit button if the status is not success
+                submitButton.disabled = false;
             }
         }
 
