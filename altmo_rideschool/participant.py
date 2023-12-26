@@ -161,9 +161,7 @@ def participant_table():
         return f"Error: {str(e)}"
     
 
-    ##not using close 
-     
-      ##not using for now open
+    
 @participant_bp.route('/participant_session_info', methods=['GET'])
 def participant_session_info():
     try:
@@ -296,4 +294,4 @@ def feedback_form():
         response = {"status": "error", "message": "An error occurred."}
         return jsonify(response)
 
-    #flash is commonly used when you want to display messages as alerts or notifications that appear at the top of the page and may disappear after a while or when the user interacts with them. It's often used for non-intrusive notifications.
+

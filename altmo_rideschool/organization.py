@@ -74,8 +74,7 @@ def submit_organization():
                 chech_contact = "SELECT organisation_id FROM organisation WHERE organisation_contact = %s"
                 cursor.execute(chech_contact, (organization_contact,))
                 existing_org = cursor.fetchone()
-            
-
+    
                 
                 if existing_org:
                 
