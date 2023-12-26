@@ -197,8 +197,9 @@
     function submitForm() {
     var form = document.getElementById('trainerForm');
     var formData = new FormData(form);
-
+    var submitButton = document.getElementById('submitBtn');
     
+    submitButton.disabled = true;
 
     $.ajax({
         url: '/register',
@@ -220,20 +221,21 @@
                 // Wait for 3 seconds and then redirect to /signup
                 setTimeout(function() {
                     window.location.href = '/signup';
-                }, 3000); // Adjust the delay as needed (3000 milliseconds = 3 seconds)
+                }, 3000); 
             }
             
-            // Reset the form
-            setTimeout(function() {
-
-            $('#trainerForm')[0].reset();
-            $('#messageAlert').hide();
-            },3000);
+             // Reset the form and re-enable the submit button
+             setTimeout(function () {
+                form.reset();
+                $('#messageAlert').hide();
+                submitButton.disabled = false; // Re-enable the submit button
+            }, 3000);
             
 
         },
         error: function () {
             displayMessage('An error occurred. Please try again later.', false);
+            submitButton.disabled = false; // Re-enable the submit button in case of an error
         }
     });
 
@@ -346,7 +348,7 @@
             </select>
             <br><br>
 
-            <input type="submit" value="Register">
+            <input type="submit"id="submitBtn" value="Register">
         </form>
         <div class="alert" id="messageAlert" style="display: none;"></div>
     </div>
@@ -355,5 +357,3 @@
 </body>
 </html>
 
-
-###
