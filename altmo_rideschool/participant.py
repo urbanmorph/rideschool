@@ -293,5 +293,3 @@ def feedback_form():
         traceback.print_exc()
         response = {"status": "error", "message": "An error occurred."}
         return jsonify(response)
-
-
