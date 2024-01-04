@@ -1,127 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organization Form</title>
+{% extends "application.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
+{% block head %}
+    {{ super() }}   
+{% endblock %}
 
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
+{% block title %} Organization Form {% endblock %}
 
-        form {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 40px;
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
+{% block content %}
 
-       
+    <div class="container" style="margin-top: 100px;">
+        <h1>Organization Form</h1>
 
-        label {
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select,
-        textarea,
-        input[type="file"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 95%;
-            margin-bottom: 10px;
-        }
-
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .error-message {
-            color: #FF0000;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        .alert-success {
-            background-color: #D4EDDA;
-            border: 1px solid #C3E6CB;
-            color: #155724;
-        }
-
-        .alert-danger {
-            background-color: #F8D7DA;
-            border: 1px solid #F5C6CB;
-            color: #721C24;
-        }
-        form button {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    form button:hover {
-        background-color: #45a049;
-    }
-    
-    </style>
-<!--
-<style>
-    
-
-    .alert-success {
-        background-color: #D4EDDA;
-        border: 1px solid #C3E6CB;
-        color: #155724;
-    }
-
-    .alert-danger {
-        background-color: #F8D7DA;
-        border: 1px solid #F5C6CB;
-        color: #721C24;
-    }
-</style>-->
-</head>
-<body>
-    {% include 'navbar.html' %}
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="container">
-        <h1>OrganiZation Form</h1>
-
-        <form id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
+        <form class="my-form" id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
             <label for="organization-name">Organization Name:</label>
             <input type="text" id="organization-name" name="organization-name" required>
             
@@ -154,8 +44,7 @@
             
             <label for="organization-legal-status-document">Legal Status Document:</label>
             <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.jpg,.jpeg">  <!--  accept=".pdf,.doc,.docx">-->
-
-            
+  
             <label for="coordinator-name">Coordinator Name:</label>
             <input type="text" id="coordinator-name" name="coordinator-name" required>
             
@@ -184,165 +73,155 @@
                 var allowedExtensions = ['.pdf', '.jpg', '.jpeg'];
                
                 organizationForm.addEventListener('submit', function (event) {
-                    event.preventDefault(); // Prevent default form submission
+                event.preventDefault(); // Prevent default form submission
 
-                    //submitButton.addEventListener('click', function () {
-                    const formData = new FormData(organizationForm);
+                //submitButton.addEventListener('click', function () {
+                const formData = new FormData(organizationForm);
 
-                    // Check if a file is selected
-                    var legalStatusDocumentInput = document.getElementById('organization-legal-status-document');
-                    if (legalStatusDocumentInput.files.length === 0) {
-                        displayMessage('alert-danger', 'Please select a document.');
-                        return;
-                    }
+                // Check if a file is selected
+                var legalStatusDocumentInput = document.getElementById('organization-legal-status-document');
+                if (legalStatusDocumentInput.files.length === 0) {
+                    displayMessage('alert-danger', 'Please select a document.');
+                    return;
+                }
 
-                    // Check the file extension
-                    var fileName = legalStatusDocumentInput.files[0].name;
-                    var fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+                // Check the file extension
+                var fileName = legalStatusDocumentInput.files[0].name;
+                var fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
-                    if (!allowedExtensions.includes(fileExtension)) {
-                        displayMessage('alert-danger', 'Invalid file type. Please select a .pdf, .jpg, or .jpeg document.');
-                        return;
-                    }
+                if (!allowedExtensions.includes(fileExtension)) {
+                    displayMessage('alert-danger', 'Invalid file type. Please select a .pdf, .jpg, or .jpeg document.');
+                    return;
+                }
 
-                    // Disable the submit button during the AJAX request
-                    submitButton.disabled = true;
+                // Disable the submit button during the AJAX request
+                submitButton.disabled = true;
 
-                    $.ajax({
-                url: '/submit_organization',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (result) {
+                $.ajax({
+                    url: '/submit_organization',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
                     handleAjaxResponse(result);
-                },
-                error: function (xhr, status, error) {
+                    },
+                    error: function (xhr, status, error) {
                     console.error('AJAX Error:', error);
                     displayMessage('alert-danger', 'An error occurred. Please try again.');
                     hideAlertMessage();
                     // Re-enable the submit button on error
                     submitButton.disabled = false;
-                }
-            });
-        });
+                    }
+                });
+                });
 
-        function handleAjaxResponse(result) {
-            
-           // submitButton.disabled = true;// Disable the submit button
+                function handleAjaxResponse(result) {
+                
+            // submitButton.disabled = true;// Disable the submit button
+                if (result.status === 'success' || result.status === 'error') {
+                    displayMessage(result.status === 'success' ? 'alert-success' : 'alert-danger', result.message);
+                    setTimeout(function () {
+                    organizationForm.reset();
+                    hideAlertMessage();
 
-            if (result.status === 'success' || result.status === 'error') {
-                displayMessage(result.status === 'success' ? 'alert-success' : 'alert-danger', result.message);
-                setTimeout(function () {
-                        organizationForm.reset();
-                        hideAlertMessage();
-
-                        submitButton.disabled = false;// Re-enable the submit button after form reset
+                    submitButton.disabled = false;// Re-enable the submit button after form reset
                     }, 3000);
-                hideError('contact');
-                hideError('email');
-                hideError('coordinator-email');
-                hideError('coordinator-contact');
+                    hideError('contact');
+                    hideError('email');
+                    hideError('coordinator-email');
+                    hideError('coordinator-contact');
 
-                if (result.status === 'success') {
+                    if (result.status === 'success') {
                     setTimeout(function () {
                         organizationForm.reset();
                         hideAlertMessage();
                     }, 3000);
+                    }
+                } else {
+                        
+                    hideAlertMessage();
+                        // Re-enable the submit button if the status is not success
+                    submitButton.disabled = false;
                 }
-            } else {
-                
-                hideAlertMessage();
-                // Re-enable the submit button if the status is not success
-                submitButton.disabled = false;
-            }
-        }
-
+                }
 
                 // Event listener for organization contact
                 var organizationContactInput = document.getElementById('organization-contact');
                 organizationContactInput.addEventListener('input', function () {
-                    var contactValue = organizationContactInput.value;
-                    if (!/^\d{10}$/.test(contactValue)) {
-                        displayError('contact', 'Organization contact should contain 10 digits.');
-                    } else {
-                        hideError('contact');
-                    }
+                var contactValue = organizationContactInput.value;
+                if (!/^\d{10}$/.test(contactValue)) {
+                    displayError('contact', 'Organization contact should contain 10 digits.');
+                } else {
+                    hideError('contact');
+                }
                 });
 
                 // Event listener for coordinator contact
                 var coordinatorContactInput = document.getElementById('coordinator-contact');
                 coordinatorContactInput.addEventListener('input', function () {
-                    var coordinatorContactValue = coordinatorContactInput.value;
-                    if (!/^\d{10}$/.test(coordinatorContactValue)) {
-                        displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
-                    } else {
-                        hideError('coordinator-contact');
-                    }
+                var coordinatorContactValue = coordinatorContactInput.value;
+                if (!/^\d{10}$/.test(coordinatorContactValue)) {
+                    displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
+                } else {
+                    hideError('coordinator-contact');
+                }
                 });
 
                 // Event listener for organization email
                 var organizationEmailInput = document.getElementById('organization-email');
                 organizationEmailInput.addEventListener('input', function () {
-                    var emailValue = organizationEmailInput.value;
-                    if (!isValidEmail(emailValue)) {
-                        displayError('email', 'Invalid email address.');
-                    } else {
-                        hideError('email');
-                    }
+                var emailValue = organizationEmailInput.value;
+                if (!isValidEmail(emailValue)) {
+                    displayError('email', 'Invalid email address.');
+                } else {
+                    hideError('email');
+                }
                 });
 
                 // Event listener for coordinator email
                 var coordinatorEmailInput = document.getElementById('coordinator-email');
                 coordinatorEmailInput.addEventListener('input', function () {
-                    var coordinatorEmailValue = coordinatorEmailInput.value;
-                    if (!isValidEmail(coordinatorEmailValue)) {
-                        displayError('coordinator-email', 'Invalid email address.');
-                    } else {
-                        hideError('coordinator-email');
-                    }
+                var coordinatorEmailValue = coordinatorEmailInput.value;
+                if (!isValidEmail(coordinatorEmailValue)) {
+                    displayError('coordinator-email', 'Invalid email address.');
+                } else {
+                    hideError('coordinator-email');
+                }
                 });
 
                 function isValidEmail(email) {
                     // Updated email validation logic to check for '@' and '.'
-                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
                 }
 
                 function displayError(fieldId, errorMessage) {
-                    var errorField = document.getElementById(fieldId + '-error-message');
-                    errorField.innerHTML = errorMessage;
-                    errorField.style.display = 'block';
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = errorMessage;
+                errorField.style.display = 'block';
                 }
 
                 function hideError(fieldId) {
-                    var errorField = document.getElementById(fieldId + '-error-message');
-                    errorField.innerHTML = '';
-                    errorField.style.display = 'none';
+                var errorField = document.getElementById(fieldId + '-error-message');
+                errorField.innerHTML = '';
+                errorField.style.display = 'none';
                 }
 
                 // Hide alert message on input change
                 organizationForm.addEventListener('input', function () {
-                    hideAlertMessage();
+                hideAlertMessage();
                 });
 
                 function hideAlertMessage() {
-                    messageAlert.style.display = 'none';
+                messageAlert.style.display = 'none';
                 }
 
                 function displayMessage(type, message) {
-                    messageAlert.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
-                    messageAlert.style.display = 'block';
+                messageAlert.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
+                messageAlert.style.display = 'block';
                 }
             });
         </script>
-   
-
-
-
     </div>
-</body>
-</html>
-
-
-
-
+{% endblock %}
+   
