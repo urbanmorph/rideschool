@@ -1,0 +1,506 @@
+/* index.html start */
+.custom-img {
+  max-width: 150px; /* Set the maximum width for the image */
+  height: auto; 
+  display: block;
+  margin: 0 auto; 
+  position: relative;
+  background-size: cover;
+}
+
+.my-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Each button takes 1/3 of the width */
+  gap: 1rem; 
+}
+.my-btn-group-container {
+  width: 100%; /* Each button group takes the full width of the page */
+}
+.my-btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; 
+}
+/* Add this style to set a max-width for the banner image */
+.banner-img {
+  position: relative;
+  background-size: cover;
+  padding-top: 5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /*
+   max-width: 100%; /
+   height: auto;
+   margin: 0 auto;*/
+}
+/* index.html end */
+
+/* map.html start */
+/* Set the height of the map container */
+#map-container {
+    height: 500px;
+}
+/* map.html end */
+
+/* participant_session_info.html start */
+h1 {
+/* margin-bottom: 20px;*/
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+}
+.my-table {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd; 
+  /*border-collapse: collapse;*/
+  /*border-collapse: collapse;*/
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-table th, .my-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  /* border-right: 1px solid #ddd; 
+  white-space: pre-wrap; 
+  vertical-align: middle; / / Middle align content vertically */
+}
+
+.my-table thead {
+  background-color: #343a40; 
+  color: #fff;
+  position: sticky; 
+  top: 60px;
+ /* overflow-y: auto;*/
+  max-height: 550px;  
+  overflow: auto; /* Enable scrolling for the table */ 
+}
+.my-table th {
+  font-weight: bold;
+ /* border-right: 1px solid #ddd;*/
+}       
+/* participant_session_info.html end */
+
+/* participant_form.html start */
+form label {
+  display: block;
+  margin-bottom: 10px;
+  color: #333;
+  }
+
+  .my-form label {
+      font-weight: bold;
+  }
+  .my-form input[type="text"],
+  .my-form input[type="email"],
+  .my-form input[type="tel"],
+  .my-form input[type="password"],
+  .my-form input[type="file"],
+  .my-form textarea,
+  .my-form select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 10px;
+  }
+
+  .my-form input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  .my-form input[type="submit"]:hover {
+      background-color: #45a049;
+  }
+
+  .my-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  form button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+
+  form button:hover {
+      background-color: #45a049;
+  }
+
+  #message {
+      font-weight: bold;
+      margin-top: 15px;
+      color: #4CAF50;
+  }
+
+  .error {
+      color: #FF0000;
+      margin-top: 5px;
+  }
+
+  .info {
+      color: #008CBA;
+      margin-top: 5px;
+  }
+  
+  .success {
+  background-color: #D4EDDA;
+  border: 1px solid #C3E6CB;
+  color: #155724;
+  }
+      
+  .error {
+      background-color: #F8D7DA;
+      border: 1px solid #F5C6CB;
+      color: #721C24;
+  }
+  
+  .response-message {
+      font-weight: bold;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      transition: opacity 0.3s ease-in-out;
+      opacity: 0; /* Start with opacity set to 0 */
+  }
+/* participant_form.html end */
+
+/* feedback form start*/
+/*
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  text-align: center;
+  /*padding: 20px;
+  margin: 0;
+  padding-top: 50px;*/
+/*}*/
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.star-rating {
+  font-size: 24px;
+  display: inline-block;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  float: right;
+}
+
+.star-rating label:before {
+  content: "\2605";
+  margin: 5px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.star-rating input:checked ~ label:before {
+  content: "\2605";
+  color: gold;
+}
+
+/* Blue color for trainer evaluation stars */
+.star-rating input:checked[name="trainer_evaluation"] ~ label:before {
+  color: hwb(44 0% 0%);
+}
+/*.form-group {
+  margin: 10px 0;
+}*/
+/* feedback form end*/
+
+/* organization_form.html start*/
+.error-message {
+  color: #FF0000;
+  margin-top: 5px;
+  display: none;
+}
+.alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.alert-success {
+  background-color: #D4EDDA;
+  border: 1px solid #C3E6CB;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #F8D7DA;
+  border: 1px solid #F5C6CB;
+  color: #721C24;
+}
+/* input[type="file"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 95%;
+  margin-bottom: 10px;
+}*/
+/* organization_form.html end*/
+
+/*participant_admin.html start*/
+ .custom-update-button {
+  background-color: green; 
+} */
+/*participant_admin.html end*/
+
+/* sessions_form.html start */
+.container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.form-group .date-time-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.form-group .date-time-wrapper .date-input,
+.form-group .date-time-wrapper .time-input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.form-group .date-input[type="date"]::-webkit-inner-spin-button,
+.form-group .date-input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-group .time-input[type="time"]::-webkit-inner-spin-button,
+.form-group .time-input[type="time"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-group input[type="file"] {
+  padding: 6px 10px;
+}
+
+.form-group button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.form-group button:hover {
+  background-color: #45a049;
+}
+
+.form-group select#trainer-name {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+.form-group select#participant-name {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+.form-group select#hours-trained {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: dodgerblue;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+/* sessions_form.html end */
+
+/* signup.html start */
+form input {
+width: 100%;
+padding: 10px;
+margin-bottom: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 10px;
+}
+/* signup.html end*/
+
+/* trainer_details.html start */
+/* Adjust the width for the "Training Location" column */
+th:nth-child(10),
+td:nth-child(10) {
+  width: 30%; 
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2; 
+}
+/* trainer_details.html end */
+
+/* trainer form.html start */
+.container {
+max-width: 1000px;
+margin: 0 auto;
+padding: 20px;
+border-radius: 4px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+/* trainer form.html end */
+
+/* training location start */
+.training-list-container {
+margin: 20px;
+}
+
+.training-list-table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.training-list-table th {
+background-color: #222529;
+color: #fff;
+text-align: center;
+position: sticky;
+top: 100px; 
+}
+
+.training-list-table th, .training-list-table td {
+padding: 10px;
+text-align: center;
+}
+
+.training-list-table tbody tr:nth-child(odd) {
+background-color: #f2f2f2;
+margin: 0;
+padding-top: 50px;
+}
+
+.delete-selected-btn {
+margin-top: 10px;
+}
+/* training location end */
+
+/* trainer_admin.html start */
+/*img {
+height: 50px;
+width: 50px;
+}
+
+video {
+width: 100%;
+}*/
+/* trainer_admin.html end */
+
+
+/*participant_info.html start */
+/*.table-container {
+ /* max-height: 500px; /* Set a maximum height for the container */
+ /* overflow-y: auto; /* Add vertical scroll for overflow */
+  /*margin-top: 10px; /* Adjust margin-top for space between fixed header and content */
+/*}
+/*.table-container {
+
+thead th {
+  background-color: #343a40;
+  color: #fff;
+  position: sticky;
+ 
+  top: 20px;
+
+}*/
+/*participant_info.html end */
+
+
+/* trainer form.html start */
+/*.container {
+max-width: 1000px;
+margin: 0 auto;
+padding: 20px;
+border-radius: 4px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}*/
+/* trainer form.html end */
+
+
+/*participant_display.html start*/
+/*.container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+button {
+  margin-top: 20px;
+}
+/*
+thead th {
+  background-color: #008000; /* Set background color to green */
+ /* color: #ffffff; /* Set text color to white */
+ /* position: sticky; 
+}
+*/
+
+/*participant_display.html end */
