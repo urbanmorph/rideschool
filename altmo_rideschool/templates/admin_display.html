@@ -6,33 +6,23 @@
 {% block title %} Admin Homepage {% endblock %}
 
 {% block content %}
-
 <div class="container-fluid" style="margin-top: 80px;">
   <img src="\static\Image\banner-img.jpg" class="banner-img">
     <!--<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">-->
-  </div>
-    <br>
-    <div class="container">
-    
-    <h1 class="text-center" >Welcome Admin</h1>
-    <div class="container">
+  <br>
+  <h1 class="text-center" >Welcome Admin</h1>
+  <div class="container">
     <div class="col-lg-7">
-    <div class="px-5 py-3 mx-auto rounded-3" >
+      <div class="px-5 py-3 mx-auto rounded-3" >
         <div id="summary-data">
           <!-- Data from the 'summary' route will be displayed here -->
         </div>
       </div>
     </div>
   </div>
-      <br>
-      <br> 
-
-
-     <!--start summary that is displayed on the screen is being the includ of summary.html so i am giving the summary.py that is the python code rout over here to fetch the data from the  database and display here an in the form i a, giving the id  that is this code  <div id="summary-data"> -->
   <script>
     // Use AJAX to fetch data from the 'summary' route
     fetch('/summary')
-
       .then(response => response.text())
       .then(data => {
         // Update the content of the 'summary-data' div with the received data
@@ -42,7 +32,5 @@
         console.error('Error:', error);
       });
   </script>
-
-  <!--end  summary -->
-
-  {% endblock %}
+</div>
+{% endblock %}
