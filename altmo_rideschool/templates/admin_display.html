@@ -1,49 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome Admin</title>
-    <!-- Include the CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% extends "application.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
 
-    
-<style>
-  /* Add this style to set a max-width for the banner image */
-  .banner-img {
-    max-width: 100%; /* Adjust this value as needed */
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
+{% block title %} Admin Homepage {% endblock %}
 
-  /* Adjust the height of the navbar to make space for the image */
-  .navbar {
-    height: 150px; /* Adjust this value as needed */
-  }
+{% block content %}
 
-  /* Adjust the z-index of the collapsed navbar */
-  @media (max-width: 991.98px) {
-    .navbar-collapse {
-      z-index: 1000;
-    }
-  }
-</style>
-</head>
-<body >
-
-    <!-- Navbar code here (if any) -->
-    {% include 'navbar.html' %}
-    <!--<img src="\static\Image\banner-img.jpg" alt="home-banner"  >-->
-    
-<div class="container-fluid">
-    <img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">
+<div class="container-fluid" style="margin-top: 80px;">
+  <img src="\static\Image\banner-img.jpg" class="banner-img">
+    <!--<img src="\static\Image\banner-img.jpg" alt="home-banner" class="img-fluid banner-img" style="height: 300px; width: 1800px ; position: relative; background-size: cover; ">-->
   </div>
     <br>
     <div class="container">
     
-    <h1>Welcome Admin</h1>
+    <h1 class="text-center" >Welcome Admin</h1>
     <div class="container">
     <div class="col-lg-7">
-    <div class="px-5 py-3 mx-auto rounded-3 bg-warning">
+    <div class="px-5 py-3 mx-auto rounded-3" >
         <div id="summary-data">
           <!-- Data from the 'summary' route will be displayed here -->
         </div>
@@ -71,5 +45,4 @@
 
   <!--end  summary -->
 
-</body>
-</html>
+  {% endblock %}
