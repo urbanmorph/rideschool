@@ -1,205 +1,135 @@
-<!DOCTYPE html>
-<html>
-<head>
-     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- 
-    <style>
-        /* Adjust the z-index for the navbar */
-        .navbar {
-          z-index: 1000;
-          position: sticky;
-          top: 0; 
-        }
-      </style>
-    <style>
-        .training-list-container {
-            margin: 20px;
-        }
+{% extends "application.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
 
-        .training-list-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .training-list-table th {
-            background-color: #222529;
-            color: #fff;
-            text-align: center;
-            position: sticky;
-            top: 100px; 
-        }
-
-        .training-list-table th, .training-list-table td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        .training-list-table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
-            margin: 0;
-            padding-top: 50px;
-        }
-        
-        .delete-selected-btn {
-            margin-top: 10px;
-        }
-    </style>
-    <title>Training Locations</title>
-</head>
-<body>
-    {% include 'navbar.html' %}
+{% block title %} Training Locations List{% endblock %}
+   
+{% block content %}
     
-    
-    <center><h1  class="mt-5">Training Locations List</h1></center>
-    <div class="container">
-        <div class="training-list-container">
-            <form action="/delete_location" method="post" id="training-locations-form">
-                <table class="training-list-table ">
-                    <thead>
+    <div class="training-list-container" style="margin-top: 100px;">
+        <h1 style="text-align: center;">Training Locations List</h1>
+        <form action="/delete_location" method="post" id="training-locations-form">
+            <table class="training-list-table table table-striped">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Training Location</th>
+                        <th>Trainer</th>
+                        <th>Location Picture</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>   
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in training_location %}
                         <tr>
-                            <th>Select</th>
-                            <th>ID</th>
-                            <th>Training Location</th>
-                            <th>Trainer</th>
-                            <th>Location Picture</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                           
-                            
+                            <td><input type="checkbox" name="selected_locations" value="{{ location['training_location_id'] }}"></td>
+                            <td>{{ location['training_location_id'] }}</td>
+                            <td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" >{{ location['training_location'] }}</td>
+                            <!--<td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" data-picture="{{ location['training_location_picture'] }}">{{ location['training_location'] }}</td>-->
+                            <td>{{ location['trainer_name'] }}</td>
+                            <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>
+                          
+                            <td class="address"></td>
+                            <td class="latitude"></td>
+                            <td class="longitude"></td>
+                           <!--<td class="picture"></td>-->
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for location in training_location %}
-                            <tr>
-                                <td><input type="checkbox" name="selected_locations" value="{{ location['training_location_id'] }}"></td>
-                                <td>{{ location['training_location_id'] }}</td>
-                                <td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" >{{ location['training_location'] }}</td>
-                                <!--<td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" data-picture="{{ location['training_location_picture'] }}">{{ location['training_location'] }}</td>-->
-                                <td>{{ location['trainer_name'] }}</td>
-                                <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>
-                              
-                                <td class="address"></td>
-                                <td class="latitude"></td>
-                                <td class="longitude"></td>
-                               <!--<td class="picture"></td>-->
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    {% endfor %}
+                </tbody>                     
+            </table>
+            <br>               
+        </form>
+        <input type="submit" value="Delete Selected" class="btn btn-primary">
+    </div>
 
-                <input type="submit" value="Delete Selected" class="btn btn-primary">
+    <div class="card" style="margin-top: 50px;">
+        <div class="card-body">
+            <h2 class="card-title">Add a new training location</h2>
+            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="training_location_id">Location ID:</label>
+                    <input type="text" class="form-control" id="training_location_id" name="training_location_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="training_location">Training Location:</label>
+                    <input type="text" class="form-control" id="training_location" name="training_location" required>
+                </div>
+                <div class="form-group">
+                    <label for="training_location_address">Address:</label>
+                    <input type="text" class="form-control" id="training_location_address" name="training_location_address" required>
+                </div>
+                <div class="form-group">
+                    <label for="training_location_latitude">Latitude:</label>
+                    <input type="text" class="form-control" id="training_location_latitude" name="training_location_latitude" required>
+                </div>
+                <div class="form-group">
+                    <label for="training_location_longitude">Longitude:</label>
+                    <input type="text" class="form-control" id="training_location_longitude" name="training_location_longitude" required>
+                </div>
+                <div class="form-group">
+                    <label for="location_picture">Location Picture:</label>                
+                    <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*" required>           
+                </div>
+                <input type="submit" class="btn btn-primary" value="Add Location">
             </form>
         </div>
     </div>
-
-<br>
-<br>
-<br>
-<div class="card">
-    <div class="card-body">
-        <h2 class="card-title">Add a new training location</h2>
-       
-        
-            
-
-            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
-
-            <div class="form-group">
-                <label for="training_location_id">Location ID:</label>
-                <input type="text" class="form-control" id="training_location_id" name="training_location_id" required>
-            </div>
-            <div class="form-group">
-                <label for="training_location">Training Location:</label>
-                <input type="text" class="form-control" id="training_location" name="training_location" required>
-            </div>
-            <div class="form-group">
-                <label for="training_location_address">Address:</label>
-                <input type="text" class="form-control" id="training_location_address" name="training_location_address" required>
-            </div>
-            <div class="form-group">
-                <label for="training_location_latitude">Latitude:</label>
-                <input type="text" class="form-control" id="training_location_latitude" name="training_location_latitude" required>
-            </div>
-            <div class="form-group">
-                <label for="training_location_longitude">Longitude:</label>
-                <input type="text" class="form-control" id="training_location_longitude" name="training_location_longitude" required>
-            </div>
-
-
-            <div class="form-group">
-                <label for="location_picture">Location Picture:</label>
-                
-                
-                <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*" required>
-
-                
-
-           
-            </div>
-
-           
-
-            <input type="submit" class="btn btn-primary" value="Add Location">
-        </form>
+    <div id="message-container"></div>
     </div>
-</div>
-<div id="message-container"></div>
-</div>
-<script>
-    $(document).ready(function () {
-    $('#training-locations-form').on('submit', function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: '/delete_location',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (response) {
-                if (response.status === 'success') {
-                    showAlert('alert-success', response.message);
-                    $('input[name="selected_locations"]:checked').closest('tr').remove();
-                } else if (response.status === 'error') {
-                    showAlert('alert-danger', response.message);
+    <script>
+        $(document).ready(function () {
+            $('#training-locations-form').on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/delete_location',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            showAlert('alert-success', response.message);
+                            $('input[name="selected_locations"]:checked').closest('tr').remove();
+                        } else if (response.status === 'error') {
+                            showAlert('alert-danger', response.message);
+                        }
+                    },
+                    error: function () {
+                        showAlert('alert-danger', 'An error occurred. Please try again later.');
+                    }
+                });
+            });
+
+
+            $('#add-location-form').on('submit', function (event) {
+            event.preventDefault();
+            
+            var formData = new FormData(this); // Create a FormData object to send the file
+            
+            $.ajax({
+                url: '/add_location',
+                type: 'POST',
+                data: formData, // Use the FormData object to send the file
+                contentType: false, // Set content type to false to let the browser handle it
+                processData: false, // Set processData to false to prevent jQuery from processing data
+                success: function (response) {
+                    if (response.status === 'success') {
+                        showAlert('alert-success', response.message);
+                        // Add code here to update the table
+                    } else if (response.status === 'error') {
+                        showAlert('alert-danger', response.message);
+                    }
+                },
+                error: function () {
+                    showAlert('alert-danger', 'An error occurred. Please try again later.');
                 }
-            },
-            error: function () {
-                showAlert('alert-danger', 'An error occurred. Please try again later.');
-            }
+            });
         });
-    });
 
-
-    $('#add-location-form').on('submit', function (event) {
-    event.preventDefault();
-    
-    var formData = new FormData(this); // Create a FormData object to send the file
-    
-    $.ajax({
-        url: '/add_location',
-        type: 'POST',
-        data: formData, // Use the FormData object to send the file
-        contentType: false, // Set content type to false to let the browser handle it
-        processData: false, // Set processData to false to prevent jQuery from processing data
-        success: function (response) {
-            if (response.status === 'success') {
-                showAlert('alert-success', response.message);
-                // Add code here to update the table
-            } else if (response.status === 'error') {
-                showAlert('alert-danger', response.message);
-            }
-        },
-        error: function () {
-            showAlert('alert-danger', 'An error occurred. Please try again later.');
-        }
-    });
-});
-
- 
-$('td.location').on('click', function () {
+        
+        $('td.location').on('click', function () {
             var address = $(this).data('address');
             var latitude = $(this).data('latitude');
             var longitude = $(this).data('longitude');
@@ -222,22 +152,17 @@ $('td.location').on('click', function () {
                 row.find('.picture').text('Picture: ' + picture);
             }
         });
-    
-
-    
-
-    function showAlert(alertClass, message) {
-        var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
-            message +
-            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-            '<span aria-hidden="true">&times;</span>' +
-            '</button>' +
-            '</div>';
-        $('#message-container').html(alertHTML);
-        $('#message-container').show();
-    }
-});
-
-</script>
-</body>
-</html>
+            
+        function showAlert(alertClass, message) {
+            var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+                message +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '<span aria-hidden="true">&times;</span>' +
+                '</button>' +
+                '</div>';
+            $('#message-container').html(alertHTML);
+            $('#message-container').show();
+            }
+        });
+    </script>
+{% endblock %}
