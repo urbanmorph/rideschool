@@ -1,195 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "application.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Participants Information</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Adjust the z-index for the navbar */
-        .navbar {
-          z-index: 1000;
-        }
-      </style>
-    <style>
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-          
-        }
-
-        h1 {
-            text-align: center;
-            
-        }
-
-        table {
-            width: 100%;
-            background-color: #fff;
-            border: 1px solid #ddd; 
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            white-space: pre-wrap; 
-        }
-
-       
-        th:nth-child(10),
-        td:nth-child(10) {
-            width: 30%; 
-        }
-
-        thead {
-            background-color: #343a40; 
-            color: #fff;
-            position: sticky;
-            top: 100px; 
-        }
-
-        th {
-            font-weight: bold;
-            border-right: 1px solid #ddd; 
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f2f2f2; 
-        }
-
-
-        
-        form button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-    </style>
+{% block title %} Trainer landing {% endblock %}
     
-    <title>trainer display </title>
-   
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    {% include 'navbar.html' %}
-    <br><br>
-    <br>
-    <h1 class = "mt-5">Participants Trained By You </h1>
-    <!--the rout to update the participant_status to COMPLETED or DROPOUT by the trainer is in the login.py below the /logout rout  -->
-<form method="POST" id="update-form">
-    <table class="table table-striped table-bordered border-dark">
-        <tr>
-            <th>Participant Name</th>
-            <th>Participant Contact</th>
-            <th>Participant Status</th>
-        </tr>
-        {% for participant in participants %}
-        <tr>
-            
-            <!--<td>{{ participant[1] }}</td>
-            <td>{{ participant[2] }}</td>-->
-            <td>{{ participant.participant_name }}</td>
-    <td>{{ participant.participant_contact }}</td>
-            <td>
-                <!-- class to the select element to make it easier to select with jQuery -->
-               <!--<select class="status-select" name="participant_status" data-participant-id="{{ participant[0] }}" data-initial-status="{{ participant[3] }}">
+{% block content %}
+    <div  style="margin-top: 100px;">    
+        <h1>Participants Trained  </h1>
+        <!--the rout to update the participant_status to COMPLETED or DROPOUT by the trainer is in the login.py below the /logout rout  -->
+        <form method="POST" id="update-form">
+            <table class="table table-striped table-bordered border-dark">
+                <tr>
+                    <th>Participant Name</th>
+                    <th>Participant Contact</th>
+                    <th>Participant Status</th>
+                </tr>
+                {% for participant in participants %}
+                <tr>
+                    <td>{{ participant.participant_name }}</td>
+                    <td>{{ participant.participant_contact }}</td>
+                    <td>
+                        <select class="status-select" name="participant_status" data-participant-id="{{ participant.participant_id }}" data-initial-status="{{ participant.participant_status }}">
+                            <option value="{{ participant.participant_status }}" selected>{{ participant.participant_status }}</option>
+                            {% if participant.participant_status == 'ONGOING' %}
+                            <option value="COMPLETED">COMPLETED</option>
+                            <option value="DROP-OUT">DROP-OUT</option>
+                            {% endif %}
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>        
+            <div class="d-flex justify-content-center">
+            <button type="button" id="update-button" >Update</button></div>
+        </form>
 
-                    <option value="{{ participant[3] }}" selected>{{ participant[3] }}</option>--> 
-                    <select class="status-select" name="participant_status" data-participant-id="{{ participant.participant_id }}" data-initial-status="{{ participant.participant_status }}">
-                        <option value="{{ participant.participant_status }}" selected>{{ participant.participant_status }}</option>
-                        {% if participant.participant_status == 'ONGOING' %}
-                        <option value="COMPLETED">COMPLETED</option>
-                        <option value="DROP-OUT">DROP-OUT</option>
-                        {% endif %}
-                        <!--<option value="COMPLETED">COMPLETED</option>
-                    <option value="DROP-OUT">DROP-OUT</option>--> 
-                </select>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <center><button type="button" id="update-button">Update</button></center>
-</form>
+        <script>
+            $(document).ready(function () {
+                $("#update-button").click(function () {
+                    // Create an array to store updates
+                    var updates = [];
 
+                    // Loop through all select elements
+                    $(".status-select").each(function () {
+                        var participantId = $(this).data("participant-id");              
+                        var newStatus = $(this).val();
+                        var initialStatus = $(this).closest("td").data("initial-status");
 
-<script>
-$(document).ready(function () {
-    $("#update-button").click(function () {
-        // Create an array to store updates
-        var updates = [];
+                        // Check if the status has changed
+                        if (newStatus !== initialStatus) {
+                            updates.push({
+                                "participantId": participantId,
+                                "newStatus": newStatus,
+                            });
+                        }
+                    });
 
-        // Loop through all select elements
-        $(".status-select").each(function () {
-            //For each select element:, wheenever you select an option from the droplist
-//It retrieves the participant's ID, the newly selected status, and the initial status from data attributes in the HTML.
-//It checks if the status has changed. If it has, it adds an object containing the participant ID and the new status to the updates array.
-            var participantId = $(this).data("participant-id");              
-            var newStatus = $(this).val();
-            var initialStatus = $(this).closest("td").data("initial-status");
+                    // Send an AJAX request to update the statuses , to the server 
+                    $.ajax({
+                        type: "POST",
+                        url: "/update_participant_statuses",
+                        contentType: "application/json",
+                        data: JSON.stringify(updates),  
+                        success: function (response) {
+                            var messageDiv = $("#message-div"); // alert 1
+                                    messageDiv.empty(); // alert 1
 
-            // Check if the status has changed
-            if (newStatus !== initialStatus) {
-                updates.push({
-                    "participantId": participantId,
-                    "newStatus": newStatus,
+                            // Handle the response
+                            console.log("Response from server:", response);  //  is used for debugging and logging the server response to the browser console. It's typically used during development and debugging to inspect the response data.we  can keep or remove this line 
+
+                            // Check if the response contains a success message
+                            if (response.success) {
+                                // Display a success message in an alert box  
+                                //alert 2
+                                messageDiv.html('<div class="alert alert-success" role="alert">Participant status updated successfully.</div>');
+                            } else {
+                                // Display an error message in an alert box
+                                // alert 3
+                                messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>');
+                            }
+                        },
+                        error: function () {
+                            // Handle errors
+                            console.error("Error occurred during AJAX request");// used for logging an error message to the browser console when there's an error during the AJAX request. This can be helpful for debugging and diagnosing issues when something goes wrong with the request. we can keep or remove these lines based on your preference.
+
+                            var messageDiv = $("#message-div");// alert 4
+                            messageDiv.empty(); // alert 5
+                            // Display an error message in an alert box
+                            messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>'); // alert 6
+                        },
+                    });
                 });
-            }
-        });
-
-        // Send an AJAX request to update the statuses , to the server 
-        $.ajax({
-            type: "POST",
-            url: "/update_participant_statuses",
-            contentType: "application/json",
-            data: JSON.stringify(updates),  // Send the array of updates, sends the data in json format,The data to be sent in JSON format (the updates array).
-
-//The success and error callback functions handle the response from the server:
-
-//If the server responds with success, it displays a success message in the "message-div" element.
-//If there's an error during the request, it logs the error and displays an error message.
-            success: function (response) {
-
-                var messageDiv = $("#message-div"); // alert 1
-                        messageDiv.empty(); // alert 1
-
-                // Handle the response
-                console.log("Response from server:", response);  //  is used for debugging and logging the server response to the browser console. It's typically used during development and debugging to inspect the response data.we  can keep or remove this line 
-
-                // Check if the response contains a success message
-                if (response.success) {
-                    // Display a success message in an alert box  
-                    //alert 2
-                    messageDiv.html('<div class="alert alert-success" role="alert">Participant status updated successfully.</div>');
-                } else {
-                    // Display an error message in an alert box
-                    // alert 3
-                    messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>');
-                }
-            },
-            error: function () {
-                // Handle errors
-                console.error("Error occurred during AJAX request");// used for logging an error message to the browser console when there's an error during the AJAX request. This can be helpful for debugging and diagnosing issues when something goes wrong with the request. we can keep or remove these lines based on your preference.
-
-                var messageDiv = $("#message-div");// alert 4
-                messageDiv.empty(); // alert 5
-                // Display an error message in an alert box
-                messageDiv.html('<div class="alert alert-danger" role="alert">Unable to update participant status. An error occurred.</div>'); // alert 6
-            },
-        });
-    });
-});
-
-</script>
-
-<div class="alert-message" id="message-div"></div>  
-</body>
-</html>
+            });
+        </script>
+        <div class="alert-message" id="message-div"></div> 
+    </div> 
+{% endblock %}
