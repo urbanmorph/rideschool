@@ -1,54 +1,26 @@
+{% extends "application.html" %}
 
+{% block head %}
+    {{ super() }}
+        <!-- include  the Folium CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <!-- script tags include the Leaflet and Folium JavaScript libraries. -->
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/folium@0.12.1/folium.js"></script>
+{% endblock %}
 
-<!-- map.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AltMo Ride School Map</title>
-    <!-- include  the Folium CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-   
-    <style>
-        /* Set the height of the map container */
-        #map-container {
-            height: 500px;
-        }
-        body {
-   /* padding-top: 56px; /* Adjust this value based on your navbar height */
-}
-
-.navbar {
-    z-index: 1000; /* Ensure the navbar is on top */
-    background-color: #111; /* Set the background color of the navbar */
-}
-
-#map-container {
-    z-index: 0; /* Set a lower z-index for the map to be behind the navbar */
-}
-
-
-
-        
-    </style>
-</head>
-<body>
-    {% include 'navbar.html' %}
+{% block title %} AltMo Ride School Map {% endblock %}
     
-
+{% block content %}
+<!--<div class="container" style="margin-top: 90px;">-->
     <!-- The map container -->
     <div id="map-container"></div>
-
-    <!-- script tags include the Leaflet and Folium JavaScript libraries. -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/folium@0.12.1/folium.js"></script>
-
     <script>
         // Fetch locations from the server (replace this with your actual data)
         var locations = {{ locations|tojson|safe }};  
         //var locations = {{ locations|tojson|safe }}; is used to pass the locations variable from the Flask server to the JavaScript code in the template. In your case, you are already passing the locations from the server to the template using render_template('map.html', locations=locations) in your show_map route.//
-//Make sure that your locations variable is a list of lists or a list of tuples where each inner list or tuple contains latitude and longitude values, as the JavaScript code assumes this structure.
+        //Make sure that your locations variable is a list of lists or a list of tuples where each inner list or tuple contains latitude and longitude values, as the JavaScript code assumes this structure.
+        
         // Create a Folium map
         var myMap = L.map('map-container').setView([12.9716, 77.5946], 13);
 
@@ -64,31 +36,5 @@
                 .addTo(myMap);
         });
     </script>
-</body>
-</html>
-
-<!--
-
-In the provided code, the purpose of the show_map route and the associated functions (fetch_locations_from_db and create_folium_map) is to fetch location data from a database, create a Folium map with markers based on the fetched locations, and then render an HTML template (map.html) that will display the map.
-
-Let's break down the process:
-
-fetch_locations_from_db Function:
-
-This function interacts with the database to fetch the latitude and longitude of training locations from the training_locations_list table.
-create_folium_map Function:
-
-This function takes a list of locations (latitude and longitude pairs) as input.
-It creates a Folium map centered at the first location in the list.
-For each location in the list, it adds a marker to the map.
-show_map Route:
-
-The show_map route is associated with the /map URL endpoint.
-Inside the route, it calls fetch_locations_from_db to get the locations from the database.
-Then, it calls create_folium_map to generate a Folium map with markers based on the fetched locations.
-The map is saved as an HTML file named map.html.
-Finally, it renders the map.html template and passes the locations variable to the template. This allows the JavaScript code in the template to use these locations to display markers on the map.
-map.html Template:
-
-The JavaScript code in the template uses Leaflet and Folium libraries to create a map and add markers based on the locations variable passed from the route.
-This setup allows you to dynamically generate a map with markers based on the data stored in the database. The show_map route serves as the endpoint where the map is generated, and the resulting HTML template is rendered for display in a web browser.-->
+<!--</div>-->
+{% endblock %}
