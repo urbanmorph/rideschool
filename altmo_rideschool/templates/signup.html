@@ -2,11 +2,6 @@
 
 {% block head %}
     {{ super() }}
-    <!-- Include the CSS file -->
-    <!--
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    -->
 {% endblock %}
 
 {% block title %} Signup Form {% endblock %}
@@ -45,6 +40,19 @@
                 var alertClass = alertType === 'success' ? 'alert-success' : 'alert-danger';
                 var alertHtml = `<div class="alert ${alertClass}">${message}</div>`;
                 $('#alert-container').html(alertHtml);
+
+                if (alertType === 'success') {
+                    // Redirect to the login page after 3 seconds for success
+                    setTimeout(function () {
+                        window.location.href = "/logins";
+                    }, 3000);
+                } else {
+                    // Reset the form after 3 seconds for errors
+                    setTimeout(function () {
+                        $('#signup-form')[0].reset(); // Reset the form
+                        $('#alert-container').html(''); // Clear alert messages
+                    }, 3000);
+                }               
             }
             $(document).ready(function () {
                 $('#signup-form').submit(function (event) {
