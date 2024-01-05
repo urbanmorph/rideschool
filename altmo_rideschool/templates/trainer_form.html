@@ -11,44 +11,31 @@
         <form class="my-form" id="trainerForm" action="/register" method="POST">
 
             <label for="trainer_name">Name:</label>
-            <br>
             <input type="text" id="trainer_name" name="trainer_name" required>
-            <br><br>
 
-            <label for="trainer_email">Email:</label>
-            <br>
+            <label for="trainer_email">Email:</label>       
             <input type="email" id="trainer_email" name="trainer_email" required onblur="validateEmail()">
             <span id="email_error" class="error"></span>
-            <br><br>
-
-            <label for="trainer_contact">Contact No:</label>
-            <br>
+            
+            <label for="trainer_contact">Contact No:</label>           
             <input type="text" id="trainer_contact" name="trainer_contact" required onblur="validateContact()">
             <span id="contact_error" class="error"></span>
-            <br><br>
-
-            <label for="trainer_address">Address:</label>
-            <br>
+            
+            <label for="trainer_address">Address:</label>           
             <textarea id="trainer_address" name="trainer_address" required></textarea>
-            <br><br>
 
-            <label for="trainer_age">Age:</label>
-            <br>
+            <label for="trainer_age">Age:</label>           
             <input type="text" id="trainer_age" name="trainer_age" required>
-            <br><br>
-
-            <label for="trainer_gender">Gender:</label>
-            <br>
+            
+            <label for="trainer_gender">Gender:</label>          
             <select id="trainer_gender" name="trainer_gender" required>
                 <option value="">Select gender</option>
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
                 <option value="Other">Others</option>
             </select>
-            <br><br>
-
-            <label for="trainer_education">Education Qualification:</label>
-            <br>
+            
+            <label for="trainer_education">Education Qualification:</label>          
             <select id="trainer_education" name="trainer_education" onchange="handleEducationChange()" required>
                 <option value="">Select qualification</option>
                 <option value="Below 10th">Below 10th</option>
@@ -57,36 +44,27 @@
                 <option value="Graduation">Graduation</option>
                 <option value="Post Graduation">Post Graduation</option>
             </select>
-            <br><br>
-
+            
             <label for="trainer_language">Language:</label>
-            <br>
-            <input type="checkbox" id="language_kannada" name="trainer_language" value="Kannada">
-            <label for="language_kannada">Kannada</label>
-            <br>
-            <input type="checkbox" id="language_hindi" name="trainer_language" value="Hindi">
-            <label for="language_hindi">Hindi</label>
-            <br>
-            <input type="checkbox" id="language_english" name="trainer_language" value="English">
-            <label for="language_english">English</label>
-            <br><br>
-
-            <label for="trainer_aadhar_no">Aadhar Number:</label>
-            <br>
+            <label for="language_kannada" style="margin-right: 5px;">Kannada          
+            <input type="checkbox" id="language_kannada" name="trainer_language" value="Kannada"></label>  
+            <label for="language_hindi" style="margin-right: 5px;">Hindi 
+            <input type="checkbox" id="language_hindi" name="trainer_language" value="Hindi"></label> 
+            <label for="language_english" style="margin-right: 5px;">English   
+            <input type="checkbox" id="language_english" name="trainer_language" value="English"></label> 
+              
+            <label for="trainer_aadhar_no">Aadhar Number:</label>          
             <input type="text" id="trainer_aadhar_no" name="trainer_aadhar_no" required onblur="validateAadharNumber()">
             <span id="aadhar_error" class="error"></span>
-            <br><br>
-
-            <label for="organisation_name">Organisation Name:</label>
-            <br>
+            
+            <label for="organisation_name">Organisation Name:</label>            
             <select id="organisation_name" name="organisation_name" required>
                 <option value="">Select organisation</option>
                 {% for organisation_name in organisation_names %}
                 <option value="{{ organisation_name }}">{{ organisation_name }}</option>
                 {% endfor %}
             </select>
-            <br><br>
-
+            
             <input type="submit"id="submitBtn" value="Register">
         </form>
         <div class="alert" id="messageAlert" style="display: none;"></div>
