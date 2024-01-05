@@ -48,8 +48,8 @@
 
     <div class="card" style="margin-top: 50px;">
         <div class="card-body">
-            <h2 class="card-title">Add a new training location</h2>
-            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data">
+            <h2 class="card-title" style="text-align:center;" >Add a new training location</h2>
+            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data" class="my-con-container">
                 <div class="form-group">
                     <label for="training_location_id">Location ID:</label>
                     <input type="text" class="form-control" id="training_location_id" name="training_location_id" required>
@@ -74,6 +74,7 @@
                     <label for="location_picture">Location Picture:</label>                
                     <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*" required>           
                 </div>
+                <br>
                 <input type="submit" class="btn btn-primary" value="Add Location">
             </form>
         </div>
