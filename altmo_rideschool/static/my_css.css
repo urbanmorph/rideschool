@@ -185,15 +185,7 @@ form label {
 /* participant_form.html end */
 
 /* feedback form start*/
-/*
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  text-align: center;
-  /*padding: 20px;
-  margin: 0;
-  padding-top: 50px;*/
-/*}*/
+
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 5px;
@@ -504,3 +496,14 @@ thead th {
 */
 
 /*participant_display.html end */
+/*form */
+/*
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  text-align: center;
+  /*padding: 20px;
+  margin: 0;
+  padding-top: 50px;*/
+/*}*/
+/*form */
