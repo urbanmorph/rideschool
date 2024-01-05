@@ -1,14 +1,22 @@
 
 print("import feane/ logins.py")
+
 #from altmo_utils.db import  get_db_pool, close_db_pool, get_db_connection, get_db_cursor
+
 from altmo_utils.db import get_db_cursor
 import bcrypt
+
 ##import psycopg2
+
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
+
 #from .config.config import get_config_value 
+
 from .forms import YourLoginForm  # Import your login form 
 #is a Python import statement that allows you to access the get_config_value function from the config module located within the config directory.
+
 #import get_config_value: This part of the statement specifies that you want to import the get_config_value function from the config module( config.py).which is inside the config directory/folder 
+
 #this line of code is saying, "From the config package, go into the config module and import the get_config_value function so that I can use it in this current module (e.g., your Flask application or script)." This allows you to use the get_config_value function to access configuration values stored in the config module from within your application.
  # Import the config dictionary/ folder
 import traceback
@@ -56,13 +64,12 @@ def index():
 def check_logins():
     db_cursor = None
     
-    db_connection = None
+    #db_connection = None
     form = YourLoginForm(request.form)  # Create an instance of your login form
     try:
         #with get_db_pool().getconn() as db_connection:
         with get_db_cursor(commit=True) as db_cursor:
             #db_cursor = db_connection.cursor()
-
             contact = request.form['contact']
             user_password = request.form['password']
         # Debugging: Log the received form data
@@ -118,7 +125,7 @@ def check_logins():
                         trainer_id = trainer_data['trainer_id']
                         trainer_name = trainer_data['trainer_name']
                         trainer_status = trainer_data['trainer_status']
-############################
+######
                         session['trainer_name'] = trainer_name
 
                         if trainer_status == 'CERTIFIED':
@@ -161,7 +168,7 @@ def check_logins():
 
                         #training_location_id = participant_data[3]
                         training_location_id = participant_data['training_location_id']
-##########################
+##########   ##############
                         db_cursor.execute("SELECT training_location_address FROM training_locations_list WHERE training_location_id = %s", (training_location_id,))
                         training_location_address = db_cursor.fetchone()
 
