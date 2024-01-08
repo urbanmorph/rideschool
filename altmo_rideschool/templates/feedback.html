@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label for="training_rating">Rate your training sessions (1-5 stars):</label>
                 <div class="star-rating">
-                    <input type="radio" id="star5" name="training_rating" value="5">
+                    <input type="radio" id="star5" name="training_rating" value="5" >
                     <label for="star5"></label>
                     <input type="radio" id="star4" name="training_rating" value="4">
                     <label for="star4"></label>
@@ -46,22 +46,26 @@
             </div>
             <div class="form-group">
                 <label>Did you find the learner's guide useful?</label>
-                <input type="checkbox" id="learner_guide_yes" name="learner_guide" value="yes">Yes
-                <input type="checkbox" id="learner_guide_no" name="learner_guide" value="no">No<br>
+                <label for="learner_guide_yes">Yes</label>
+                <input type="checkbox" id="learner_guide_yes" name="learner_guide" value="yes">
+                <label for="learner_guide_no">No</label>
+                <input type="checkbox" id="learner_guide_no" name="learner_guide" value="no"><br>
             </div>
             <div class="form-group">
                 <label for="additional_feedback">Please provide any additional feedback, including what challenges you faced and what you liked about it:</label>
-                <textarea id="additional_feedback" name="additional_feedback" rows="4" cols="50"></textarea><br>
+                <textarea id="additional_feedback" name="additional_feedback" rows="4" cols="50" required ></textarea><br>
             </div>
             <div class="form-group">
                 <label>Do you feel confident to ride a bicycle?</label>
-                <input type="radio" id="confidence_yes" name="confidence" value="yes">Yes
-                <input type="radio" id="confidence_no" name="confidence" value="no">No<br>
+                <label for="confidence_yes">Yes</label>
+                <input type="radio" id="confidence_yes" name="confidence" value="yes">
+                <label for="confidence_no">No</label>
+                <input type="radio" id="confidence_no" name="confidence" value="no"><br>
             </div>
             <div class="form-group">
                 <label for="trainer_evaluation">How will you evaluate our trainer?</label>
                 <div class="star-rating">
-                    <input type="radio" id="trainer_star5" name="trainer_evaluation" value="5">
+                    <input type="radio" id="trainer_star5" name="trainer_evaluation" value="5" >
                     <label for="trainer_star5"></label>
                     <input type="radio" id="trainer_star4" name="trainer_evaluation" value="4">
                     <label for="trainer_star4"></label>
@@ -75,52 +79,42 @@
             </div>
             <div class="form-group">
                 <label for="trainer_feedback">Please provide feedback for the trainer:</label>
-                <textarea id="trainer_feedback" name="trainer_feedback" rows="4" cols="50"></textarea><br>
+                <textarea id="trainer_feedback" name="trainer_feedback" rows="4" cols="50" required></textarea><br>
             </div>
-            <button type="submit">Submit Feedback</button>
-            <div id="message-container">
+            <div style=" text-align:center">
+                <button type="submit" >Submit Feedback</button>
             </div>
+            <!--<div id="message-container">
+            </div>-->
         </form>
         <script>
             // JavaScript code for handling form submission and displaying custom alerts
             $(document).ready(function () {
                 $('#feedback-form').on('submit', function (event) {
                     event.preventDefault(); // Prevent the form from submitting normally
+
+                    var formData =  $(this).serialize();
                     $.ajax({
                         url: '/feedback-form',
                         type: 'POST',
-                        data: new FormData(this),
-                        processData: false,
-                        contentType: false,
+                        data: formData,
                         success: function (response) {
-                        alert('Feedback submitted successfully');  // Display an alert message
-                            if (response.status === 'success') {
-                                //showAlert('success', response.message);
+                            alert(response.message);
 
-                                // Handle success...
-                            } else if (response.status === 'error') {
-                                //showAlert('error', response.message);
-                                // Handle error...
+                            if (response.alert_type === 'success') {
+                                window.location.href = '/participants-display';                            
+                            } else {
+                                $('#feedback-form')[0].reset();
                             }
                         },
-                        error: function () {
-                            showAlert('error', 'An error occurred. Please try again later.');
+                        error: function (xhr, status, error) {
+                            var responseText = xhr.responseJSON;
+                            alert(responseText && responseText.message || 'An error occurred while processing the signup.');
                         }
                     });
                 });
-                // Custom showAlert function to display messages in the message-container
-                function showAlert(type, message) {
-                    var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-                    var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
-                                    message +
-                                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                    '<span aria-hidden="true">&times;</span>' +
-                                    '</button>' +
-                                    '</div>';
-                    $('#message-container').html(alertHTML);
-                    $('#message-container').show();
-                }
-            });
+            });           
         </script>
+  
     </div>
 {% endblock %}
