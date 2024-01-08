@@ -25,7 +25,7 @@
             <textarea id="participant_address" name="participant_address"></textarea>
 
             <label for="participant_age">Age:</label>
-            <select id="participant_age" name="participant_age">
+            <select id="participant_age" name="participant_age" required>
                 <option value="">Select age range</option>
                 <option value="5-10">5-10</option>
                 <option value="11-20">11-20</option>
@@ -37,7 +37,7 @@
             </select>
 
             <label for="participant_gender">Gender:</label>
-            <select id="participant_gender" name="participant_gender">
+            <select id="participant_gender" name="participant_gender" required>
                 <option value="">Select gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -55,7 +55,7 @@
 
             <input type="submit" value="Register" id="submitBtn" onclick="submitForm()">
         </form>
-        <div class="alert" id="messageAlert" style="display: none;"></div>
+       <!-- <div class="alert" id="messageAlert" style="display: none;"></div>-->
         <br>
         <p class="text-center">If you have already registered, please create an account to login : <a href="/signup">Create an account  </a></p>
     </div> 
@@ -71,7 +71,7 @@
                 var atIndex = email.indexOf("@");//it checks if it contains @ nd .
                 var dotIndex = email.lastIndexOf(".");
                 if (atIndex < 1 || dotIndex < (atIndex + 2) || (dotIndex + 2) >= email.length) { // depending on the validation it sets nd adds the error or removes the error class frm the input
-                    emailError.textContent = "Invalid email address. Email should contain @ and .";
+                    emailError.textContent = "Invalid email id.";
                     emailInput.classList.add("error");
                 } else {
                     emailError.textContent = "";
@@ -89,7 +89,7 @@
     
             if (contact.length > 0) { //It checks if the contact number is not empty 
                 if (contact.length !== 10 || !/^\d{10}$/.test(contact)) { // checks whether it consists of exactly 10 digits if it does not contain exactly 10 digit it is considered  invalid.
-                    contactError.textContent = "Invalid contact number. Contact number should consist of 10 digits.";
+                    contactError.textContent = "Invalid contact number.";
                     contactInput.classList.add("error");
                 } else {
                     contactError.textContent = "";
@@ -107,69 +107,36 @@
             address.textContent = selectedOption.getAttribute("data-address");// it  updates the displayed address by taking the value stored in the "data-address" attribute of the selected option in a dropdown and setting it as the visible text for the address element.
         }
     </script>
+
+
+<!--send the form data and display the return message as an alert -->
     <script>
-        // Function to display a message in the alert box , so in an alert box it will have things/parameters message, success( colour  if success  true =green , false= red )
-        function displayMessage(message, success) { //takes two parameters: message and success. ,,,message: It defines the text message to display in an alert box ,, and success: It determines the styling of the alert box; true makes it green for success, and false makes it red for an error. 
-            var alertElement = document.getElementById('messageAlert');//It retrieves an HTML element with the ID 'messageAlert' from the current HTML document and stores it in the variable alertElement.
-            alertElement.style.display = 'block';// It makes the alert box visible by changing its CSS display property to 'block'.
-            alertElement.innerHTML = message;// It sets the content inside the alert box to the value of the message parameter, dynamically updating what's displayed.
-            alertElement.classList.remove('alert-success', 'alert-danger');//It removes the CSS classes 'alert-success' and 'alert-danger' from the alertElement to reset its styling.
-            alertElement.classList.add(success ? 'alert-success' : 'alert-danger');// It adds a CSS class ('alert-success' for success or 'alert-danger' for error) to the alertElement based on the value of the success parameter to style the alert box accordingly.
-        }
-            
-        // Function to submit the form (with formid participantForm) to the server asynchronously (without reloading the whole page).
-        function submitForm() {
-            var form = document.getElementById('participantForm');
-            var formData = new FormData(form);
-            var submitButton = document.getElementById('submitBtn'); // this is the id which is set in the submit button 
-            // Disable the submit button to prevent multiple submissions
-            submitButton.disabled = true;
+        $(document).ready(function () { //This ensures that the enclosed code runs only after the DOM has fully loaded.
+            $('#participantForm').submit(function (event) {//This attaches a submit event handler to the form with the ID "participantForm". When this form is submitted, the provided function is executed.(insidde this there are below 2 thing that hapeen )
+                event.preventDefault();//This prevents the default form submission behavior, ensuring that the form doesn't perform a traditional synchronous submission (that is form action).
+                var formData = $(this).serialize();//The this keyword that reffers to the form id , within the context of the submit event handler function, refers to the HTML form element that triggered the event. In this case, it is the form with the ID "participantForm" because the event handler is attached to that specific form using $('#participantForm').submit(...).  // Within the event handler function, this refers to the form element that triggered the submit event. $(this) converts it into a jQuery object, and .serialize() then serializes the form data into a format that can be easily sent in an HTTP request.
 
-            $.ajax({
-                url: '/submit',
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    handleResponse(data);
-                },
-                error: function() {
-                    handleResponse('An error occurred. Please try again later.');
-                }
-            });
-        }
+                $.ajax({
+                    type: 'POST',
+                    url: "/submit", // Update the URL to match your endpoint
+                    data: formData,
+                    success: function (response) {
+                        alert(response.message);
 
-        function handleResponse(message) {
-            var alertType = message.includes('successfully') ? 'alert-success' : 'alert-danger';
-            var alertHTML = '<div class="alert ' + alertType + '">' + message + '</div>';
-            var messageContainer = $('#messageAlert');
-            messageContainer.html(alertHTML).show();
-
-            if (alertType === 'alert-success') {
-                setTimeout(function() {
-                    window.location.href = '/signup';
-                }, 3000);
-            }
-
-            setTimeout(function() {
-                $('#participantForm')[0].reset();
-                messageContainer.hide();
-                // Re-enable the submit button
-                var submitButton = document.getElementById('submitBtn');
-                submitButton.disabled = false;
-            }, 3000);
-        }
-
-        $(document).ready(function() {
-            $('#participantForm').submit(function(event) {
-                event.preventDefault();
-
-                if (!validateRegistrationForm()) {
-                    return false;
-                }
-                submitForm();
+                        if (response.alert_type === 'success') {
+                            window.location.href = '/signup';
+                            
+                        } else {
+                            $('#participantForm')[0].reset();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var responseText = xhr.responseJSON;
+                        alert(responseText && responseText.message || 'An error occurred while processing the signup.');
+                    }
+                });
             });
         });
-    </script>   
+    </script>
+
 {% endblock %}
