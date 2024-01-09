@@ -1,23 +1,8 @@
-print("import feane/ trainer.py")
+print("trainer.py")
 from flask import Blueprint, render_template, request, jsonify
-##from flask import session, url_for, current_app
-#from .db import get_db_connection
-#from altmo_utils.db import get_db_cursor, get_db_connection
 from altmo_utils.db import get_db_cursor 
 import traceback 
-#import psycopg2
-##import json
-##from .config.config import get_config_value 
-
 trainer_bp = Blueprint('trainer_bp', __name__)
-
-
-
-# Configure database connection
-##db_host = get_config_value('db_host')
-##db_user = get_config_value('db_user')
-##db_password = get_config_value('db_password')
-##db_name = get_config_value('db_name')
 
 # Function to generate the trainer code
 def generate_trainer_code(trainer_id):
@@ -27,8 +12,7 @@ def generate_trainer_code(trainer_id):
 # Route to the trainer form page
 @trainer_bp.route('/trainer-form', methods=['GET'])
 def trainer_form():
-    try:
-        
+    try:        
         with get_db_cursor(commit=False) as cursor:
             # Fetch training locations from the table
             cursor.execute("SELECT organisation_name FROM organisation")
@@ -36,11 +20,9 @@ def trainer_form():
             rows = cursor.fetchall()
             print("Rows from the database:", rows) 
             organisation_names = [row['organisation_name'] for row in rows]
-
         # Render the form template with the training locations
         return render_template('trainer_form.html', organisation_names=organisation_names)
-    except Exception as e:
-        import traceback
+    except Exception as e:        
         traceback.print_exc()  # Print the full traceback to the console
         return "An error occurred. Please check the console for details."
 # Route to handle form submission
@@ -58,59 +40,34 @@ def submit_form():
         trainer_languages = request.form.getlist('trainer_language')
         trainer_aadhar_no = request.form['trainer_aadhar_no']
         organisation_name = request.form['organisation_name']
-
-        # Connect to the database
-        ##connection = psycopg2.connect(
-          ##  host=db_host,
-            ##user=db_user,
-            ##password=db_password,
-            ##dbname=db_name
-        ##)
-        with get_db_cursor(commit=True) as cursor:
-        ##with get_db_connection() as connection:
-          ##  cursor = connection.cursor()
-             # Check if the contact number already exists
+        
+        with get_db_cursor(commit=True) as cursor:        
             check_query = "SELECT trainer_id FROM trainer WHERE trainer_contact = %s"
             cursor.execute(check_query, (trainer_contact,))
             existing_trainer = cursor.fetchone()
 
-            if existing_trainer:
-                # Contact number already exists, return a message
-                #return "Trainer with this contact number is already registered. Please continue to create an account."
-                ##error_message = "Trainer with this contact number is already registered. Please continue to create an account."
-                ##print(error_message)
-                ##return error_message
-                print("Trainer with this contact number is already registered.")
-                return jsonify({"status": "error", "message": "Trainer with this contact number is already registered. Please continue to create an account."})
+            if existing_trainer:                              
+                return jsonify({"alert_type": "error", "message": "The contact number is currently registered. Please await certification before proceeding with the account creation."})
 
-
-        # Fetch the organisation_id based on the selected organisation_name
+            # Fetch the organisation_id based on the selected organisation_name
             select_query = "SELECT organisation_id FROM organisation WHERE organisation_name = %s"
             cursor.execute(select_query, (organisation_name,))
             #organisation_id = cursor.fetchone()[0]
             result = cursor.fetchone()
-
-            print("Result from the database:", result)  
-
+            
             if result and 'organisation_id' in result:
                 organisation_id = result['organisation_id']
             else:
-    # Handle the case where organisation_id is not found
-                #return "Organisation not found."
-                print("Organisation not found.")
-                return jsonify({"status": "error", "message": "Organisation not found."})
-
-
+                # Handle the case where organisation_id is not found
+                return jsonify({"alert_type": "error", "message": "Organisation not found."})
     
-       #Note :  admin sets the traing_location
-
-       # Insert trainer data into the trainers table
+            #Note :  admin sets the traing_location
+            # Insert trainer data into the trainers table
             insert_query = '''
             INSERT INTO trainer (trainer_name, trainer_email, trainer_contact, trainer_address, trainer_age, trainer_gender, trainer_education, trainer_language, trainer_aadhar_no, organisation_id, training_location_id, trainer_training_completion_date)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, '0001-01-01')
             RETURNING trainer_id
             '''
-
             values = (trainer_name, trainer_email, trainer_contact, trainer_address, trainer_age, trainer_gender, trainer_education, trainer_languages, trainer_aadhar_no, organisation_id, 0)
             cursor.execute(insert_query, values)
             new_trainer_id = cursor.fetchone()
@@ -118,32 +75,22 @@ def submit_form():
             if new_trainer_id and 'trainer_id' in new_trainer_id:
                 new_trainer_id = new_trainer_id['trainer_id']
             else:
-    # Handle the case where trainer_id is not found
-                #return "Trainer ID not found."
-                print("Trainer ID not found.")
-                return jsonify({"status": "error", "message": "Trainer ID not found."})
-
-            print("New trainer ID:", new_trainer_id) 
-
-        # Generate the code for the trainer
+                # Handle the case where trainer_id is not found                                
+                return jsonify({"alert_type": "error", "message": "Trainer ID not found."})
+            
+            # Generate the code for the trainer
             new_code = generate_trainer_code(new_trainer_id)
 
-        # Update the code with the generated code
+            # Update the code with the generated code
             update_query = "UPDATE trainer SET trainer_code = %s WHERE trainer_id = %s;"
             cursor.execute(update_query, (new_code, new_trainer_id))
 
-        # Commit the transaction
-           # connection.commit()
-
-        # Close the cursor and connection
-        #cursor.close()
-        #connection.close()
-
         # Redirect to a success page or any other desired page
-        return jsonify({"status": "success", "message": "Trainer registered successfully!"})
-       # return "Trainer registered successfully!"
-    except Exception as e:
-        error_message = f"Error :{repr(e)}"
+        return jsonify({"alert_type": "success", "message": "Registration successful!"})
+      
+    except Exception as e:       
         traceback.print_exc()
-        #return f"Error: {str(e)}"
-        return jsonify({"status": "error", "message": f"Error: {str(e)}"})
+       # error_message = f"Error :{repr(e)}"
+        return jsonify({"alert_type": "error", "message": "An error occurred. Please try again later "})
+       # return jsonify({"alert_type": "error", "message": f"Error: {str(e)}"})
+    
