@@ -89,10 +89,12 @@ form label {
   display: block;
   margin-bottom: 10px;
   color: #333;
+  font-size: 20px;
   }
 
   .my-form label {
       font-weight: bold;
+      /*font-size: 20px;*/      
   }
   .my-form input[type="text"],
   .my-form input[type="email"],
@@ -106,7 +108,7 @@ form label {
       border: 1px solid #ccc;
       border-radius: 4px;
       margin-bottom: 10px;
-      font-size: 10px;
+      font-size: 18px;
   }
 
   .my-form input[type="submit"] {
@@ -185,7 +187,6 @@ form label {
 /* participant_form.html end */
 
 /* feedback form start*/
-
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 5px;
@@ -375,7 +376,7 @@ padding: 10px;
 margin-bottom: 10px;
 border: 1px solid #ccc;
 border-radius: 5px;
-font-size: 10px;
+font-size: 18px;
 }
 /* signup.html end*/
 
