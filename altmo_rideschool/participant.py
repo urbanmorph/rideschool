@@ -14,19 +14,16 @@ def generate_participant_code(participant_id):
 # Route to the participant form page
 @participant_bp.route('/participant-form', methods=['GET'])
 def participant_form():
-    try:
-       
+    try:       
         with get_db_cursor(commit=False) as cursor:
             # Fetch training locations from the table
             cursor.execute("SELECT training_location, training_location_address FROM training_locations_list")
             training_locations = cursor.fetchall()
 
-            #print("Query executed successfully.")
-
         # Render the form template with the training locations
         return render_template('participant_form.html', training_locations=training_locations)
     except Exception as e:
-        return jsonify({"message": f"Error: {str(e)}", "status": "error"})
+        return jsonify({"message": f"Error: {str(e)}", "alert_type": "error"})
         #return f"Error: {str(e)}"
 
 # Route to handle form submission
@@ -54,18 +51,15 @@ def submit_form():
 
             if existing_participant:
                 # Display a message if the contact number is already registered
-               # return jsonify({"message": "Contact number is already registered. Continue to create an account.", "type": "info"})
-                #return "Contact number is already registered. Continue to create an account!!!"
                 return jsonify({"message": "Contact number is already registered. Continue to create account by clicking on the link below !!!", "alert_type": "danger"})
 
-          
             else:# Fetch the training_location_id based on the selected training_location
                 select_query = "SELECT training_location_id FROM training_locations_list WHERE training_location = %s"
                 cursor.execute(select_query, (training_location,))
                 result = cursor.fetchone()
 
                 if result is not None and 'training_location_id' in result:
-                # Use the key 'training_location_id' to access the value
+                # Useing the key 'training_location_id' to access the value
                     training_location_id = result['training_location_id']
                 else:
                     return jsonify({"message": "Training location not found.", "alert_type": "danger"})
@@ -89,24 +83,15 @@ def submit_form():
                     update_query = "UPDATE participants SET participant_code = %s WHERE participant_id = %s"
                     cursor.execute(update_query, (new_code, new_participant_id))
                 else:
-                    error_message = "Error retrieving newly inserted participant_id or result is empty."
-                    #print(error_message)
-                    #return error_message
-                    return jsonify({"message": error_message, "status": "error"})
-                
-                # Return the success message
-                #return jsonify({"message": "Participant registered successfully!!!", "type": "success"})
-                 ## return "Participant registered successfully!!!"
-                return jsonify({"message": "Participant registered successfully!", "alert_type": "success"})
+                    error_message = "Error retrieving newly inserted participant_id or result is empty."                    
+                    return jsonify({"message": error_message, "alert_type": "error"})                                              
+                return jsonify({"message": "Registration successful!", "alert_type": "success"})
 
     except Exception as e:
         # Print statement to print the error for debugging
         print(f"Error: {str(e)}")
-        traceback.print_exc()
-        # Return an error message
-        #return f"Error: {str(e)}"
-        #return jsonify({"message": f"Error: {str(e)}", "status": "error"})
-        return jsonify({"message": "An error occurred while processing your request. Please try again later.", "status": "error"})
+        traceback.print_exc()        
+        return jsonify({"message": "An error occurred while processing your request. Please try again later.", "alert_type": "error"})
 
            
 @participant_bp.route('/participant_session_info', methods=['GET'])
@@ -137,13 +122,13 @@ def participant_session_info():
             # Render the template with session details
             return render_template('participant_session_info.html', session_details=session_details)
         else:
-           # return "You need to be logged in as a participant to view session details."
+          
             return jsonify({"message": "You need to be logged in as a participant to view session details.", "alert_type": "danger"})
     except Exception as e:        
         print(f"Error: {str(e)}")  # Print the error for debugging
         traceback.print_exc()
         #return f"Error: {str(e)}"
-        return jsonify({"message": f"Error: {str(e)}", "status": "error"})
+        return jsonify({"message": f"Error: {str(e)}", "alert_type": "error"})
  ##not using for now close 
 
 # Route to display the feedback form and handle form submission
@@ -188,10 +173,6 @@ def feedback_form():
                     )
                     cursor.execute(insert_query, values)
 
-                    # Commit the transaction
-                    # No need to commit explicitly when using get_db_cursor with commit=True
-                    # Return a success message
-                    ##  response = {"status": "success", "message": "Feedback submitted successfully!"}
                     response = {"alert_type": "success", "message": "Feedback submitted successfully!"}
                     return jsonify(response)
 
@@ -222,21 +203,17 @@ def feedback_form():
                         """
                         cursor.execute(sql_query, (participant_id,))
                         result = cursor.fetchone()
-                        print("SQL Query Result:", result)
-
+                       
                         return render_template('feedback.html', participant=participant, result=result)
 
                     else:
-                        return jsonify({"message": "You must be logged in as a participant with 'COMPLETED' status to access the feedback form.", "alert_type": "info"})
-                        #return "You must be logged in as a participant with 'COMPLETED' status to access the feedback form."
+                        return jsonify({"message": "You must be logged in as a participant with 'COMPLETED' status to access the feedback form.", "alert_type": "info"})                       
                 else:
-                    return jsonify({"message": "Participant not found.", "alert_type": "danger"})
-                    #return "Participant not found."
+                    return jsonify({"message": "Participant not found.", "alert_type": "danger"})                   "
         else:
             return jsonify({"message": "You must be logged in as a participant to access the feedback form.", "alert_type": "info"})
-            #return "You must be logged in as a participant to access the feedback form."
+            
     except Exception as e:
         traceback.print_exc()
-        #return jsonify({"message": f"Error: {str(e)}", "status": "error"})
-        response = {"status": "error", "message": "An error occurred"}
+        response = {"alert_type": "error", "message": "An error occurred"}
         return jsonify(response)

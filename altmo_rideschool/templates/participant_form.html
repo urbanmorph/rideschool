@@ -89,7 +89,7 @@
     
             if (contact.length > 0) { //It checks if the contact number is not empty 
                 if (contact.length !== 10 || !/^\d{10}$/.test(contact)) { // checks whether it consists of exactly 10 digits if it does not contain exactly 10 digit it is considered  invalid.
-                    contactError.textContent = "Invalid contact number.";
+                    contactError.textContent = "Invalid contact number. Contact number should consist of 10 digits.";
                     contactInput.classList.add("error");
                 } else {
                     contactError.textContent = "";

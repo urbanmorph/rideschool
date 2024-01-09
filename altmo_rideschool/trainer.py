@@ -29,7 +29,6 @@ def trainer_form():
 @trainer_bp.route('/register', methods=['POST'])
 def submit_form():
     try:
-        # Get the form data
         trainer_name = request.form['trainer_name']
         trainer_email = request.form['trainer_email']
         trainer_contact = request.form['trainer_contact']
@@ -90,7 +89,6 @@ def submit_form():
       
     except Exception as e:       
         traceback.print_exc()
-       # error_message = f"Error :{repr(e)}"
         return jsonify({"alert_type": "error", "message": "An error occurred. Please try again later "})
-       # return jsonify({"alert_type": "error", "message": f"Error: {str(e)}"})
+      
     
