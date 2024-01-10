@@ -209,7 +209,7 @@ def feedback_form():
                     else:
                         return jsonify({"message": "You must be logged in as a participant with 'COMPLETED' status to access the feedback form.", "alert_type": "info"})                       
                 else:
-                    return jsonify({"message": "Participant not found.", "alert_type": "danger"})                   "
+                    return jsonify({"message": "Participant not found.", "alert_type": "danger"})                                   
         else:
             return jsonify({"message": "You must be logged in as a participant to access the feedback form.", "alert_type": "info"})
             
@@ -217,3 +217,4 @@ def feedback_form():
         traceback.print_exc()
         response = {"alert_type": "error", "message": "An error occurred"}
         return jsonify(response)
+        
