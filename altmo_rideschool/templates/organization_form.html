@@ -7,10 +7,8 @@
 {% block title %} Organization Form {% endblock %}
 
 {% block content %}
-
     <div class="container" style="margin-top: 100px;">
         <h1>Organization Form</h1>
-
         <form class="my-form" id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
             <label for="organization-name">Organization Name:</label>
             <input type="text" id="organization-name" name="organization-name" required>
@@ -58,17 +56,12 @@
             
             <button type="submit" id="submitButton">Submit</button>
         </form>
-
-        <div class="alert" id="messageAlert" style="display: none;"></div>
-
-        
+ 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
 
                 var organizationForm = document.getElementById('organization-form');
-                var messageAlert = document.getElementById('messageAlert');
-                var submitButton = document.getElementById('submitButton'); // Gets the submit button
-                // var submitButton = document.querySelector('button[type="submit"]');
+                var submitButton = document.getElementById('submitButton'); // Gets the submit button           
                 // this js is used to validate if the document is 1 of these '.pdf', '.jpg', '.jpeg' if it is any thing appart from these it will give an allert that says the uploaded folder should be 1 of those types 
                 var allowedExtensions = ['.pdf', '.jpg', '.jpeg'];
                
@@ -94,9 +87,6 @@
                     return;
                 }
 
-                // Disable the submit button during the AJAX request
-                submitButton.disabled = true;
-
                 $.ajax({
                     url: '/submit_organization',
                     type: 'POST',
@@ -104,47 +94,20 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                    handleAjaxResponse(result);
-                    },
-                    error: function (xhr, status, error) {
-                    console.error('AJAX Error:', error);
-                    displayMessage('alert-danger', 'An error occurred. Please try again.');
-                    hideAlertMessage();
-                    // Re-enable the submit button on error
-                    submitButton.disabled = false;
-                    }
+                        alert(result.message);
+                        if (result.alert_type === 'success') {
+                                window.location.href = '/';
+                            } else {
+                                organizationForm.reset();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            //console.error('AJAX Error:', error);
+                            var responseText = xhr.responseJSON;
+                            alert(responseText && responseText.message || 'An error occurred. Please try again.');
+                        }
+                    });
                 });
-                });
-
-                function handleAjaxResponse(result) {
-                
-            // submitButton.disabled = true;// Disable the submit button
-                if (result.status === 'success' || result.status === 'error') {
-                    displayMessage(result.status === 'success' ? 'alert-success' : 'alert-danger', result.message);
-                    setTimeout(function () {
-                    organizationForm.reset();
-                    hideAlertMessage();
-
-                    submitButton.disabled = false;// Re-enable the submit button after form reset
-                    }, 3000);
-                    hideError('contact');
-                    hideError('email');
-                    hideError('coordinator-email');
-                    hideError('coordinator-contact');
-
-                    if (result.status === 'success') {
-                    setTimeout(function () {
-                        organizationForm.reset();
-                        hideAlertMessage();
-                    }, 3000);
-                    }
-                } else {
-                        
-                    hideAlertMessage();
-                        // Re-enable the submit button if the status is not success
-                    submitButton.disabled = false;
-                }
-                }
 
                 // Event listener for organization contact
                 var organizationContactInput = document.getElementById('organization-contact');
@@ -205,21 +168,7 @@
                 var errorField = document.getElementById(fieldId + '-error-message');
                 errorField.innerHTML = '';
                 errorField.style.display = 'none';
-                }
-
-                // Hide alert message on input change
-                organizationForm.addEventListener('input', function () {
-                hideAlertMessage();
-                });
-
-                function hideAlertMessage() {
-                messageAlert.style.display = 'none';
-                }
-
-                function displayMessage(type, message) {
-                messageAlert.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
-                messageAlert.style.display = 'block';
-                }
+                }               
             });
         </script>
     </div>
