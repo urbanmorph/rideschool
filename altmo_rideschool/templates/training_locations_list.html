@@ -41,9 +41,10 @@
                     {% endfor %}
                 </tbody>                     
             </table>
-            <br>               
+            <br> 
+            <input type="submit" value="Delete Selected" class="btn btn-primary">              
         </form>
-        <input type="submit" value="Delete Selected" class="btn btn-primary">
+        
     </div>
 
     <div class="card" style="margin-top: 50px;">
@@ -79,8 +80,8 @@
             </form>
         </div>
     </div>
-    <div id="message-container"></div>
-    </div>
+  
+    <!--</div>-->
     <script>
         $(document).ready(function () {
             $('#training-locations-form').on('submit', function (event) {
@@ -90,23 +91,21 @@
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function (response) {
-                        if (response.status === 'success') {
-                            showAlert('alert-success', response.message);
+                        if (response.alert_type === 'success') {
+                            alert(response.message);                             
                             $('input[name="selected_locations"]:checked').closest('tr').remove();
-                        } else if (response.status === 'error') {
-                            showAlert('alert-danger', response.message);
+                        } else if (response.alert_type === 'error') {
+                            alert(response.message); 
+                            $('#participantForm')[0].reset();                            
                         }
                     },
                     error: function () {
-                        showAlert('alert-danger', 'An error occurred. Please try again later.');
+                        alert('An error occurred. Please try again later.');                        
                     }
                 });
             });
-
-
             $('#add-location-form').on('submit', function (event) {
-            event.preventDefault();
-            
+            event.preventDefault();            
             var formData = new FormData(this); // Create a FormData object to send the file
             
             $.ajax({
@@ -116,7 +115,7 @@
                 contentType: false, // Set content type to false to let the browser handle it
                 processData: false, // Set processData to false to prevent jQuery from processing data
                 success: function (response) {
-                    if (response.status === 'success') {
+                    if (response.alert_type === 'success') {
                         showAlert('alert-success', response.message);
                         // Add code here to update the table
                     } else if (response.status === 'error') {
@@ -128,7 +127,6 @@
                 }
             });
         });
-
         
         $('td.location').on('click', function () {
             var address = $(this).data('address');
@@ -136,7 +134,6 @@
             var longitude = $(this).data('longitude');
             var picture = $(this).data('picture');
             var row = $(this).closest('tr');
-
             if (row.hasClass('info-displayed')) {
                 // Information is already displayed, hide it
                 row.removeClass('info-displayed');
@@ -151,19 +148,8 @@
                 row.find('.latitude').text('Latitude: ' + latitude);
                 row.find('.longitude').text('Longitude: ' + longitude);
                 row.find('.picture').text('Picture: ' + picture);
-            }
-        });
-            
-        function showAlert(alertClass, message) {
-            var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
-                message +
-                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                '<span aria-hidden="true">&times;</span>' +
-                '</button>' +
-                '</div>';
-            $('#message-container').html(alertHTML);
-            $('#message-container').show();
-            }
+                }
+            });       
         });
     </script>
 {% endblock %}
