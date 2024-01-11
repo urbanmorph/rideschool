@@ -11,8 +11,7 @@
         <h1>Create Account </h1>
         <p id="message"></p>
         <p class="test-center">You have to be registered to create an account, click to register as : <a href="/participant-form">Participant, </a> <a href="/trainer-form">Trainer</a></p>
-        <form class="my-form" id="signup-form" action="{{ url_for('signup.check_contact') }}" method="POST">
-           
+        <form class="my-form" id="signup-form" action="{{ url_for('signup.check_contact') }}" method="POST">           
             {{ form.csrf_token }}
             <label for="contact">Enter Contact Number:</label>
             {{ form.contact(size=20) }}<br>
@@ -30,65 +29,12 @@
             {{ form.confirm_password(size=20) }}<br>
             {% if form.confirm_password.errors %}
                 <p class="error">{{ form.confirm_password.errors[0] }}</p>
-            {% endif %}
-              <!--<button type="submit">Submit</button>-->
+            {% endif %}             
           <button type="submit" >Submit</button>
         </form>
-        <div id="alert-container"></div> <!-- This is where the alert messages will appear -->
-        <p class="text-center"> click here to <a href="/logins"> Login </a> </p>
         
-       <!-- <script>
-            function myFunction() {
-              alert(location.hostname);
-            }
-            </script>-->
-    
-       <!--<script>
-            function showAlert(alertType, message) {  //a custom showAlert() function 
-                var alertClass = alertType === 'success' ? 'alert-success' : 'alert-danger'; //This line decides the CSS class for the alert based on the alertType. If alertType is 'success', it sets alertClass to 'alert-success', otherwise, it sets it to 'alert-danger'. This class determines the visual style of the alert (success or error).
-                var alertHtml = `<div class="alert ${alertClass}">${message} <button onclick="cancelAlert()">X</button></div>`;
-               // var alertHtml = `<div class="alert ${alertClass}">${message}</div>`;   //This line creates an HTML string for the alert. It includes the determined alertClass and the actual message received as a parameter.
-                $('#alert-container').html(alertHtml);  //This line sets the HTML content of the element with the ID alert-container to the created alert HTML. This effectively displays the alert on the page.
-
-                if (alertType === 'success') {
-                    // Redirect to the login page after 3 seconds for success
-                    setTimeout(function () {
-                        window.location.href = "/logins";
-                    }, 10000);
-                } else {
-                    // Reset the form after 3 seconds for errors
-                    setTimeout(function () {
-                        $('#signup-form')[0].reset(); // Reset the form
-                        $('#alert-container').html(''); // Clear alert messages
-                    }, 10000);
-                }               
-            }
-
-            function cancelAlert() {
-                $('#signup-form')[0].reset(); // Reset the form
-                $('#alert-container').html(''); // Clear the alert messages
-            }
-            
-            $(document).ready(function () {
-                $('#signup-form').submit(function (event) {
-                    event.preventDefault(); // prevents default form action 
-                    var formData = $(this).serialize(); // this refferes to the  form element with the id "signup-form.", serialize() encode the form data into a URL-encoded string
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ url_for('signup.check_contact') }}",
-                        data: formData,          // or we alternative data: $('#signup-form').serialize(),
-                        success: function (response) {
-                            showAlert(response.alert_type, response.message);
-                        },
-                        error: function (xhr, status, error) {
-                            var responseText = xhr.responseJSON;
-                            showAlert('danger', responseText && responseText.message || 'An error occurred while processing the signup.');
-                        }
-                    });
-                });
-            });
-        </script>--> 
-
+        <p class="text-center"> click here to <a href="/logins"> Login </a> </p>
+     
         <script>
             $(document).ready(function () {
                 $('#signup-form').submit(function (event) {
@@ -106,13 +52,12 @@
                                 window.location.href = "/logins";
                             } 
                             else {
-                                $('#signup-form')[0].reset();
-                            //location.reload(); // Reload the page
+                                $('#signup-form')[0].reset();                            
                         }
                         },
-                        error: function (xhr, status, error) {
+                        error: function (xhr, alert_type, error) {
                             var responseText = xhr.responseJSON;
-                            showAlert('danger', responseText && responseText.message || 'An error occurred while processing the signup.');
+                            alert(responseText && responseText.message || 'An error occurred while processing the signup.');
                         }
                     });
                 });
