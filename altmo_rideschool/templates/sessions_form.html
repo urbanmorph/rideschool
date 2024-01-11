@@ -67,9 +67,7 @@
       <div class="form-group" style="text-align: center;">
         <button type="submit" id="submit-button">Submit</button>
       </div>
-    </form>
-    <div id="message-container" style="display: none;"></div>
-      <!--</div>-->
+    </form>  
 <script>
   $(document).ready(function () {
 
@@ -122,7 +120,7 @@
             //}
             error: function (xhr, status, error) {
               var responseText = xhr.responseJSON;
-              alert(responseText && responseText.message || 'An error occurred while processing the signup.');
+              alert(responseText && responseText.message || 'An error occurred while processing the form.');
               }
           });
         });

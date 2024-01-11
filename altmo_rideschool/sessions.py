@@ -83,14 +83,16 @@ def get_participants(trainer_id):
         logging.error("An error occurred:", exc_info=True)
         return jsonify([])
 
-@sessions_bp.route('/participant/<string:participant_name>')
-def get_participant(participant_name):
+#@sessions_bp.route('/participant/<string:participant_name>')
+#def get_participant(participant_name):
+@sessions_bp.route('/participant/<int:participant_id>')
+def get_participant(participant_id):
     try:
         # Fetch the participant details based on the given participant_name
-        with get_db_cursor() as cursor:            
-            cursor.execute("SELECT * FROM participants WHERE participant_name = %s", (participant_name,))
-            participant = cursor.fetchone()
-        
+        with get_db_cursor() as cursor:  
+            cursor.execute("SELECT * FROM participants WHERE participant_id = %s", (participant_id,))          
+            #cursor.execute("SELECT * FROM participants WHERE participant_name = %s", (participant_name,))
+            participant = cursor.fetchone()        
             if participant is None:
                 return jsonify({}), 404  # Return an empty response with 404 status if participant is not found
        
