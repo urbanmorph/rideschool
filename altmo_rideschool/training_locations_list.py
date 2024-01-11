@@ -1,4 +1,4 @@
-print("import feane/ training_locations_list.py")
+print("training_locations_list.py")
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory
 ##import psycopg2
 import os
@@ -17,16 +17,9 @@ training_location = []
 # Function to delete a training location from the database
 def delete_training_location_from_database(training_location_id):
     with get_db_cursor(commit=True) as cursor:
-    #with get_db_connection() as conn:   
-    #conn = get_db_connection()
-        #cursor = conn.cursor()
+   
         cursor.execute("DELETE FROM training_locations_list WHERE training_location_id = %s", (training_location_id,))
-  
-
-#def get_db_connection():
- #   with get_db_pool().getconn() as conn:
-  #      return conn
-
+ 
 
 @training_locations_list_bp.route('/training_locations_list', methods=['GET', 'POST'])
 def show_training_location():
@@ -43,22 +36,21 @@ def show_training_location():
 
                     return redirect(url_for('training_locations_list.show_training_location'))
    
-
-
         with get_db_cursor() as cursor:
     #with get_db_connection() as conn:
      #   db_cursor = conn.cursor()
-            cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
+            #cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
+            cursor.execute("SELECT tl.training_location_id, tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_picture, t.trainer_name FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id")
+            
 
             training_location = cursor.fetchall()
-            print(training_location)
+           # print(training_location)
             return render_template('training_locations_list.html', training_location=training_location)
     ##conn.close()
     except Exception as e:
         # Log the exception for debugging purposes
-        print(f"Error in show_training_location: {str(e)}")
+        #print(f"Error in show_training_location: {str(e)}")
         traceback.print_exc()
-
         return render_template('training_locations_list.html', training_location=training_location)
    # return render_template('training_locations_list.html', training_location=training_location)
 
@@ -73,31 +65,28 @@ def delete_location():
             for location_id in location_ids:
                 delete_training_location_from_database(int(location_id))
             response = {
-                'status': 'success',
+                'alert_type': 'success',
                 'message': 'Selected locations deleted successfully.'
             }
     except Exception as e:
         traceback.print_exc()
         response = {
-            'status': 'error',
+            'alert_type': 'error',
             'message': 'An error occurred while deleting the selected locations.'
         }
 
     return jsonify(response)
 
-
 @training_locations_list_bp.route('/add_location', methods=['POST'])
 def add_location():
-    print("add_location route called")  
+ 
     try:
         # Get the form data
         training_location_id = request.form['training_location_id']
         training_location = request.form['training_location']
         training_location_address = request.form['training_location_address']
         training_location_latitude = request.form['training_location_latitude']
-        training_location_longitude = request.form['training_location_longitude']
-
-        # Check if a file was uploaded
+        training_location_longitude = request.form['training_location_longitude']       
         # Check if a file was uploaded
         location_picture = request.files['location_picture']
 
@@ -111,34 +100,23 @@ def add_location():
 
             # Save the picture
             location_picture.save(picture_path_full)
-
+             
+            # Check if the location ID already exists
+            #if any(existing_location['training_location_id'] == training_location_id for existing_location in training_location):
+             #   return jsonify({'status': 'error', 'message': 'Location with this ID already exists.'})
 
         # Connect to the database (replace with your actual connection parameters)
         with get_db_cursor(commit=True) as cursor:
         
             cursor.execute("INSERT INTO training_locations_list (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
-               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, relative_picture_path))
-            print("Committing changes...")
-
-        # Commit the transaction
-        #connection.commit()
-
-        # Close the cursor and connection
-        ##cursor.close()
-        ##connection.close()
-
-        # Return a success message
-        return jsonify({'status': 'success', 'message': 'Location added to the database'})
+               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, relative_picture_path))           
+       
+        return jsonify({'alert_type': 'success', 'message': 'Added a new location'})
         
-
     except Exception as e:
         traceback.print_exc()
         print(f"Error while saving image: {str(e)}")
-        return jsonify({'status': 'error', 'message': f'Error: {str(e)}'})
-
-
-
-
+        return jsonify({'alert_type': 'error', 'message': f'Error: {str(e)}'})
 
 @training_locations_list_bp.route('/training_location_pictures/<filename>')
 def display_image(filename):

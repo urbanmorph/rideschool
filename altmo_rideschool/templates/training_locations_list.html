@@ -115,15 +115,14 @@
                 contentType: false, // Set content type to false to let the browser handle it
                 processData: false, // Set processData to false to prevent jQuery from processing data
                 success: function (response) {
+                    alert(response.message);
                     if (response.alert_type === 'success') {
-                        showAlert('alert-success', response.message);
-                        // Add code here to update the table
-                    } else if (response.status === 'error') {
-                        showAlert('alert-danger', response.message);
+                        $('#training-session-form')[0].reset();                    
                     }
                 },
-                error: function () {
-                    showAlert('alert-danger', 'An error occurred. Please try again later.');
+                error: function (xhr, status, error) {
+                    var responseText = xhr.responseJSON;
+                    alert(responseText && responseText.message || 'An error occurred while processing the form.');
                 }
             });
         });
