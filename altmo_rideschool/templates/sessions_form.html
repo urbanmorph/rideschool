@@ -72,18 +72,16 @@
       <!--</div>-->
 <script>
   $(document).ready(function () {
-    //(participant name is populated here )
-    // Fetch participants for the logged-in trainer and populate the participant select element (participant name is populated here )
+
+    //(participant name is populated here )// Fetch participants for the logged-in trainer and populate the participant select element (participant name is populated here )
     $.get('/participants/{{ session["trainer_id"] }}', function (participantsData) {
       //console.log('Fetched participants:', participantsData);
       var participantSelect = $('#participant_name');
       participantSelect.empty(); // Clear previous options
-
       participantsData.forEach(function (participant) {
         if (participant.participant_status !== "COMPLETED") {
           //var option = $('<option></option>').attr('value', participant.participant_id ).text(participant.participant_name);
           var option = $('<option></option>').attr('value', participant.participant_name).text(participant.participant_name);
-
           participantSelect.append(option);
         }
       });
@@ -102,61 +100,33 @@
     $('#logged-in-trainer-name').text(loggedInTrainerName);
     $('#trainer_training_location_id').val('{{ session["trainer_id"] }}');
   
-     // Handle form submission (alert messages code: returns the return messages in the form of allert message )
+
+    // Handle form submission
     $('#training-session-form').on('submit', function (event) {
-      event.preventDefault(); // Prevent the form from submitting normally
-     
-      // Disable the submit button to prevent multiple submissions
-      $('#submit-button').prop('disabled', true);
+          event.preventDefault();
+         // var formData = $(this).serialize();
 
-      $.ajax({
-        url: '/submit_form',
-        type: 'POST',
-        data: new FormData(this),
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          if (response.status === 'success') {
-            showAlert('success', response.message);
-            
-          } else if (response.status === 'error') {
-            showAlert('error', response.message);
-          }
-        },
-        error: function () {
-          showAlert('error', 'An error occurred. Please try again later.');
-        },
-        complete: function () {
-                    // Reset the form and enable the submit button after 3 seconds
-                    setTimeout(function () {
-                        resetForm();
-                    }, 3000);
-                }
+          $.ajax({
+            url: '/submit_form',
+            type: 'POST',
+            data: new FormData(this),//capable to handle various fprm data type 
+            //data: formData ,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              alert(response.message);
+              $('#training-session-form')[0].reset();
+            },
+            //error: function () {
+              //alert('An error occurred. Please try again later.');
+            //}
+            error: function (xhr, status, error) {
+              var responseText = xhr.responseJSON;
+              alert(responseText && responseText.message || 'An error occurred while processing the signup.');
+              }
+          });
+        });
       });
-    });
-
-    function showAlert(type, message) {
-      var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-      var alertHTML = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
-                  message +
-                  '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                  '<span aria-hidden="true">&times;</span>' +
-                  '</button>' +
-                  '</div>';
-      $('#message-container').html(alertHTML);
-      $('#message-container').show();
-    }
-  
-    function resetForm() {
-      // Reset the form
-      $('#training-session-form')[0].reset();
-      $('#message-container').hide();
-
-      // Enable the submit button immediately after the form is reset
-      $('#submit-button').prop('disabled', false);
-    }
-  
-  });
 </script>
 </div>
 {% endblock %}
