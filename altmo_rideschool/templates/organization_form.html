@@ -69,7 +69,7 @@
                 event.preventDefault(); // Prevent default form submission
 
                 //submitButton.addEventListener('click', function () {
-                const formData = new FormData(organizationForm);
+                //const formData = new FormData(organizationForm);
 
                 // Check if a file is selected
                 var legalStatusDocumentInput = document.getElementById('organization-legal-status-document');
@@ -90,7 +90,8 @@
                 $.ajax({
                     url: '/submit_organization',
                     type: 'POST',
-                    data: formData,
+                   // data: formData,
+                    data: new FormData(this),
                     contentType: false,
                     processData: false,
                     success: function (result) {
@@ -174,3 +175,4 @@
     </div>
 {% endblock %}
    
+ 

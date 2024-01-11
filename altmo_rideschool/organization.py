@@ -30,9 +30,10 @@ def submit_organization():
         organization_legal_status_document = request.files['organization-legal-status-document']
         if organization_legal_status_document:
             document_filename = secure_filename(organization_legal_status_document.filename)
-            relative_document_path = os.path.join('static', 'organization_image', document_filename)
-            document_path_full = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
-
+           # relative_document_path = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
+            relative_document_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], document_filename)
+            #document_path_full = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
+            document_path_full = os.path.join(current_app.root_path, relative_document_path)
             # Ensure the directory exists
             os.makedirs(os.path.dirname(document_path_full), exist_ok=True)
 
