@@ -28,13 +28,13 @@ def submit_organization():
         coordinator_contact = request.form['coordinator-contact']
         # Handle file upload
         organization_legal_status_document = request.files['organization-legal-status-document']
-        if organization_legal_status_document:
-            document_filename = secure_filename(organization_legal_status_document.filename)
-           # relative_document_path = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
-            relative_document_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], document_filename)
-            #document_path_full = os.path.join(current_app.root_path, current_app.config['ORGANIZATION_FOLDER'], document_filename)
+        if organization_legal_status_document:            
+            document_filename = secure_filename(organization_legal_status_document.filename)        
+            relative_document_path = os.path.join(current_app.config['ORGANIZATION_FOLDER'], document_filename) #current_app.config['ORGANIZATION_FOLDER']: "This retrieves the value" of 'ORGANIZATION_FOLDER' from your Flask app's configuration.            
             document_path_full = os.path.join(current_app.root_path, relative_document_path)
             # Ensure the directory exists
+            print("relative_document_path:",relative_document_path)
+            print("document_path_full:",document_path_full)
             os.makedirs(os.path.dirname(document_path_full), exist_ok=True)
 
             # Save the document
@@ -88,7 +88,8 @@ def submit_organization():
         # Display error message
         return jsonify({'alert_type ': 'error', 'message': 'An error occurred. Please try again.'})
 
- #   return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)
+ # below code not in use
 @organization_bp.route('/display_legal_document/<filename>')
 def display_legal_document(filename):
-    return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename)
+    return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename) #return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename): This line uses the send_from_directory function to send the file with the specified filename from the directory specified by current_app.config['ORGANIZATION_FOLDER']
+#the URL for serving legal documents would be something like /display_legal_document/some_document.pdf, and it will internally use the path specified in ORGANIZATION_FOLDER, which is "static/organization_image". The client doesn't need to know the exact file system path.
