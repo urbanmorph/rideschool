@@ -22,11 +22,15 @@
         </form>
         <p id="message"></p>
         {% if error_message %}
-            <div class="alert alert-danger">
-                {{ error_message }}
-            </div>
+            <script>
+                // Display an alert for error messages from the server
+                $(document).ready(function () {
+                    alert("{{ error_message }}");
+                });
+            </script>
         {% endif %}
         <p style ="text-align: center;"> If you have not created an account click to : <a href="/signup">Create account </a></p>
     </div>
-{% endblock %}   
+{% endblock %} 
+
 

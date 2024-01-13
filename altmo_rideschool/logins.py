@@ -1,5 +1,5 @@
 
-print("import feane/ logins.py")
+print("logins.py")
 
 #from altmo_utils.db import  get_db_pool, close_db_pool, get_db_connection, get_db_cursor
 
@@ -63,55 +63,34 @@ def index():
 @logins_bp.route('/check_logins', methods=['POST'])
 def check_logins():
     db_cursor = None
-    
-    #db_connection = None
     form = YourLoginForm(request.form)  # Create an instance of your login form
     try:
-        #with get_db_pool().getconn() as db_connection:
         with get_db_cursor(commit=True) as db_cursor:
-            #db_cursor = db_connection.cursor()
             contact = request.form['contact']
-            user_password = request.form['password']
-        # Debugging: Log the received form data
-            print("Received form data - Contact:", contact)
-            print("Received form data - Password:", user_password)
-          # Check if the provided contact and password match the admin's fixed values
-            print("Admin Contact:", current_app.config['ADMIN_CONTACT'])
-            print("Admin Password:", current_app.config['ADMIN_PASSWORD'])
-            print("Contact Comparison:", contact == str(current_app.config['ADMIN_CONTACT']))
-            print("Password Comparison:", user_password == current_app.config['ADMIN_PASSWORD'])
-
-        # Check if the provided contact and password match the admin's fixed values
-       #### with current_app.open_instance_resource('config.json') as config_file:
-           #### config = json.load(config_file)
-        # Check if the provided contact and password match the admin's fixed values
-        #if contact == get_config_value('admin_contact') and user_password == get_config_value('admin_password'):
+            user_password = request.form['password']       
+                # Check if the provided contact and password match the admin's fixed values
+                #### with current_app.open_instance_resource('config.json') as config_file:
+                #### config = json.load(config_file)
+                # Check if the provided contact and password match the admin's fixed values
+                #if contact == get_config_value('admin_contact') and user_password == get_config_value('admin_password'):
         
-        #if contact == current_app.config['ADMIN_CONTACT'] and user_password == current_app.config['ADMIN_PASSWORD']:
+            #if contact == current_app.config['ADMIN_CONTACT'] and user_password == current_app.config['ADMIN_PASSWORD']:
+            role = None
             if contact == str(current_app.config['ADMIN_CONTACT']) and user_password == current_app.config['ADMIN_PASSWORD']:
 
-
-            # Admin login: If the contact and password match, set the session as an admin
+                # Admin login: If the contact and password match, set the session as an admin
                 session['logged_in'] = True
                 session['role'] = 'admin'
                 return render_template('admin_display.html', role='admin')
 
             db_cursor.execute("SELECT * FROM users_signup WHERE contact_no=%s", (contact,))
             user_data = db_cursor.fetchone()
-            print("User Data:", user_data)
-
-            if user_data:
-                #hashed_password = user_data[2]  # Get the hashed password from the user data
-                #hashed_password = user_data['hashed_password'] 
+            
+            if user_data:                
                 #hashed_password = user_data.get('hashed_password')
                 hashed_password = user_data.get('password')
-
-
-                #if bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8')):
+              
                 if bcrypt.checkpw(user_password.encode('utf-8'), hashed_password.encode('utf-8')):
-
-                # Passwords match, so the user is authenticated
-                    #role = user_data[3]  # Get the user's role from the user data
                     role = user_data['role'] 
 
                 # trainer and participant login.
@@ -125,9 +104,7 @@ def check_logins():
                         trainer_id = trainer_data['trainer_id']
                         trainer_name = trainer_data['trainer_name']
                         trainer_status = trainer_data['trainer_status']
-######
                         session['trainer_name'] = trainer_name
-
                         if trainer_status == 'CERTIFIED':
                             session['logged_in'] = True
                             session['role'] = role
@@ -148,9 +125,8 @@ def check_logins():
                             return render_template('trainer_details.html', role=role, trainer_name=trainer_name, participants=participant_data)
                         else:
                             ##return "Trainer is not certified. Please complete your certification."
-                            error_message = "Incorrect contact no or password"
+                            error_message = "Incorrect contact number or password"
                             return render_template('logins.html', form=form, error_message=error_message)
-
                 elif role == 'participant':
                     # Fetch participant details from the participants table using contact number
                     db_cursor.execute("SELECT participant_id, participant_name, participant_status, training_location_id FROM participants WHERE participant_contact=%s", (contact,))
@@ -158,22 +134,16 @@ def check_logins():
 
                     if participant_data:
                         session['logged_in'] = True
-                        session['role'] = role
-                        #session['participant_id'] = participant_data[0]
-                        #session['participant_name'] = participant_data[1]
-                        #session['participant_status'] = participant_data[2]
+                        session['role'] = role                        
                         session['participant_id'] = participant_data['participant_id']
                         session['participant_name'] = participant_data['participant_name']
-                        session['participant_status'] = participant_data['participant_status']
-
-                        #training_location_id = participant_data[3]
+                        session['participant_status'] = participant_data['participant_status']                       
                         training_location_id = participant_data['training_location_id']
-##########   ##############
+
                         db_cursor.execute("SELECT training_location_address FROM training_locations_list WHERE training_location_id = %s", (training_location_id,))
                         training_location_address = db_cursor.fetchone()
 
                         if training_location_address:
-                            #training_location_address = training_location_address[0]
                             training_location_address = training_location_address['training_location_address']
                             session['participant_training_location'] = training_location_address
                         else:
@@ -202,42 +172,29 @@ def check_logins():
                             session['session_trainer_data'] = session_trainer_data
 
                             return render_template('participant_display.html', role=role)
-                        else:
-                            #return "Incorrect contact no or password"
-                            error_message = "Incorrect contact no or password"
-                            return render_template('logins.html', form=form, error_message=error_message)
-                    ##else:
-                        ##return "Participant details not found."
+                        else:                            
+                            error_message = "Incorrect contact number or password."
+                            return render_template('logins.html', form=form, error_message=error_message)                    
                     else:
                         error_message = "Participant details not found"
                         return render_template('logins.html', form=form, error_message=error_message)    
                 else:
                 ##return "Incorrect contact no or password"
-                    error_message = "Incorrect contact no or password"
+                    error_message = "Incorrect contact number or password. please check your credentials and try again "
                     return render_template('logins.html', form=form, error_message=error_message)
             else:
                 error_message = "Please create an account"
                 return render_template('logins.html', form=form, error_message=error_message)
             #return render_template('logins.html', form=form, error_message=error_message)    
-
     except Exception as e:
         traceback.print_exc()
-        print("An error occurred during database query:", str(e))
-
-        # Roll back the transaction to undo any changes made before the error
-        #db_connection.rollback()
-
-        # Return an error message
-        ##return f"An error occurred: {str(e)}"
-    
+        print("An error occurred during database query:", str(e))    
         error_message = f"An error occurred: {str(e)}"
         return render_template('logins.html', form=form, error_message=error_message)
 
     finally:
         pass
-        #if db_cursor is not None:
-            #db_cursor.close()
-
+        
     # If none of the conditions are met, return a generic error response
     #return "An error occurred during login."
 
@@ -349,11 +306,7 @@ def trainer_details():
         traceback.print_exc()
         print("An error occurred during trainer details retrieval:", str(e))
         return f"An error occurred: {str(e)}"
-    ##finally:
-        ##if db_cursor is not None:
-         ##   db_cursor.close()
-
-
+   
 @logins_bp.route('/participants-display')
 def participants_display():
     role = session.get('role')
@@ -364,8 +317,9 @@ def participants_display():
     error_message = None
 
     try:
-        with get_db_pool().getconn() as db_connection:
-            db_cursor = db_connection.cursor()
+        with get_db_cursor(commit=False) as db_cursor:
+        #with get_db_pool().getconn() as db_connection:
+         #   db_cursor = db_connection.cursor()
 
             participant_id = session.get('participant_id')
             db_cursor.execute("""
@@ -396,10 +350,6 @@ def participants_display():
     except Exception as e:
         print("An error occurred during participant display:", str(e))
         error_message = "An error occurred during participant display."
-
-   ## finally:
-     ##   if db_cursor is not None:
-       ##     db_cursor.close()
 
     return render_template('participant_display.html', role=role, error_message=error_message)
 
