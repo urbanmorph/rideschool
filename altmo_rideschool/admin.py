@@ -24,7 +24,7 @@ def participant_info():
                     tl.training_location,
                     tl.training_location_address,
                     p.participant_status,
-                    p.participant_created_date,
+                    p.participant_created_at,
                     p.participant_code
                 FROM participants p
                 JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
@@ -181,7 +181,7 @@ def participant_admin(participant_id):
                     p.participant_gender,
                     p.participant_address,
                     tl.training_location_address,
-                    p.participant_created_date,
+                    p.participant_created_at,
                     p.participant_status,
                     p.participant_code,
                     SUM(s.hours_trained) AS total_hours_trained,
@@ -190,7 +190,7 @@ def participant_admin(participant_id):
                 LEFT JOIN sessions s ON p.participant_id = s.participant_id
                 LEFT JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
                 WHERE p.participant_id = %s
-                GROUP BY p.participant_id, p.participant_name, p.participant_email, p.participant_contact, p.participant_age, p.participant_gender, p.participant_address, tl.training_location_address, p.participant_created_date, p.participant_status, p.participant_code
+                GROUP BY p.participant_id, p.participant_name, p.participant_email, p.participant_contact, p.participant_age, p.participant_gender, p.participant_address, tl.training_location_address, p.participant_created_at, p.participant_status, p.participant_code
             """, (participant_id,))
 
             participant_data = cursor.fetchone()

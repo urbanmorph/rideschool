@@ -39,8 +39,8 @@ def submit_form():
         participant_gender = request.form['participant_gender']
         training_location = request.form['training_location']
         participant_status = "NEW"
-        participant_created_date = datetime.now()
-        participant_updated_date = participant_created_date  # Update participant_updated_date to participant_created_date initially
+        #participant_created_date = datetime.now()
+        #participant_updated_date = participant_created_date  # Update participant_updated_date to participant_created_date initially
 
         # Connect to the database
         with get_db_cursor(commit=True) as cursor: 
@@ -65,8 +65,10 @@ def submit_form():
                     return jsonify({"message": "Training location not found.", "alert_type": "danger"})
                   
                 # Insert participant data into the participants table with participant_created_date and participant_updated_date
-                insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
-                values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
+                #insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
+                #values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
+                insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
+                values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status)
                 cursor.execute(insert_query, values)
 
                 # Fetch the newly inserted participant_id
