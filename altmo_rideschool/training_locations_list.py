@@ -15,10 +15,10 @@ training_locations_list_bp = Blueprint('training_locations_list', __name__)
 training_location = []
 
 # Function to delete a training location from the database
-def delete_training_location_from_database(training_location_id):
+def delete_training_location_from_database(id):
     with get_db_cursor(commit=True) as cursor:
    
-        cursor.execute("DELETE FROM training_locations_list WHERE training_location_id = %s", (training_location_id,))
+        cursor.execute("DELETE FROM training_locations_list WHERE id = %s", (id,))
  
 
 @training_locations_list_bp.route('/training_locations_list', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def show_training_location():
     #with get_db_connection() as conn:
      #   db_cursor = conn.cursor()
             #cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
-            cursor.execute("SELECT tl.training_location_id, tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_picture, t.trainer_name FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id")
+            cursor.execute("SELECT tl.id, tl.training_location, tl.address, tl.latitude, tl.longitude, tl.training_location_picture, t.name FROM training_locations_list tl LEFT JOIN trainer t ON tl.id = t.id")
             
 
             training_location = cursor.fetchall()
@@ -82,11 +82,11 @@ def add_location():
  
     try:
         # Get the form data
-        training_location_id = request.form['training_location_id']
+        id = request.form['id']
         training_location = request.form['training_location']
-        training_location_address = request.form['training_location_address']
-        training_location_latitude = request.form['training_location_latitude']
-        training_location_longitude = request.form['training_location_longitude']       
+        address = request.form['address']
+        latitude = request.form['latitude']
+        longitude = request.form['longitude']       
         # Check if a file was uploaded
         location_picture = request.files['location_picture']
 
@@ -108,8 +108,8 @@ def add_location():
         # Connect to the database (replace with your actual connection parameters)
         with get_db_cursor(commit=True) as cursor:
         
-            cursor.execute("INSERT INTO training_locations_list (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
-               (training_location_id, training_location, training_location_address, training_location_latitude, training_location_longitude, relative_picture_path))           
+            cursor.execute("INSERT INTO training_locations_list (id, training_location, address, latitude,longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
+               (id, training_location, address, latitude, longitude, relative_picture_path))           
        
         return jsonify({'alert_type': 'success', 'message': 'Added a new location'})
         
