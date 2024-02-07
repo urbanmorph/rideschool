@@ -12,49 +12,49 @@
             <table>
                 <tr>
                     <td><strong>Trainer Name:</strong></td>
-                    <td>{{ trainer_name }}</td>
+                    <td>{{ name }}</td>
                 </tr>    
                 <tr>
                     <td><strong>Trainer Email:</strong></td>
-                    <td>{{ trainer_email }}</td>
+                    <td>{{ email }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Contact:</strong></td>
-                    <td>{{ trainer_contact }}</td>
+                    <td>{{ contact }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Training Location Address:</strong></td>
-                    <td>{{ training_location_address }}</td>
+                    <td>{{ address }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Address:</strong></td>
-                    <td>{{ trainer_address }}</td>
+                    <td>{{ address }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Gender:</strong></td>
-                    <td>{{ trainer_gender }}</td>
+                    <td>{{ gender }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Aadhar No:</strong></td>
-                    <td>{{ trainer_aadhar_no }}</td>
+                    <td>{{ aadhar_no }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Created At:</strong></td>
-                    <td>{{ trainer_created_at }}</td>
+                    <td>{{ created_date }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Trainer Training Completion Date:</strong></td>
-                    <td>{{ trainer_training_completion_date }}</td>
+                    <td>{{ training_completion }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Organisation Name:</strong></td>
-                    <td> {{ organisation_name }}</td>
+                    <td> {{ name }}</td>
                 </tr>          
                 <tr>
                     <td><strong>Trainer Status:</strong></td>
                     <td>
-                        <select class="status-select" name="trainer_status" trainer-id="{{ trainer_id }}" data-initial-status="{{ trainer_status }}">
-                            <option value="{{ trainer_status }}" selected>{{ trainer_status }}</option>
+                        <select class="status-select" name="trainer_status" trainer-id="{{ id }}" data-initial-status="{{ status }}">
+                            <option value="{{ status }}" selected>{{ status }}</option>
                             <option value="CERTIFIED">CERTIFIED</option>
                             <option value="NOT CERTIFIED">NOT CERTIFIED</option>
                         </select>
@@ -62,7 +62,7 @@
                 </tr>
                 <tr>
                     <td><strong>Trainer Code:</strong></td>
-                    <td>{{ trainer_code }}</td>
+                    <td>{{ code }}</td>
                 </tr> 
                 <tr>
                     <td><strong>Hours Trained:</strong></td>
@@ -77,17 +77,7 @@
                 <button type="button" id="update-button"style="background-color: green; color: white;" >Update</button>
             </div>
         </form>
-
-        <!-- this is the JavaScript code that takes the new status to the server  and updates the tranter table with the new status 
-        <script>
-        $(document).ready(function () {
-            $("#update-button").click(function () {
-                var trainerId = $(".status-select").attr("trainer-id");
-                var newStatus = $(".status-select").val();
-            });
-        });
-        </script> -->
-       
+   
         <script>
             $(document).ready(function () {
             $("#update-button").click(function () {

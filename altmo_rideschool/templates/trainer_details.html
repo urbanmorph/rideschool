@@ -18,12 +18,12 @@
                 </tr>
                 {% for participant in participants %}
                 <tr>
-                    <td>{{ participant.participant_name }}</td>
-                    <td>{{ participant.participant_contact }}</td>
+                    <td>{{ participant.name }}</td>
+                    <td>{{ participant.contact }}</td>
                     <td>
-                        <select class="status-select" name="participant_status" data-participant-id="{{ participant.participant_id }}" data-initial-status="{{ participant.participant_status }}">
-                            <option value="{{ participant.participant_status }}" selected>{{ participant.participant_status }}</option>
-                            {% if participant.participant_status == 'ONGOING' %}
+                        <select class="status-select" name="participant_status" data-participant-id="{{ participant.id }}" data-initial-status="{{ participant.status }}">
+                            <option value="{{ participant.status }}" selected>{{ participant.status }}</option>
+                            {% if participant.status == 'ONGOING' %}
                             <option value="COMPLETED">COMPLETED</option>
                             <option value="DROP-OUT">DROP-OUT</option>
                             {% endif %}

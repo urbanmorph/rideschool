@@ -16,14 +16,14 @@
       <div class="form-group">
         <label for="trainer-name">Trainer Name:</label>
         <div class="trainer-name-box" id="logged-in-trainer-name">
-          {{ session['trainer_name'] }}
+          {{ session['name'] }}
         </div>
         <input type="hidden" name="trainer-id" value="{{ session['trainer_id'] }}">
         <input type="hidden" name="training_location_id" id="trainer_training_location_id">
       </div>     
       <div class="form-group">
         <label for="participant-name">Participant Name:</label>
-        <select name="participant-name" id="participant_name" class="form-control">
+        <select name="participant-name" id="name" class="form-control">
           <option value="">Select Participant</option>
         </select>
         <input type="hidden" name="training_location_id" id="participant_training_location_id">
@@ -74,19 +74,21 @@
     //(participant name is populated here )// Fetch participants for the logged-in trainer and populate the participant select element (participant name is populated here )
     $.get('/participants/{{ session["trainer_id"] }}', function (participantsData) {
       //console.log('Fetched participants:', participantsData);
-      var participantSelect = $('#participant_name');
+      /////
+      var participantSelect = $('#name');
       participantSelect.empty(); // Clear previous options
       participantsData.forEach(function (participant) {
-        if (participant.participant_status !== "COMPLETED") {
+        if (participant.status !== "COMPLETED") {
           //var option = $('<option></option>').attr('value', participant.participant_id ).text(participant.participant_name);
-          var option = $('<option></option>').attr('value', participant.participant_name).text(participant.participant_name);
+          var option = $('<option></option>').attr('value', participant.name).text(participant.name);
           participantSelect.append(option);
         }
       });
     });
 
     // When a participant is selected, fetch the corresponding training_location_id and update the hidden input
-    $('#participant_name').on('change', function () {
+    ////
+    $('#name').on('change', function () {
       var participantId = $(this).val();
       $.get('/participant/' + participantId, function (data) {
         $('#participant_training_location_id').val(data.training_location_id);
