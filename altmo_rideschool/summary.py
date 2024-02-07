@@ -47,27 +47,26 @@ def summary():
             total_participants = result.get('count', 0)
             print(result)
 
-            cursor.execute("SELECT COUNT(*) FROM participants WHERE participant_status IN ('COMPLETED', 'CERTIFIED')")
+            cursor.execute("SELECT COUNT(*) FROM participants WHERE status IN ('COMPLETED', 'CERTIFIED')")
             #total_completed_certified = cursor.fetchone()[0]
             result = cursor.fetchone()
             total_completed_certified = result.get('count', 0)
             print(result)
 
-            cursor.execute("SELECT COUNT(*) FROM participants WHERE participant_status = 'ONGOING'")
+            cursor.execute("SELECT COUNT(*) FROM participants WHERE status = 'ONGOING'")
             #total_ongoing = cursor.fetchone()[0]
             result = cursor.fetchone()
             total_ongoing = result.get('count', 0)
             print(result)
 
-            cursor.execute("SELECT COUNT(*) FROM participants WHERE participant_status = 'DROP-OUT'")
+            cursor.execute("SELECT COUNT(*) FROM participants WHERE status = 'DROP-OUT'")
             #total_dropouts = cursor.fetchone()[0]
             result = cursor.fetchone()
             total_dropouts = result.get('count', 0)
             print(result)
 
-
-            cursor.execute("SELECT COUNT(*) FROM participants WHERE participant_status = 'NEW'")
-            #total_uncontacted = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM participants WHERE status = 'NEW'")
+            #cursor.execute("SELECT COUNT(*) FROM participants WHERE participant_status = 'NEW'")
             result = cursor.fetchone()
             total_uncontacted= result.get('count', 0)
             print(result)
