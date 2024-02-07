@@ -17,7 +17,7 @@ def participant_form():
     try:       
         with get_db_cursor(commit=False) as cursor:
             # Fetch training locations from the table
-            cursor.execute("SELECT training_location, training_location_address FROM training_locations_list")
+            cursor.execute("SELECT training_location, address FROM training_locations_list")
             training_locations = cursor.fetchall()
 
         # Render the form template with the training locations
@@ -45,7 +45,7 @@ def submit_form():
         # Connect to the database
         with get_db_cursor(commit=True) as cursor: 
             # Check if the contact number already exists
-            check_contact_query = "SELECT participant_id FROM participants WHERE participant_contact = %s"
+            check_contact_query = "SELECT id FROM participants WHERE contact = %s"
             cursor.execute(check_contact_query, (participant_contact,))
             existing_participant = cursor.fetchone()
 
@@ -54,20 +54,20 @@ def submit_form():
                 return jsonify({"message": "Contact number is already registered. Continue to create account by clicking on the link below !!!", "alert_type": "danger"})
 
             else:# Fetch the training_location_id based on the selected training_location
-                select_query = "SELECT training_location_id FROM training_locations_list WHERE training_location = %s"
+                select_query = "SELECT id FROM training_locations_list WHERE training_location = %s"
                 cursor.execute(select_query, (training_location,))
                 result = cursor.fetchone()
 
-                if result is not None and 'training_location_id' in result:
+                if result is not None and 'id' in result:
                 # Useing the key 'training_location_id' to access the value
-                    training_location_id = result['training_location_id']
+                    training_location_id = result['id']
                 else:
                     return jsonify({"message": "Training location not found.", "alert_type": "danger"})
                   
                 # Insert participant data into the participants table with participant_created_date and participant_updated_date
                 #insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
                 #values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status, participant_created_date, participant_updated_date)
-                insert_query = "INSERT INTO participants (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING participant_id"
+                insert_query = "INSERT INTO participants (name, email, contact, address, age, gender, t_location_id, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
                 values = (participant_name, participant_email, participant_contact, participant_address, participant_age, participant_gender, training_location_id, participant_status)
                 cursor.execute(insert_query, values)
 
@@ -76,13 +76,13 @@ def submit_form():
 
                 if new_participant_row:
                     # Extract participant_id from the RealDictRow
-                    new_participant_id = new_participant_row['participant_id']
+                    new_participant_id = new_participant_row['id']
         
                     # Generate the code for the participant using the fetched participant_id
                     new_code = generate_participant_code(new_participant_id)
 
                     # Update the participant's code in the database
-                    update_query = "UPDATE participants SET participant_code = %s WHERE participant_id = %s"
+                    update_query = "UPDATE participants SET code = %s WHERE id = %s"
                     cursor.execute(update_query, (new_code, new_participant_id))
                 else:
                     error_message = "Error retrieving newly inserted participant_id or result is empty."                    
@@ -109,14 +109,14 @@ def participant_session_info():
                     # Fetch session details for the logged-in participant
                     cursor.execute("""
                         SELECT
-                            s.actual_datetime,
+                            s.actual_date,
                             s.hours_trained,
                             s.picture_path,
                             s.video_path,
                             s.description,
-                            t.trainer_name
+                            t.name AS trainer_name
                         FROM sessions s
-                        JOIN trainer t ON s.trainer_id = t.trainer_id
+                        JOIN trainer t ON s.trainer_id = t.id
                         WHERE s.participant_id = %s;
                     """, (participant_id,))
                     session_details = cursor.fetchall()
@@ -145,7 +145,7 @@ def feedback_form():
             with get_db_cursor(commit=True) as cursor:
 
                 # Fetch participant details for the logged-in participant
-                cursor.execute("SELECT * FROM participants WHERE participant_id = %s", (participant_id,))
+                cursor.execute("SELECT * FROM participants WHERE id = %s", (participant_id,))
                 participant = cursor.fetchone()
 
                 if not participant:
@@ -166,7 +166,7 @@ def feedback_form():
 
                     # Insert the feedback data into the "feedback" table
                     insert_query = """
-                        INSERT INTO feedback (participant_id, rate_training_sessions, learner_guide_useful, feedback, confident_to_ride, trainer_evaluation, trainer_feedback)
+                        INSERT INTO feedback (participant_id, sessions_rating, lguide_useful, feedback, confident, trainer_rating, trainer_feedback)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """
                     values = (
@@ -185,23 +185,23 @@ def feedback_form():
                     if participant.get('participant_status') == 'COMPLETED':
                         sql_query = """
                             SELECT
-                                p.participant_name,
-                                p.participant_code,
-                                p.participant_updated_at,
+                                p.name,
+                                p.code,
+                                p.updated_at,
                                 COUNT(s.hours_trained) AS session_count,  -- Calculate the count of sessions
-                                t.trainer_name
+                                t.name
                             FROM
                                 participants p
                             JOIN
-                                sessions s ON p.participant_id = s.participant_id
+                                sessions s ON p.id = s.participant_id
                             JOIN
-                                trainer t ON s.trainer_id = t.trainer_id
+                                trainer t ON s.trainer_id = t.id
                             WHERE
-                                p.participant_status = 'COMPLETED'
+                                p.status = 'COMPLETED'
                             AND
-                                p.participant_id = %s
+                                p.id = %s
                             GROUP BY
-                                p.participant_name, p.participant_code, p.participant_updated_at, t.trainer_name
+                                p.name, p.code, p.update_date, t.name
                         """
                         cursor.execute(sql_query, (participant_id,))
                         result = cursor.fetchone()
