@@ -43,7 +43,7 @@ def submit_organization():
             # Perform database insertion or any other necessary operations
             with get_db_cursor(commit=True) as cursor:
                 # check if contact no is already registered 
-                chech_contact = "SELECT organisation_id FROM organisation WHERE organisation_contact = %s"
+                chech_contact = "SELECT id FROM organisation WHERE contact = %s"
                 cursor.execute(chech_contact, (organization_contact,))
                 existing_org = cursor.fetchone()
                     
@@ -52,13 +52,13 @@ def submit_organization():
 
                 cursor.execute("""
                 INSERT INTO public.organisation (
-                    organisation_name, 
-                    organisation_address, 
-                    organisation_contact, 
-                    organisation_email, 
-                    organisation_type, 
-                    organisation_activities, 
-                    organisation_legal_status_document, 
+                    name, 
+                    address, 
+                    contact, 
+                    email, 
+                    org_type, 
+                    activities, 
+                    legal_document, 
                     coordinator_name, 
                     coordinator_email,
                     coordinator_contact
