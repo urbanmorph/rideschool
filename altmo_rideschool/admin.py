@@ -17,17 +17,17 @@ def participant_info():
         with get_db_cursor() as cursor:        
             cursor.execute("""
                 SELECT
-                    p.participant_id,
-                    p.participant_name,
-                    p.participant_email,
-                    p.participant_contact,
+                    p.id,
+                    p.name,
+                    p.email,
+                    p.contact,
                     tl.training_location,
-                    tl.training_location_address,
-                    p.participant_status,
-                    p.participant_created_at,
-                    p.participant_code
+                    tl.address,
+                    p.status,
+                    p.created_date,                    
+                    p.code
                 FROM participants p
-                JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
+                JOIN training_locations_list tl ON p.t_location_id = tl.id
             """)
             participants = cursor.fetchall()
             print(participants)
@@ -45,30 +45,30 @@ def trainer_info():
         with get_db_cursor() as cursor:
             cursor.execute("""
                 SELECT
-                    t.trainer_id,
-                    t.trainer_name,
-                    t.trainer_email,
-                    t.trainer_contact,
-                    CASE WHEN t.training_location_id = 0 THEN NULL
+                    t.id,
+                    t.name,
+                    t.email,
+                    t.contact,
+                    CASE WHEN t.t_location_id = 0 THEN NULL
                          ELSE tl.training_location
                     END AS training_location,      
-                    t.trainer_address,
-                    t.trainer_gender,
-                    t.trainer_aadhar_no,
-                    t.trainer_created_at,
-                    t.trainer_training_completion_date,
-                    o.organisation_name,
-                    t.trainer_status,
-                    t.trainer_code
+                    t.address,
+                    t.gender,
+                    t.aadhar_no,
+                    t.created_date,
+                    t.training_completion,
+                    o.name AS organization_name, -- rename this o.name to this organization_name to avoide confusion 
+                    t.status,
+                    t.code
                 FROM trainer t
-                LEFT JOIN training_locations_list tl ON t.training_location_id = tl.training_location_id
-                JOIN organisation o ON t.organisation_id = o.organisation_id
+                LEFT JOIN training_locations_list tl ON t.t_location_id = tl.id
+                JOIN organisation o ON t.org_id = o.id
             """)
             trainers = cursor.fetchall()
 
         # Fetch the list of training locations for the dropdown
         with get_db_cursor() as cursor:
-            cursor.execute("SELECT training_location_id, training_location FROM training_locations_list")
+            cursor.execute("SELECT id, training_location FROM training_locations_list")
             training_locations = cursor.fetchall()
             print(training_locations )
 
@@ -81,27 +81,27 @@ def trainer_info():
 #adin session 
 @admin_bp.route('/sessions_info')
 def sessions_info():
-    print("Reached sessions_info route")  # Debugging statement
+    print("Reached sessions_info route")  
     try:
-         # Create a database connection
+         # Creating a database connection
         with get_db_cursor() as cursor:
             cursor.execute("""
                 SELECT
-                    t.trainer_id,  
-                    t.trainer_name,
-                    p.participant_name,
-                    p.training_start_date,
-                    p.training_end_date,
-                    s.actual_datetime,
+                    t.id,  
+                    t.name,
+                    p.name AS participant_name,
+                    p.training_start,
+                    p.training_end,
+                    s.actual_date,
                     s.hours_trained,
                     s.picture_path,
                     s.video_path,
                     s.description,
-                    s.session_update_date,
-                    p.participant_id
+                    s.update_date,
+                    p.id
                 FROM sessions s
-                JOIN trainer t ON s.trainer_id = t.trainer_id
-                JOIN participants p ON s.participant_id = p.participant_id
+                JOIN trainer t ON s.trainer_id = t.id
+                JOIN participants p ON s.participant_id = p.id
                 
                ;                
             """)
@@ -111,37 +111,37 @@ def sessions_info():
         traceback.print_exc()
         return f"Error:{str(e)}"     
                
-@admin_bp.route('/trainer_details/<int:trainer_id>')
-def trainer_details(trainer_id):
+@admin_bp.route('/trainer_details/<int:id>')
+def trainer_details(id):
     try:
-        # Convert trainer_id to an integer
-        trainer_id = int(trainer_id)
+        # Converts trainer_id to an integer
+        trainer_id = int(id)
 
         # Fetch trainer details based on trainer_id from the database
         with get_db_cursor() as cursor:
             cursor.execute("""
                 SELECT
-                    t.trainer_id,
-                    t.trainer_name,
-                    t.trainer_email,
-                    t.trainer_contact,
-                    tl.training_location_address,
-                    t.trainer_address,
-                    t.trainer_gender,
-                    t.trainer_aadhar_no,
-                    t.trainer_created_at,
-                    t.trainer_training_completion_date,
-                    o.organisation_name,
-                    t.trainer_status,
-                    t.trainer_code,
+                    t.id,
+                    t.name,
+                    t.email,
+                    t.contact,
+                    tl.address AS training_loaction_address,
+                    t.address,
+                    t.gender,
+                    t.aadhar_no,
+                    t.created_date,
+                    t.training_completion,
+                    o.name AS organisation_name,
+                    t.status,
+                    t.code,
                     SUM(s.hours_trained) AS total_hours_trained,  -- Calculate the total hours trained
                     COUNT(s.hours_trained) AS session_count  -- Calculate the count of sessions
                 FROM trainer t
-                LEFT JOIN sessions s ON t.trainer_id = s.trainer_id
-                LEFT JOIN training_locations_list tl ON t.training_location_id = tl.training_location_id
-                LEFT JOIN organisation o ON t.organisation_id = o.organisation_id
-                WHERE t.trainer_id = %s
-                GROUP BY t.trainer_id, tl.training_location_address, o.organisation_name
+                LEFT JOIN sessions s ON t.id = s.trainer_id
+                LEFT JOIN training_locations_list tl ON t.t_location_id = tl.id
+                LEFT JOIN organisation o ON t.org_id = o.id
+                WHERE t.id = %s
+                GROUP BY t.id, tl.address, o.name
             """, (trainer_id,))                    
             trainer_data = cursor.fetchone()
 
@@ -151,13 +151,14 @@ def trainer_details(trainer_id):
     except Exception as e:
         traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
-        return 'Error fetching trainer details. Please try again later.'
+        #return 'Error fetching trainer details. Please try again later.'
+        return f"Error fetching trainer details. Details: {str(e)}"
     
-# Helper function to fetch feedback data for a specific participant with COMPLETED or CERTIFIED status
+# function to fetch feedback data for a specific participant with COMPLETED or CERTIFIED status
 def fetch_feedback_data(participant_id):
     try:
         with get_db_cursor() as cursor:
-            cursor.execute("SELECT * FROM feedback WHERE participant_id = %s", (participant_id,))
+            cursor.execute("SELECT * FROM feedback WHERE id = %s", (participant_id,))
             feedback_data = cursor.fetchall()
 
             return feedback_data
@@ -166,32 +167,32 @@ def fetch_feedback_data(participant_id):
         logging.error("An error occurred while fetching feedback data:", exc_info=True)
         return None
 
-@admin_bp.route('/participant_admin/<int:participant_id>')
-def participant_admin(participant_id):
+@admin_bp.route('/participant_admin/<int:id>')
+def participant_admin(id):
     try:
         # Fetch participant details based on participant_id from the database
         with get_db_cursor() as cursor:
             cursor.execute("""
                 SELECT
-                    p.participant_id,
-                    p.participant_name,
-                    p.participant_email,
-                    p.participant_contact,
-                    p.participant_age,
-                    p.participant_gender,
-                    p.participant_address,
-                    tl.training_location_address,
-                    p.participant_created_at,
-                    p.participant_status,
-                    p.participant_code,
+                    p.id,
+                    p.name,
+                    p.email,
+                    p.contact,
+                    p.age,
+                    p.gender,
+                    p.address,
+                    tl.address AS training_location_addres,
+                    p.created_date,
+                    p.status,
+                    p.code,
                     SUM(s.hours_trained) AS total_hours_trained,
                     COUNT(s.hours_trained) AS session_count
                 FROM participants p
-                LEFT JOIN sessions s ON p.participant_id = s.participant_id
-                LEFT JOIN training_locations_list tl ON p.training_location_id = tl.training_location_id
-                WHERE p.participant_id = %s
-                GROUP BY p.participant_id, p.participant_name, p.participant_email, p.participant_contact, p.participant_age, p.participant_gender, p.participant_address, tl.training_location_address, p.participant_created_at, p.participant_status, p.participant_code
-            """, (participant_id,))
+                LEFT JOIN sessions s ON p.id = s.participant_id
+                LEFT JOIN training_locations_list tl ON p.t_location_id = tl.id
+                WHERE p.id = %s
+                GROUP BY p.id, p.name, p.email, p.contact, p.age, p.gender, p.address, tl.address, p.created_date, p.status, p.code
+            """, (id,))
 
             participant_data = cursor.fetchone()
             print(participant_data)
@@ -201,9 +202,9 @@ def participant_admin(participant_id):
             
         # Check if the participant's status is "COMPLETED" or "CERTIFIED"
            # if participant_status in ['COMPLETED', 'CERTIFIED']:
-           if participant_data['participant_status'] in ['COMPLETED', 'CERTIFIED']:
+           if participant_data['status'] in ['COMPLETED', 'CERTIFIED']:
             # Fetch feedback data only for the specific participant with "COMPLETED" or "CERTIFIED" status
-                feedback_data = fetch_feedback_data(participant_id)
+                feedback_data = fetch_feedback_data(id)
         else:
             feedback_data = None
         return render_template('participant_admin.html', participant_data=participant_data, feedback_data=feedback_data)
@@ -235,7 +236,7 @@ def update_participant_statuses_admin():
                     break  # Break the loop if an invalid ID is encountered
 
                 # Update the participant status only if the ID is valid
-                cursor.execute("UPDATE participants SET participant_status = %s WHERE participant_id = %s", (new_status, participant_id))
+                cursor.execute("UPDATE participants SET status = %s WHERE id = %s", (new_status, participant_id))
 
             if success:
                 return jsonify({"success": True})
@@ -259,9 +260,9 @@ def update_trainer_status():
         new_location_id = data.get('newLocationId')
         
         with get_db_cursor(commit=True) as cursor:       
-            cursor.execute("UPDATE trainer SET trainer_status = %s WHERE trainer_id = %s", (new_status, trainer_id))
+            cursor.execute("UPDATE trainer SET status = %s WHERE id = %s", (new_status, trainer_id))
              # Update the training_location_id in the trainers table
-            cursor.execute("UPDATE trainer SET training_location_id = %s WHERE trainer_id = %s", (new_location_id, trainer_id))            
+            cursor.execute("UPDATE trainer SET t_location_id = %s WHERE id = %s", (new_location_id, trainer_id))            
         return jsonify({"success": True})
     except Exception as e:
         current_app.logger.error("Error updating trainer status:", exc_info=True)
@@ -274,18 +275,18 @@ def organisation_info():
         
             cursor.execute("""
                 SELECT
-                    organisation_id,
-                    organisation_name,
-                    organisation_address,
-                    organisation_contact,
-                    organisation_email,
-                    organisation_type,
-                    organisation_activities,
-                    organisation_legal_status_document,
+                    id,
+                    name,
+                    address,
+                    contact,
+                    email,
+                    org_type,
+                    activities,
+                    legal_document,
                     coordinator_name,
                     coordinator_email,
                     coordinator_contact,
-                    organisation_created_at
+                    created_date
                     
                 FROM organisation
             """)
@@ -293,7 +294,7 @@ def organisation_info():
         ###
         # loops through organizations and print the organisation_legal_status_document path this is just for debugging 
         for organization in organizations:
-            legal_status_document_path = organization['organisation_legal_status_document']
+            legal_status_document_path = organization['legal_document']
             print("Organisation Document Path:", legal_status_document_path)
         #print("organization:", organization['organisation_legal_status_document'])
         ###
