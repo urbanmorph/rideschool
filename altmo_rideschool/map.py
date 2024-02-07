@@ -7,7 +7,7 @@ map_bp = Blueprint('map', __name__)
 
 def fetch_locations_from_db():
     with get_db_cursor() as cursor:
-        cursor.execute("SELECT training_location_latitude, training_location_longitude FROM training_locations_list")
+        cursor.execute("SELECT latitude, longitude FROM training_locations_list")
         locations = cursor.fetchall()
     return locations
 
@@ -24,7 +24,7 @@ def create_folium_map(locations):
 
     # Step 2: Add markers to the map for each location in the result set
     for location in locations:
-        marker_location = [location['training_location_latitude'], location['training_location_longitude']]
+        marker_location = [location['latitude'], location['longitude']]
         folium.Marker(location=marker_location, popup='Marker Popup Text').add_to(my_map)
 
     # Step 3: Save the map to an HTML file
