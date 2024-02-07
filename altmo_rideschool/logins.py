@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 
 #from .config.config import get_config_value 
 
-from .forms import YourLoginForm  # Import your login form 
+from .forms import YourLoginForm  # Import the login form 
 
 import traceback
 from flask import current_app
@@ -56,7 +56,7 @@ def check_logins():
                     trainer_data = db_cursor.fetchone()
 
                     if trainer_data:
-                        ###trainer_id, trainer_name, trainer_status = trainer_data
+                        
                         id = trainer_data['id']
                         name = trainer_data['name']
                         status = trainer_data['status']
@@ -159,12 +159,10 @@ def update_participant_statuses():
     try:
         updates = request.get_json()        
         with get_db_cursor(commit=True) as db_cursor:
-           # db_cursor = db_connection.cursor()
-
+           
             for update in updates:
                 participant_id = update.get('participantId')
                 new_status = update.get('newStatus')
-
                 try:
                     participant_id = int(participant_id)
                 except ValueError:

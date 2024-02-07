@@ -88,7 +88,7 @@ def submit_organization():
         # Display error message
         return jsonify({'alert_type ': 'error', 'message': 'An error occurred. Please try again.'})
 
- # below code not in use
+ # below code is not in use 
 @organization_bp.route('/display_legal_document/<filename>')
 def display_legal_document(filename):
     return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename) #return send_from_directory(current_app.config['ORGANIZATION_FOLDER'], filename): This line uses the send_from_directory function to send the file with the specified filename from the directory specified by current_app.config['ORGANIZATION_FOLDER']

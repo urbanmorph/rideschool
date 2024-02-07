@@ -1,6 +1,5 @@
 print("training_locations_list.py")
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory
-
 import os
 import time 
 from altmo_utils.db import get_db_cursor
