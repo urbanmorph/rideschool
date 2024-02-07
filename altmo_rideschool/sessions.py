@@ -20,17 +20,15 @@ def form():
     try:
         # Fetch the certified trainer names from the database       
         with get_db_cursor() as cursor:            
-            cursor.execute("SELECT trainer_id, trainer_name FROM trainer WHERE trainer_status = %s", ('CERTIFIED',))
+            cursor.execute("SELECT id, name FROM trainer WHERE status = %s", ('CERTIFIED',))
             rows = cursor.fetchall()            
-            # Construct the trainers list
-            trainers = [{'trainer_id': row['trainer_id'], 'trainer_name': row['trainer_name']} for row in rows]    
-            # Get the currently logged-in trainer's name from the session (replace with your actual session data)
-            current_trainer_name = session.get('trainer_name', '')  # Use session['trainer_name'] if that's how you access it
+            
+            trainers = [{'id': row['id'], 'name': row['name']} for row in rows]               
+            current_trainer_name = session.get('name', '')  
             return render_template('sessions_form.html', trainers=trainers, current_trainer_name=current_trainer_name)
     except Exception as e:
         traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
-        #return f'Error fetching certified trainer names. Error details: {str(e)}'
         return jsonify({'alert_type ': 'error', 'message': 'Error fetching certified trainer names. Please try again later.'})
 
 @sessions_bp.route('/trainers')
@@ -38,8 +36,8 @@ def get_trainers():
     try:
         # Fetch the trainer names and statuses from the database
         with get_db_cursor() as cursor:        
-            cursor.execute("SELECT trainer_id, trainer_name, trainer_status FROM trainer")          
-            trainers = [{'trainer_id': row['trainer_id'], 'trainer_name': row['trainer_name'], 'trainer_status': row['trainer_status']} for row in cursor.fetchall()]       
+            cursor.execute("SELECT id, name, status FROM trainer")          
+            trainers = [{'id': row['id'], 'name': row['name'], 'status': row['status']} for row in cursor.fetchall()]       
 
         return jsonify(trainers)
     except Exception as e:
@@ -51,9 +49,9 @@ def get_trainer(trainer_id):
     try:
         # Fetch the training_location_id for the selected trainer
         with get_db_cursor() as cursor:        
-            cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id = %s", (trainer_id,))
-            training_location_id = cursor.fetchone().get('training_location_id', None)
-        return jsonify({'training_location_id': training_location_id})
+            cursor.execute("SELECT t_location_id FROM trainer WHERE id = %s", (trainer_id,))
+            training_location_id = cursor.fetchone().get('t_location_id', None)
+        return jsonify({'t_location_id': training_location_id})
     except Exception as e:
         logging.error("An error occurred:", exc_info=True)
         return jsonify({})
@@ -63,19 +61,19 @@ def get_participants(trainer_id):
     try:
         # Fetch the training_location_id for the selected trainer        
         with get_db_cursor() as cursor:
-            cursor.execute("SELECT training_location_id FROM trainer WHERE trainer_id = %s", (trainer_id,))
+            cursor.execute("SELECT t_location_id FROM trainer WHERE id = %s", (trainer_id,))
             result = cursor.fetchone()
             if result is None:
-                return jsonify([])  # Return an empty list if no training_location_id found
+                return jsonify([])  # Return an empty list if no training_location_id is found
 
-            training_location_id = result.get('training_location_id', None)
+            training_location_id = result.get('t_location_id', None)
 
         # Fetch the participants based on the matching training_location_id, participant_status as "NEW" or "ONGOING",and exclude those with participant_status as "COMPLETED"
             cursor.execute(
-                "SELECT participant_name FROM participants WHERE training_location_id = %s AND participant_status IN ('NEW', 'ONGOING') AND participant_name NOT IN (SELECT participant_name FROM participants WHERE participant_status = 'COMPLETED')",
+                "SELECT name FROM participants WHERE t_location_id = %s AND status IN ('NEW', 'ONGOING') AND name NOT IN (SELECT name FROM participants WHERE status = 'COMPLETED')",
                 (training_location_id,))
      
-            participants = [{'participant_name': row.get('participant_name')} for row in cursor.fetchall()]    
+            participants = [{'name': row.get('name')} for row in cursor.fetchall()]    
             #print("Fetched Participants:", participants)
             return jsonify(participants)
     except Exception as e:
@@ -83,22 +81,20 @@ def get_participants(trainer_id):
         logging.error("An error occurred:", exc_info=True)
         return jsonify([])
 
-#@sessions_bp.route('/participant/<string:participant_name>')
-#def get_participant(participant_name):
 @sessions_bp.route('/participant/<int:participant_id>')
 def get_participant(participant_id):
     try:
         # Fetch the participant details based on the given participant_name
         with get_db_cursor() as cursor:  
-            cursor.execute("SELECT * FROM participants WHERE participant_id = %s", (participant_id,))          
+            cursor.execute("SELECT * FROM participants WHERE id = %s", (participant_id,))          
             #cursor.execute("SELECT * FROM participants WHERE participant_name = %s", (participant_name,))
             participant = cursor.fetchone()        
             if participant is None:
                 return jsonify({}), 404  # Return an empty response with 404 status if participant is not found
        
             return jsonify({            
-                'participant_name': participant['participant_name'],  
-                'training_location_id': participant['training_location_id'],            
+                'name': participant['name'],  
+                't_location_id': participant['t_location_id'],            
             })
     except Exception as e:
         traceback.print_exc()
@@ -121,12 +117,12 @@ def submit_form():
         # Fetch the trainer_id and participant_id based on the names
         with get_db_cursor(commit=True) as cursor:        
             # Fetch participant_id based on participant_name    
-            cursor.execute("SELECT participant_id FROM participants WHERE participant_name = %s", (participant_name,))
+            cursor.execute("SELECT id FROM participants WHERE name = %s", (participant_name,))
             participant_id = cursor.fetchone()
 
             if participant_id is not None:
                 #participant_id = participant_id[0]
-                participant_id = participant_id['participant_id']
+                participant_id = participant_id['id']
             else:
                 # Handle the case where the participant is not found
                 return jsonify({'alert_type ': 'error', 'message': 'Participant not found'})
@@ -135,12 +131,12 @@ def submit_form():
             cursor.execute("SELECT COUNT(*) FROM sessions WHERE participant_id = %s", (participant_id,))
             #session_count = cursor.fetchone()[0]
             session_count = cursor.fetchone()['count']
-            # Determine the session status
+            #determine the session status
             session_status = 'ONGOING' if session_count > 0 else 'NEW'
 
             # If this is the first session, update participant status to 'ONGOING'
             if session_count == 0:
-                cursor.execute("UPDATE participants SET participant_status = 'ONGOING', training_start_date = %s WHERE participant_id = %s", (actual_datetime, participant_id,))
+                cursor.execute("UPDATE participants SET status = 'ONGOING', training_start = %s WHERE id = %s", (actual_datetime, participant_id,))
                 
             # Save the image and video files to the uploaded_images folder under the static folder
             picture_filename = picture.filename
@@ -163,12 +159,12 @@ def submit_form():
                     trainer_id,  -- Store the trainer_id
                     participant_id, 
                     scheduled_datetime, 
-                    actual_datetime, 
+                    actual_date, 
                     hours_trained, 
                     picture_path, 
                     video_path, 
                     description,
-                    session_status
+                    status
                 ) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
             ''', (trainer_id, participant_id, scheduled_datetime, actual_datetime, hours_trained,
@@ -181,7 +177,7 @@ def submit_form():
             logging.error("An error occurred:", exc_info=True)
             return jsonify({'alert_type ': 'error', 'message': 'Error submitting the form. Please try again later.'})
 
-#When a trainer logs in and is authenticated, their trainer_id is stored in the session along with other relevant information, such as their name (trainer_name),,When the form is submitted to the /submit_form route, the value of the hidden input field named "trainer-id" is extracted from the form data using request.form['trainer-id']. This value corresponds to the trainer_id of the currently logged-in trainer.. In this way, the trainer_id is carried through the hidden input field from the session to the form submission. This approach helps ensure that the data is associated with the correct trainer and maintains data integrity throughout the form submission process
+#When a trainer logs in and is authenticated, their trainer_id is stored in the session along with other relevant information, such as their name (trainer name),,When the form is submitted to the /submit_form route, the value of the hidden input field named "trainer-id" is extracted from the form data using request.form['trainer-id']. This value corresponds to the trainer_id of the currently logged-in trainer.. In this way, the trainer_id is carried through the hidden input field from the session to the form submission. This approach helps ensure that the data is associated with the correct trainer and maintains data integrity throughout the form submission process
 @sessions_bp.route('/sessions_table')
 def sessions_table():
     try:
