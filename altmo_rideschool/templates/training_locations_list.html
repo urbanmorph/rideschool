@@ -31,7 +31,7 @@
                             <td class="location" data-address="{{ location['address'] }}" data-latitude="{{ location['latitude'] }}" data-longitude="{{ location['longitude'] }}" >{{ location['training_location'] }}</td>
                             <!--<td class="location" data-address="{{ location['training_location_address'] }}" data-latitude="{{ location['training_location_latitude'] }}" data-longitude="{{ location['training_location_longitude'] }}" data-picture="{{ location['training_location_picture'] }}">{{ location['training_location'] }}</td>-->
                             <td>{{ location['trainer_name'] }}</td>
-                            <td><a href="{{ location['training_location_picture'] }}" target="_blank"><img src="{{ location['training_location_picture'] }}" style="height: 50px; width: 50px;"></a></td>
+                            <td><a href="{{ location['picture_path'] }}" target="_blank"><img src="{{ location['picture_path'] }}" style="height: 50px; width: 50px;"></a></td>
                           
                             <td class="address"></td>
                             <td class="latitude"></td>
@@ -68,7 +68,7 @@
                     <input type="text" class="form-control" id="latitude" name="latitude" required>
                 </div>
                 <div class="form-group">
-                    <label for="training_location_longitude">Longitude:</label>
+                    <label for="longitude">Longitude:</label>
                     <input type="text" class="form-control" id="longitude" name="longitude" required>
                 </div>
                 <div class="form-group">

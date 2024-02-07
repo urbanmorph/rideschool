@@ -130,7 +130,7 @@
                             $('#participantForm')[0].reset();
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function (xhr, alert_type, error) {
                         var responseText = xhr.responseJSON;
                         alert(responseText && responseText.message || 'An error occurred while processing the signup.');
                     }

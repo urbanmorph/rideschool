@@ -1,10 +1,8 @@
 print("training_locations_list.py")
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory
-##import psycopg2
+
 import os
 import time 
-#from .config.config import get_config_value  
-#from altmo_utils.db  import get_db_connection, get_db_pool
 from altmo_utils.db import get_db_cursor
 import traceback
 from werkzeug.utils import secure_filename
@@ -36,23 +34,16 @@ def show_training_location():
 
                     return redirect(url_for('training_locations_list.show_training_location'))
    
-        with get_db_cursor() as cursor:
-    #with get_db_connection() as conn:
-     #   db_cursor = conn.cursor()
-            #cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.trainer_name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
-            cursor.execute("SELECT tl.id, tl.training_location, tl.address, tl.latitude, tl.longitude, tl.training_location_picture, t.name FROM training_locations_list tl LEFT JOIN trainer t ON tl.id = t.id")
+        with get_db_cursor() as cursor:   
+            #cursor.execute("SELECT tl.training_location, tl.training_location_address, tl.training_location_latitude, tl.training_location_longitude, tl.training_location_id, t.name,tl.training_location_picture  FROM training_locations_list tl LEFT JOIN trainer t ON tl.training_location_id = t.training_location_id ")
+            cursor.execute("SELECT tl.id, tl.training_location, tl.address, tl.latitude, tl.longitude, tl.picture_path, t.name FROM training_locations_list tl LEFT JOIN trainer t ON tl.id = t.id")
             
-
             training_location = cursor.fetchall()
            # print(training_location)
-            return render_template('training_locations_list.html', training_location=training_location)
-    ##conn.close()
-    except Exception as e:
-        # Log the exception for debugging purposes
-        #print(f"Error in show_training_location: {str(e)}")
+            return render_template('training_locations_list.html', training_location=training_location)    
+    except Exception as e:        
         traceback.print_exc()
         return render_template('training_locations_list.html', training_location=training_location)
-   # return render_template('training_locations_list.html', training_location=training_location)
 
 #"JSON alert message code"
 # Route for deleting a location and returning "JSON" response
@@ -108,7 +99,7 @@ def add_location():
         # Connect to the database (replace with your actual connection parameters)
         with get_db_cursor(commit=True) as cursor:
         
-            cursor.execute("INSERT INTO training_locations_list (id, training_location, address, latitude,longitude, training_location_picture) VALUES (%s, %s, %s, %s, %s, %s)",
+            cursor.execute("INSERT INTO training_locations_list (id, training_location, address, latitude,longitude, picture_path) VALUES (%s, %s, %s, %s, %s, %s)",
                (id, training_location, address, latitude, longitude, relative_picture_path))           
        
         return jsonify({'alert_type': 'success', 'message': 'Added a new location'})

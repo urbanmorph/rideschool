@@ -27,16 +27,16 @@
                 {% if organizations %}
                     {% for org in organizations %}
                         <tr>
-                            <td>{{ org.organisation_name }}</td>
-                            <td>{{ org.organisation_address }}</td>
-                            <td>{{ org.organisation_contact }}</td>
-                            <td>{{ org.organisation_email }}</td>
-                            <td>{{ org.organisation_type}}</td>
-                            <td><a href="{{ org.organisation_legal_status_document }}" target="_blank"><img src="{{ org.organisation_legal_status_document }}" style="height: 50px; width: 50px;"></a></td>
+                            <td>{{ org.name }}</td>
+                            <td>{{ org.address }}</td>
+                            <td>{{ org.contact }}</td>
+                            <td>{{ org.email }}</td>
+                            <td>{{ org.org_type}}</td>
+                            <td><a href="{{ org.legal_document }}" target="_blank"><img src="{{ org.legal_document }}" style="height: 50px; width: 50px;"></a></td>
                             <td>{{ org.coordinator_name }}</td>
                             <td>{{ org.coordinator_email }}</td>
                             <td>{{ org.coordinator_contact }}</td>
-                            <td>{{ org.organisation_created_at }}</td>                         
+                            <td>{{ org.created_date }}</td>                         
                         </tr>
                     {% endfor %}
                 {% else %}

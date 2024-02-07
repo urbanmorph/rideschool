@@ -27,16 +27,16 @@
                 {% for session in sessions %}
                     <tr>
                         <!-- Link to trainer_details route for trainer details -->
-                        <td><a href="{{ url_for('admin.trainer_details', trainer_id=session['trainer_id']) }}">{{ session['trainer_name'] }}</a></td>
-                        <td>  <a href="{{ url_for('admin.participant_admin', participant_id=session['participant_id']) }}">  {{ session['participant_name'] }}</a> </td>
+                        <td><a href="{{ url_for('admin.trainer_details', id=session['id']) }}">{{ session['name'] }}</a></td>
+                        <td>  <a href="{{ url_for('admin.participant_admin', id=session['id']) }}">  {{ session['participant_name'] }}</a> </td>
                         <!--<td>{{session['actual_datetime']}}</td>-->
-                        <td>{{ session['training_start_date'] }}</td>
-                        <td>{{session['training_end_date']}}</td>
+                        <td>{{ session['training_start'] }}</td>
+                        <td>{{session['training_end']}}</td>
                         <td>{{ session['hours_trained'] }}</td>
                         <td><a href="{{ session['picture_path'] }}" target="_blank"><img src="{{ session['picture_path'] }}" style="height: 50px; width: 50px;"></a></td>
                         <td><video controls width="100"><source src="{{ session['video_path'] }}" type="video/mp4"></video></td>
                         <td>{{ session['description'] }}</td>
-                        <td>{{ session['session_update_date'] }}</td>     
+                        <td>{{ session['update_date'] }}</td>     
                     </tr>
                 {% endfor %}
             </tbody>
