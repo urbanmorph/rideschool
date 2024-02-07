@@ -1,7 +1,7 @@
 """Rename users_signup table
 
 Revision ID: 70eed478de13
-Revises: a5adc765449c
+Revises: d3a7180bed21
 Create Date: 2024-01-29 23:06:08.297642
 
 """
@@ -13,7 +13,8 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '70eed478de13'
-down_revision: Union[str, None] = 'a5adc765449c'
+#down_revision: Union[str, None] = None
+down_revision: Union[str, None] = 'd3a7180bed21'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
