@@ -31,7 +31,7 @@
 
         // Add markers to the map for each location
         locations.forEach(function (location) {
-            var marker = L.marker([location.training_location_latitude, location.training_location_longitude])
+            var marker = L.marker([location.latitude, location.longitude])
                 .bindPopup('Marker Popup Text')
                 .addTo(myMap);
         });
