@@ -41,7 +41,7 @@ def check_contact():
 
             # Check if the contact is in the participants table
             with get_db_cursor() as db_cursor:
-                db_cursor.execute("SELECT * FROM participants WHERE participant_contact=%s", (contact,))
+                db_cursor.execute("SELECT * FROM participants WHERE contact=%s", (contact,))
                 existing_participant = db_cursor.fetchone()
 
             if existing_participant:
@@ -62,7 +62,7 @@ def check_contact():
 
             # Check if the contact is in the trainer table
             with get_db_cursor() as db_cursor:
-                db_cursor.execute("SELECT * FROM trainer WHERE trainer_contact=%s", (contact,))
+                db_cursor.execute("SELECT * FROM trainer WHERE contact=%s", (contact,))
                 trainer = db_cursor.fetchone()
 
                 # Determine the role based on whether the contact exists in trainer or participants table
@@ -73,12 +73,12 @@ def check_contact():
                     role = "trainer"
                     # Check if the trainer_status is CERTIFIED
                     with get_db_cursor() as db_cursor:
-                        db_cursor.execute("SELECT trainer_status FROM trainer WHERE trainer_contact=%s", (contact,))
+                        db_cursor.execute("SELECT status FROM trainer WHERE contact=%s", (contact,))
                         trainer_status_record = db_cursor.fetchone()
 
                     # Check if trainer_status_record is not None and 'trainer_status' is present in the record
-                    if trainer_status_record and 'trainer_status' in trainer_status_record:
-                        trainer_status = trainer_status_record['trainer_status']
+                    if trainer_status_record and 'status' in trainer_status_record:
+                        trainer_status = trainer_status_record['status']
 
                         if trainer_status == "CERTIFIED":
                             user_password = form.password.data
