@@ -60,25 +60,30 @@ def upgrade() -> None:
         EXECUTE FUNCTION public.update_participant_updated_at();
     ''')
 
-
 def downgrade() -> None:
-    op.drop_constraint('participants_pkey', 'participants', type_='primary')
-    op.create_primary_key('participants_pkey', 'participants', ['id'])
+    # Revert trigger function change
+    op.execute('DROP TRIGGER IF EXISTS update_participant_updated_at ON public.participants')
+    op.execute('DROP FUNCTION IF EXISTS public.update_participant_updated_at()')
 
+    # Revert foreign key constraint
     op.drop_constraint('fk_participants_t_location_id', 'participants', type_='foreignkey')
-    op.create_foreign_key('fk_participants_t_location_id', 'participants', 'training_locations_list', ['t_location_id'], ['id'])
-    
-    op.alter_column('participants', 'participant_id', new_column_name='id')
-    op.alter_column('participants', 'participant_name', new_column_name='name')
-    op.alter_column('participants', 'participant_email', new_column_name='email')
-    op.alter_column('participants', 'participant_contact', new_column_name='contact')
-    op.alter_column('participants', 'participant_address', new_column_name='address')
-    op.alter_column('participants', 'participant_age', new_column_name='age')
-    op.alter_column('participants', 'participant_gender', new_column_name='gender')
-    op.alter_column('participants', 'training_location_id', new_column_name='t_location_id')
-    op.alter_column('participants', 'participant_created_at', new_column_name='created_date')
-    op.alter_column('participants', 'participant_updated_at', new_column_name='updated_date')
-    op.alter_column('participants', 'participant_status', new_column_name='status')
-    op.alter_column('participants', 'participant_code', new_column_name='code')
-    op.alter_column('participants', 'training_start_date', new_column_name='training_start')
-    op.alter_column('participants', 'training_end_date', new_column_name='training_end')
+
+    # Revert primary key constraint
+    op.drop_constraint('participants_pkey', 'participants', type_='primary')
+    op.create_primary_key('participants_pkey', 'participants', ['participant_id']) 
+
+    # Revert column name changes
+    op.alter_column('participants', 'id', new_column_name='participant_id') 
+    op.alter_column('participants', 'name', new_column_name='participant_name')
+    op.alter_column('participants', 'email', new_column_name='participant_email')
+    op.alter_column('participants', 'contact', new_column_name='participant_contact')
+    op.alter_column('participants', 'address', new_column_name='participant_address')
+    op.alter_column('participants', 'age', new_column_name='participant_age')
+    op.alter_column('participants', 'gender', new_column_name='participant_gender')
+    op.alter_column('participants', 't_location_id', new_column_name='training_location_id')
+    op.alter_column('participants', 'created_date', new_column_name='participant_created_at')
+    op.alter_column('participants', 'updated_date', new_column_name='participant_updated_at')
+    op.alter_column('participants', 'status', new_column_name='participant_status')
+    op.alter_column('participants', 'code', new_column_name='participant_code')
+    op.alter_column('participants', 'training_start', new_column_name='training_start_date')
+    op.alter_column('participants', 'training_end', new_column_name='training_end_date')

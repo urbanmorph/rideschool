@@ -46,7 +46,7 @@ def upgrade() -> None:
 
     # Add foreign key constraints
     op.create_foreign_key('fk_sessions_trainer_id', 'sessions', 'trainer', ['trainer_id'], ['id'])
-    op.create_foreign_key('fk_sessions_participant_id', 'sessions', 'participants', ['participant_id'], ['participant_id'])
+    op.create_foreign_key('fk_sessions_participant_id', 'sessions', 'participants', ['participant_id'], ['id'])
 
 
 
