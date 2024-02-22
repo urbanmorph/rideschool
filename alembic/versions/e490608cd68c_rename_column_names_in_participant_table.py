@@ -18,72 +18,98 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+
 def upgrade() -> None:
-    
-    op.alter_column('participants', 'participant_id', new_column_name='id')
-    op.alter_column('participants', 'participant_name', new_column_name='name')
-    op.alter_column('participants', 'participant_email', new_column_name='email')
-    op.alter_column('participants', 'participant_contact', new_column_name='contact')
-    op.alter_column('participants', 'participant_address', new_column_name='address')
-    op.alter_column('participants', 'participant_age', new_column_name='age')
-    op.alter_column('participants', 'participant_gender', new_column_name='gender')
-    op.alter_column('participants', 'training_location_id', new_column_name='t_location_id')
-    op.alter_column('participants', 'participant_created_at', new_column_name='created_date')
-    op.alter_column('participants', 'participant_updated_at', new_column_name='updated_date')
-    op.alter_column('participants', 'participant_status', new_column_name='status')
-    op.alter_column('participants', 'participant_code', new_column_name='code')
-    op.alter_column('participants', 'training_start_date',new_column_name='training_start')
-    op.alter_column('participants', 'training_end_date',new_column_name='training_end')
+    with op.batch_alter_table('participants') as batch_op:
+        # Rename columns
+        batch_op.alter_column('participant_id', new_column_name='id')
+        batch_op.alter_column('participant_name', new_column_name='name')
+        batch_op.alter_column('participant_email', new_column_name='email')
+        batch_op.alter_column('participant_contact', new_column_name='contact')
+        batch_op.alter_column('participant_address', new_column_name='address')
+        batch_op.alter_column('participant_age', new_column_name='age')
+        batch_op.alter_column('participant_gender', new_column_name='gender')
+        batch_op.alter_column('training_location_id', new_column_name='t_location_id')
+        batch_op.alter_column('participant_created_at', new_column_name='created_date')
+        batch_op.alter_column('participant_updated_at', new_column_name='updated_date')
+        batch_op.alter_column('participant_status', new_column_name='status')
+        batch_op.alter_column('participant_code', new_column_name='code')
+        batch_op.alter_column('training_start_date', new_column_name='training_start')
+        batch_op.alter_column('training_end_date', new_column_name='training_end')
 
-    # pk constraint
-    op.drop_constraint('participants_pkey', 'participants', type_='primary')
-    op.create_primary_key('participants_pkey', 'participants', ['id'])
+        # drop and create newPrimary key constraint
+        batch_op.drop_constraint('participants_pkey', type_='primary')
+        batch_op.create_primary_key('participants_pkey', ['id'])
 
-    # adding foreign key constraint
-    op.create_foreign_key('fk_participants_t_location_id', 'participants', 'training_locations_list', ['t_location_id'], ['id'])
+        # add Foreign key constraint
+        batch_op.create_foreign_key(
+            'fk_participants_t_location_id',
+            'training_locations_list',
+            ['t_location_id'],
+            ['id']
+        )
 
-    # Change trigger function 
-    op.execute('DROP TRIGGER IF EXISTS update_participant_updated_at ON public.participants')
-    op.execute('''
-        CREATE OR REPLACE FUNCTION public.update_participant_updated_at()
-        RETURNS TRIGGER AS $$
-        BEGIN
-            NEW.updated_date := CURRENT_TIMESTAMP;
-            RETURN NEW;
-        END;
-        $$ LANGUAGE plpgsql;
+        # Change trigger function
+       # batch_op.drop_constraint('update_participant_updated_at', type_='trigger')
+        
+        batch_op.execute('''
+            CREATE OR REPLACE FUNCTION public.update_participant_updated_at()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.updated_date := CURRENT_TIMESTAMP;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
 
-        CREATE TRIGGER update_participant_updated_at
-        BEFORE UPDATE 
-        ON public.participants
-        FOR EACH ROW
-        EXECUTE FUNCTION public.update_participant_updated_at();
-    ''')
+            CREATE TRIGGER update_participant_updated_at
+            BEFORE UPDATE 
+            ON public.participants
+            FOR EACH ROW
+            EXECUTE FUNCTION public.update_participant_updated_at();
+        ''')
+
 
 def downgrade() -> None:
-    # Revert trigger function change
-    op.execute('DROP TRIGGER IF EXISTS update_participant_updated_at ON public.participants')
-    op.execute('DROP FUNCTION IF EXISTS public.update_participant_updated_at()')
+    with op.batch_alter_table('participants') as batch_op:
+        # Revert trigger function change
+        batch_op.drop_constraint('update_participant_updated_at', type_='trigger')
 
-    # Revert foreign key constraint
-    op.drop_constraint('fk_participants_t_location_id', 'participants', type_='foreignkey')
+        # Revert foreign key constraint
+        batch_op.drop_constraint('fk_participants_t_location_id', type_='foreignkey')
 
-    # Revert primary key constraint
-    op.drop_constraint('participants_pkey', 'participants', type_='primary')
-    op.create_primary_key('participants_pkey', 'participants', ['participant_id']) 
+        # Revert primary key constraint
+        batch_op.drop_constraint('participants_pkey', type_='primary')
+        batch_op.create_primary_key('participants_pkey', ['participant_id'])
 
-    # Revert column name changes
-    op.alter_column('participants', 'id', new_column_name='participant_id') 
-    op.alter_column('participants', 'name', new_column_name='participant_name')
-    op.alter_column('participants', 'email', new_column_name='participant_email')
-    op.alter_column('participants', 'contact', new_column_name='participant_contact')
-    op.alter_column('participants', 'address', new_column_name='participant_address')
-    op.alter_column('participants', 'age', new_column_name='participant_age')
-    op.alter_column('participants', 'gender', new_column_name='participant_gender')
-    op.alter_column('participants', 't_location_id', new_column_name='training_location_id')
-    op.alter_column('participants', 'created_date', new_column_name='participant_created_at')
-    op.alter_column('participants', 'updated_date', new_column_name='participant_updated_at')
-    op.alter_column('participants', 'status', new_column_name='participant_status')
-    op.alter_column('participants', 'code', new_column_name='participant_code')
-    op.alter_column('participants', 'training_start', new_column_name='training_start_date')
-    op.alter_column('participants', 'training_end', new_column_name='training_end_date')
+        # Revert column name changes
+        batch_op.alter_column('id', new_column_name='participant_id')
+        batch_op.alter_column('name', new_column_name='participant_name')
+        batch_op.alter_column('email', new_column_name='participant_email')
+        batch_op.alter_column('contact', new_column_name='participant_contact')
+        batch_op.alter_column('address', new_column_name='participant_address')
+        batch_op.alter_column('age', new_column_name='participant_age')
+        batch_op.alter_column('gender', new_column_name='participant_gender')
+        batch_op.alter_column('t_location_id', new_column_name='training_location_id')
+        batch_op.alter_column('created_date', new_column_name='participant_created_at')
+        batch_op.alter_column('updated_date', new_column_name='participant_updated_at')
+        batch_op.alter_column('status', new_column_name='participant_status')
+        batch_op.alter_column('code', new_column_name='participant_code')
+        batch_op.alter_column('training_start', new_column_name='training_start_date')
+        batch_op.alter_column('training_end', new_column_name='training_end_date')
+
+        # Recreate trigger with original name and definition
+        batch_op.execute('''
+            CREATE OR REPLACE FUNCTION public.update_participant_updated_at()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                NEW.updated_date := CURRENT_TIMESTAMP;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+
+            CREATE TRIGGER update_participant_updated_at
+            BEFORE UPDATE 
+            ON public.participants
+            FOR EACH ROW
+            EXECUTE FUNCTION public.update_participant_updated_at();
+        ''')
