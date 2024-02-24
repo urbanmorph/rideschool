@@ -17,7 +17,7 @@ logins_bp = Blueprint('logins', __name__)
 
 @logins_bp.route('/logins', methods=['GET'])
 def index():
-    form = YourLoginForm()  # Create an instance of the login form
+    form = YourLoginForm()  # Creates an instance of the login form
     return render_template('logins.html', form=form)
 
 
@@ -25,12 +25,12 @@ def index():
 @logins_bp.route('/check_logins', methods=['POST'])
 def check_logins():
     db_cursor = None
-    form = YourLoginForm(request.form)  # Create an instance of the login form
+    form = YourLoginForm(request.form)  # Creates an instance of the login form
     try:
         with get_db_cursor(commit=True) as db_cursor:
             contact = request.form['contact']
             user_password = request.form['password']       
-                
+                 
             role = None
             if contact == str(current_app.config['ADMIN_CONTACT']) and user_password == current_app.config['ADMIN_PASSWORD']:
 
@@ -92,9 +92,9 @@ def check_logins():
                         session['role'] = role                        
                         session['participant_id'] = participant_data['id']
                         session['participant_name'] = participant_data['name']
-                        session['participant_status'] = participant_data['status']                       
+                        session['participant_status'] = participant_data['status']                  
                         training_location_id = participant_data['t_location_id']
-
+                        print("status:",session['participant_status'])
                         db_cursor.execute("SELECT address FROM training_locations_list WHERE id = %s", (training_location_id,))
                         training_location_address = db_cursor.fetchone()
 
@@ -118,8 +118,8 @@ def check_logins():
                             LEFT JOIN trainer t ON t.t_location_id = p.t_location_id
                             INNER JOIN training_locations_list tl ON tl.id = p.t_location_id
                             WHERE 
-                                p.id = %s;
-                        """, (session['id'],))
+                                p.id = %s;                        
+                        """, (session['participant_id'],))
 
                         session_trainer_data = db_cursor.fetchall()
 
@@ -147,8 +147,8 @@ def check_logins():
         error_message = f"An error occurred: {str(e)}"
         return render_template('logins.html', form=form, error_message=error_message)
 
-    finally:
-        pass
+    #finally:
+     #   pass
         
     # If none of the conditions are met, return a generic error response
     #return "An error occurred during login."
@@ -256,7 +256,7 @@ def participants_display():
 
     try:
         with get_db_cursor(commit=False) as db_cursor:       
-            participant_id = session.get('id')
+            participant_id = session.get('participant_id')
             db_cursor.execute("""
                 SELECT 
                     COALESCE(s.actual_date, 0) AS actual_datetime, 
