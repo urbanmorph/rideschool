@@ -152,7 +152,7 @@ def feedback_form():
                     return jsonify({"message": "Participant not found.", "alert_type": "danger"})
                     #return "Participant not found."
 
-                print("Participant Status:", participant.get('participant_status'))  # Debug statement
+                print("Participant Status:", participant.get('status'))  # Debug statement
 
                 if request.method == 'POST':
                     # This block handles the form submission (POST request)
@@ -182,14 +182,14 @@ def feedback_form():
                     print("Participant Status:", participant.get('participant_status'))
 
                     # This block handles the initial form display (GET request)
-                    if participant.get('participant_status') == 'COMPLETED':
+                    if participant.get('status') == 'COMPLETED':
                         sql_query = """
                             SELECT
-                                p.name,
+                                p.name AS participant_name,
                                 p.code,
-                                p.updated_at,
+                                p.updated_date,
                                 COUNT(s.hours_trained) AS session_count,  -- Calculate the count of sessions
-                                t.name
+                                t.name AS trainer_name
                             FROM
                                 participants p
                             JOIN
@@ -201,12 +201,12 @@ def feedback_form():
                             AND
                                 p.id = %s
                             GROUP BY
-                                p.name, p.code, p.update_date, t.name
+                                p.name, p.code, p.updated_date, t.name
                         """
                         cursor.execute(sql_query, (participant_id,))
                         result = cursor.fetchone()
-                       
-                        return render_template('feedback.html', participant=participant, result=result)
+                        return render_template('feedback.html', participant_name=result['participant_name'], trainer_name=result['trainer_name'], result=result)
+                        #return render_template('feedback.html', participant=participant, result=result)
 
                     else:
                         return jsonify({"message": "You must be logged in as a participant with 'COMPLETED' status to access the feedback form.", "alert_type": "info"})                       

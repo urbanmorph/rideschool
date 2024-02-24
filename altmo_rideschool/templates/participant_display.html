@@ -11,7 +11,7 @@
         <p>Your Training Location: {{ session['participant_training_location'] }}</p>  
         <p>Trainer Name: {{ session['session_trainer_data'][0]['name'] }}</p>
         <p>Trainer Contact: {{ session['session_trainer_data'][0]['contact'] }}</p>
-        <p>Your Current Status: {{ session['status'] }}</p>
+        <p>Your Current Status: {{ session['participant_status'] }}</p>
         <h2>Session Details</h2> 
          <table class=" table table-striped table-bordered border-dark">
             <thead>
@@ -43,6 +43,12 @@
                 // Redirect to the feedback form page
                     window.location.href = "/feedback-form";
                 });
+            });
+        </script>
+        <script>
+            // Display an alert for error messages from the server
+            $(document).ready(function () {
+                alert(message);
             });
         </script>
     </div>

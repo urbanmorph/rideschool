@@ -158,7 +158,7 @@ def submit_form():
                 INSERT INTO sessions (
                     trainer_id,  -- Store the trainer_id
                     participant_id, 
-                    scheduled_datetime, 
+                    scheduled_date, 
                     actual_date, 
                     hours_trained, 
                     picture_path, 
@@ -189,7 +189,6 @@ def sessions_table():
     except Exception as e:
         traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
-        #return 'Error fetching session data. Please try again later.'
         return jsonify ({'alert_type': 'error', 'message':'Error fetching session data. Please try again later.'})
 
 #@sessions_bp.route('/uploaded_image/<filename>')
