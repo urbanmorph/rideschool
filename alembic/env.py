@@ -2,22 +2,13 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
-import os
 import json
-
-
 from alembic import context
+from sqlalchemy import MetaData
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
-
-
-# Calculate the path to the config file relative to the alembic folder
-#config_file_path = os.path.join(os.path.dirname(__file__), "instance", "config.json")
-
 # Load configuration from JSON file
 with open('instance/config.json', "r") as config_file:
     config_data = json.load(config_file)
@@ -28,10 +19,8 @@ sqlalchemy_url = (
     f"{config_data['DB_HOST']}:{config_data['DB_PORT']}/{config_data['DB_NAME']}"
 )
 
-# Set the dynamic sqlalchemy.url
+# Set the sqlalchemy.url
 config.set_main_option("sqlalchemy.url", sqlalchemy_url)
-
-
 
 
 # Interpret the config file for Python logging.
@@ -43,7 +32,9 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+metadata = MetaData()   # By adding metadata = MetaData() and target_metadata = metadata to your Alembic environment script (env.py), we ensuring that Alembic has access to the necessary MetaData object it needs for autogenerating migrations.
+target_metadata = metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
