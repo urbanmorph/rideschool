@@ -78,7 +78,7 @@ def trainer_info():
         traceback.print_exc()
         return f"Error: {str(e)}"
 
-#adin session 
+#admin session 
 @admin_bp.route('/sessions_info')
 def sessions_info():
     print("Reached sessions_info route")  
@@ -298,7 +298,7 @@ def organisation_info():
             print("Organisation Document Path:", legal_status_document_path)
         #print("organization:", organization['organisation_legal_status_document'])
         ###
-        #print("Organizations:", organizations)  # Debugging: Print fetched data
+        #print("Organizations:", organizations)  
             
         return render_template('organization_admin.html', organizations=organizations)
     except Exception as e:
