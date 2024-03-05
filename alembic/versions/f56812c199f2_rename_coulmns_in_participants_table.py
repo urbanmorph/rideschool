@@ -52,7 +52,7 @@ def upgrade() -> None:
         batch_op.execute('DROP TRIGGER IF EXISTS update_participant_updated_at ON public.participants')
         batch_op.execute('DROP FUNCTION IF EXISTS public.update_participant_updated_at CASCADE')
 
-        
+        # Recreate trigger and trigger function
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_participant_updated_at()
             RETURNS TRIGGER AS $$
@@ -72,11 +72,11 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     with op.batch_alter_table('participants') as batch_op:
-        # Revert trigger function change
+        # drop trigger and trigger function change
         batch_op.execute('DROP TRIGGER IF EXISTS update_participant_trigger ON participants')
         batch_op.execute('DROP FUNCTION IF EXISTS public.update_participant_updated_at CASCADE')
 
-        # Revert foreign key constraint
+        # Drop foreign key constraint
         batch_op.drop_constraint('fk_participants_t_location_id', type_='foreignkey')
 
         # Revert column name changes
@@ -99,7 +99,7 @@ def downgrade() -> None:
         batch_op.create_primary_key('participants_pkey', ['participant_id'])
 
 
-        # Recreate trigger with original name and definition
+        # Recreate trigger and its function with original name 
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_participant_updated_at()
             RETURNS TRIGGER AS $$
