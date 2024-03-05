@@ -32,7 +32,7 @@ def upgrade() -> None:
         batch_op.alter_column('organisation_created_at', new_column_name='created_date')
         batch_op.alter_column('organisation_updated_at', new_column_name='updated_date')
 
-        # Change primary key to new column name 'id'
+        # Change primary key to new column name 
         batch_op.drop_constraint('organisation_pkey', type_='primary')
         batch_op.create_primary_key('organisation_pkey', ['id'])
 
@@ -81,7 +81,7 @@ def downgrade() -> None:
         batch_op.drop_constraint('organisation_pkey', type_='primary')
         batch_op.create_primary_key('organisation_pkey', ['organisation_id'])
 
-        # Recreate the trigger with the original name and definition
+        # Recreate the trigger and the function with the original name 
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_organisation_updated_at()
             RETURNS TRIGGER AS $$
