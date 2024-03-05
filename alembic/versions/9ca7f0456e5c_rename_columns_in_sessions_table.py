@@ -34,7 +34,7 @@ def upgrade() -> None:
         batch_op.execute("DROP TRIGGER IF EXISTS update_session_update_date ON public.sessions")
         batch_op.execute("DROP FUNCTION IF EXISTS public.update_session_update_date CASCADE")
 
-        # update trigger function name
+        # Modify trigger function name
         
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_date()
@@ -78,7 +78,7 @@ def downgrade() -> None:
         batch_op.execute("DROP TRIGGER IF EXISTS update_date ON public.sessions")
         batch_op.execute("DROP FUNCTION IF EXISTS public.update_date CASCADE")
 
-        # update trigger function name back to original triger 
+        # Creating trigger and  trigger function back to original triger 
        
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_session_update_date()
