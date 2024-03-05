@@ -62,7 +62,7 @@ def upgrade() -> None:
         batch_op.execute('DROP TRIGGER IF EXISTS trainer_updated_at_trigger ON public.trainer')
         batch_op.execute('DROP FUNCTION IF EXISTS public.update_trainer_updated_at CASCADE')
 
-        # Recreate the trigger with the original name and definition
+        # Recreate the trigger and the triger function
         batch_op.execute('''
             CREATE OR REPLACE FUNCTION public.update_trainer_updated_at()
             RETURNS TRIGGER AS $$
