@@ -117,7 +117,9 @@
                 success: function (response) {
                     alert(response.message);
                     if (response.alert_type === 'success') {
-                        $('#training-session-form')[0].reset();                    
+                        $('#add-location-form')[0].reset(); 
+                    }else{
+                        $('#training-session-form')[0].reset();                   
                     }
                 },
                 error: function (xhr, status, error) {
