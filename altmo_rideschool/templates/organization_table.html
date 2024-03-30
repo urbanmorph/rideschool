@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Organization Table</title>
+{% extends "application.html" %}
+{% block head %}
+  {{ super() }}
     <style>
         table {
             border-collapse: collapse;
@@ -14,12 +13,15 @@
             text-align: left;
         }
 
-        th {
+        th { 
             background-color: #f2f2f2;
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block title %} Homepage {% endblock %}
+
+{% block content %}
     <h1>Organization Table</h1>
     <table>
         <tr>
@@ -51,5 +53,4 @@
         </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+    {% endblock %}
