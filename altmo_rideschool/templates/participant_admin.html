@@ -24,7 +24,7 @@
                     <td>
                         <select class="status-select" name="status" data-participant-id="{{ participant_data['id'] }}" data-initial-status="{{ participant_data['status'] }}">
                             <option value="{{ participant_data['status'] }}" selected>{{ participant_data['status'] }}</option>
-                            {% if participant_data['status'] not in ['DROP-OUT'] %}
+                            {% if participant_data['status'] not in ['NEW','ONGOING', 'DROP-OUT'] %}
                             <option value="CERTIFIED">CERTIFIED</option>
                             {% endif %}
                             <!--  <option value="COMPLETED">COMPLETED</option>
