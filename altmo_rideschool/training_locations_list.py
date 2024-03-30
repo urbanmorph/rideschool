@@ -60,10 +60,8 @@ def delete_location():
             }
     except Exception as e:
         traceback.print_exc()
-        response = {
-            'alert_type': 'error',
-            'message': 'An error occurred while deleting the selected locations.'
-        }
+        response = {'alert_type': 'error','message': 'An error occurred while deleting the selected locations. There might be Trainers and Participants associated with this location.'}
+        #return jsonify({'alert_type': 'error', 'message': f'Error: {str(e)}'})
 
     return jsonify(response)
 
