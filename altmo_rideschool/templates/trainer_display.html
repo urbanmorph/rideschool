@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Trainer</title>
-    <!-- Include the CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
-    <style>
-        /* Adjust the z-index for the navbar */
-        .navbar {
-          z-index: 1000;
-        }
-      </style>
+{% extends "application.html" %}
+{% block head %}
+  {{ super() }}
+
 <style>
     /* CSS styling for the form */
     
@@ -30,9 +20,6 @@
         border-bottom: 2px solid #333;/* this is to add borfer lines after all the headings   */
             padding-bottom: 10px;
     }
-    
-
-    
 
     p {
             font-size: 18px;
@@ -40,10 +27,15 @@
             
         }
     </style>
+    {% endblock %}
 
+    {% block title %} Homepage {% endblock %}
+    
+    {% block content %}
+<!--
 </head>
 <body>
-    {% include 'navbar.html' %}
+    {% include 'navbar.html' %}-->
     <img src="\static\Image\banner-img.jpg" alt="home-banner"  >
     <br>
 
@@ -71,5 +63,4 @@
     <a href="/session_form" class="text-decoration-none">Session completion Form</a>
 </div>
  
-</body>
-</html>
+{% endblock %}
