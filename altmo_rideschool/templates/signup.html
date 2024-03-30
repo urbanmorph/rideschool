@@ -10,7 +10,7 @@
     <div class="container" style="margin-top: 100px;">
         <h1>Create Account </h1>
         <p id="message"></p>
-        <p class="test-center">You have to be registered to create an account, click to register as : <a href="/participant-form">Participant, </a> <a href="/trainer-form">Trainer</a></p>
+        <p class="text-center"> You have to be registered to create an account, click to register as : <a href="/participant-form">Participant, </a> <a href="/trainer-form">Trainer</a></p>
         <form class="my-form" id="signup-form" action="{{ url_for('signup.check_contact') }}" method="POST">           
             {{ form.csrf_token }}
             <label for="contact">Enter Contact Number:</label>
