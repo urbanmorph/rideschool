@@ -51,7 +51,7 @@ def check_contact():
 
                 # Perform password validation (implement any additional complexity requirements here)
                 if user_password != confirm_password:
-                    return jsonify(alert_type='danger', message="Password and Confirm Password do not match. Please try again.")
+                    return jsonify(alert_type='danger', message="Passwords do not match. Please try again.")
 
                 # Store the data in the users_signup table
                 hashed_password = hash_password(user_password)
@@ -96,7 +96,7 @@ def check_contact():
                             return jsonify(alert_type='success', message=f"Hello {role.capitalize()}, you have created an account successfully.")
 
                         else:
-                            return jsonify(alert_type='danger', message="You are not CERTIFIED. You can create an account after you are certified as a Trainer.")
+                            return jsonify(alert_type='danger', message="Admin approval is required to proceed with your account creation. Please await confirmation from the admin.")
                 else:
                     return jsonify(alert_type='danger', message=f"The contact number {contact} is not registered as a participant or a trainer.")
         
