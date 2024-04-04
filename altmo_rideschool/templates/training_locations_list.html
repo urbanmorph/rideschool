@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for location in training_location %}
+                    {% for location in training_location if location['id'] != 0 %}
                         <tr>
                             <td><input type="checkbox" name="selected_locations" value="{{ location['id'] }}"></td>
                             <td>{{ location['id'] }}</td>
