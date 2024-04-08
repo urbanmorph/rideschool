@@ -54,7 +54,8 @@ def summary():
             cursor.execute("SELECT COUNT(*) FROM training_locations_list")
             result = cursor.fetchone()
             total_training_location_address = result.get('count', 0)
-
+            # Subtract 1 from the total count
+            total_training_location_address -= 1 
         except Exception as e:
             traceback.print_exc()
         # Handle any exceptions (eg: database errors)
