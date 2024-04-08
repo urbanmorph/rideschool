@@ -434,6 +434,33 @@ padding-top: 50px;
 .delete-selected-btn {
 margin-top: 10px;
 }
+
+.carousel-img {
+  height: 300px; /* Set the height */
+  width: 800px;
+  object-fit: cover; /* Ensure the image covers the entire carousel item */
+  
+ 
+  /*height: auto;
+  style="max-width: 800px;*/ 
+  display: block;
+  margin: 0 auto; 
+  position: relative;
+ /* background-size: cover;*/
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f8f9fa; /* Adjust the background color as needed */
+  padding: 20px 0; /* Adjust the padding as needed */
+  text-align: center;
+  z-index: 1000; /* Ensure the footer appears above other content */
+}
+
+
+
 /* training location end */
 
 /* trainer_admin.html start */
