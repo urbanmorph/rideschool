@@ -1,10 +1,11 @@
 print("training_locations_list.py")
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, send_from_directory, session, redirect, url_for
 import os
 import time 
 from altmo_utils.db import get_db_cursor
 import traceback
 from werkzeug.utils import secure_filename
+from functools import wraps
 
 training_locations_list_bp = Blueprint('training_locations_list', __name__)
 
@@ -17,8 +18,18 @@ def delete_training_location_from_database(id):
    
         cursor.execute("DELETE FROM training_locations_list WHERE id = %s", (id,))
  
+# Decorator to restrict access other users users 
+def admin_required(route_func):
+    @wraps(route_func)
+    def decorated_route(*args, **kwargs):
+        if session.get('role') != 'admin': 
+            error_message = 'Please login as a valid user to view this page.'
+            return redirect(url_for('logins.index', error_message=error_message))
+        return route_func(*args, **kwargs)
+    return decorated_route
 
 @training_locations_list_bp.route('/training_locations_list', methods=['GET', 'POST'])
+@admin_required
 def show_training_location():
     global training_location
     try:
@@ -47,6 +58,7 @@ def show_training_location():
 #"JSON alert message code"
 # Route for deleting a location and returning "JSON" response
 @training_locations_list_bp.route('/delete_location', methods=['POST'])
+@admin_required
 def delete_location():
     location_ids = request.form.getlist('selected_locations')
     
@@ -66,6 +78,7 @@ def delete_location():
     return jsonify(response)
 
 @training_locations_list_bp.route('/add_location', methods=['POST'])
+@admin_required
 def add_location():
  
     try:
