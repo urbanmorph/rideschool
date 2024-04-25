@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from altmo_utils.db import get_db_cursor
 import traceback
+from .validate import trainer_required
 
 sessions_bp = Blueprint('sessions', __name__)
 
@@ -16,6 +17,7 @@ def create_database():
             cursor.execute('CREATE DATABASE Pedal_Shaale')
    
 @sessions_bp.route('/session_form')
+@trainer_required
 def form():
     try:
         # Fetch the certified trainer names from the database       
@@ -102,6 +104,7 @@ def get_participant(participant_id):
         return jsonify({}), 500  # Return an empty response with 500 status for any error
 
 @sessions_bp.route('/submit_form', methods=['POST'])
+@trainer_required
 def submit_form():
     try:             
         # trainer_id = request.form.get('trainer-id') # only if i use " data: formdata ;" and this var formData = $(this).serialize(); to send the data to the server  
