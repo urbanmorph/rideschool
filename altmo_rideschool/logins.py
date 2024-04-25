@@ -1,6 +1,4 @@
-
 print("logins.py")
-
 from altmo_utils.db import get_db_cursor
 import bcrypt
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
@@ -14,11 +12,11 @@ from flask import current_app
 logins_bp = Blueprint('logins', __name__)
 
 
-
 @logins_bp.route('/logins', methods=['GET'])
 def index():
     form = YourLoginForm()  # Creates an instance of the login form
-    return render_template('logins.html', form=form)
+    error_message = request.args.get('error_message')
+    return render_template('logins.html', form=form, error_message=error_message)
 
 
 
