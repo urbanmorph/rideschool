@@ -1,8 +1,9 @@
 print("participant.py")
-from flask import Blueprint, render_template, request, session , redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from datetime import datetime
 from altmo_utils.db import get_db_cursor
 import traceback
+from .validate import user_required
 
 participant_bp = Blueprint('participant_bp', __name__)
 
@@ -97,6 +98,7 @@ def submit_form():
 
            
 @participant_bp.route('/participant_session_info', methods=['GET'])
+@user_required
 def participant_session_info():
     try:
         # Check if a participant is logged in
@@ -135,6 +137,7 @@ def participant_session_info():
 
 # Route to display the feedback form and handle form submission
 @participant_bp.route('/feedback-form', methods=['GET', 'POST'])
+@user_required
 def feedback_form():
     try:
         # Check if a participant is logged in
