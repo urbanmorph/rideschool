@@ -1,17 +1,30 @@
   # admin.py
 print("import feane/ admin.py")
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, session, redirect, url_for
 import logging # Import the logging module
 from altmo_utils.db import get_db_cursor
 import traceback 
+from functools import wraps
 admin_bp = Blueprint('admin', __name__)
-#
+
+def admin_required(route_func):
+    @wraps(route_func)
+    def decorated_route(*args, **kwargs):
+        if session.get('role') != 'admin': 
+            error_message = 'Please login as a valid user to view this page.'
+            return redirect(url_for('logins.index', error_message=error_message))
+        return route_func(*args, **kwargs)
+    return decorated_route
+
+
 @admin_bp.route('/admin')
+@admin_required
 def admin_home():
     return 'Admin Page'
 
 # Route to display participant information for all participants
 @admin_bp.route('/participant-info', methods=['GET'])
+@admin_required
 def participant_info():
     try:
         with get_db_cursor() as cursor:        
@@ -40,6 +53,7 @@ def participant_info():
 
 # Route to display trainer information for all trainers
 @admin_bp.route('/trainer-info', methods=['GET'])
+@admin_required
 def trainer_info():
     try:
         with get_db_cursor() as cursor:
@@ -80,6 +94,7 @@ def trainer_info():
 
 #admin session 
 @admin_bp.route('/sessions_info')
+@admin_required
 def sessions_info():
     print("Reached sessions_info route")  
     try:
@@ -112,6 +127,7 @@ def sessions_info():
         return f"Error:{str(e)}"     
                
 @admin_bp.route('/trainer_details/<int:id>')
+@admin_required
 def trainer_details(id):
     try:
         # Converts trainer_id to an integer
@@ -168,6 +184,7 @@ def fetch_feedback_data(participant_id):
         return None
 
 @admin_bp.route('/participant_admin/<int:id>')
+@admin_required
 def participant_admin(id):
     try:
         # Fetch participant details based on participant_id from the database
@@ -216,6 +233,7 @@ def participant_admin(id):
 
     
 @admin_bp.route('/update_participant_statuses_admin', methods=['POST'])
+@admin_required
 def update_participant_statuses_admin():
     try:
         updates = request.get_json()
@@ -251,6 +269,7 @@ def update_participant_statuses_admin():
         return jsonify({"success": False, "error": "An error occurred. Please check the logs for more information."})
 
 @admin_bp.route('/trainer_update_status', methods=['POST'])
+@admin_required
 def update_trainer_status():
    
     try:
@@ -269,6 +288,7 @@ def update_trainer_status():
         return jsonify({"success": False, "error": str(e)})
    
 @admin_bp.route('/organisation-info', methods=['GET'])
+@admin_required
 def organisation_info():
     try:
         with get_db_cursor() as cursor:
