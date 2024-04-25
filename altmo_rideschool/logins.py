@@ -1,24 +1,17 @@
-print("logins.py")
 from altmo_utils.db import get_db_cursor
 import bcrypt
 from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify, current_app
-
 #from .config.config import get_config_value 
-
 from .forms import YourLoginForm  # Import the login form 
-
 import traceback
 from flask import current_app
 logins_bp = Blueprint('logins', __name__)
-
 
 @logins_bp.route('/logins', methods=['GET'])
 def index():
     form = YourLoginForm()  # Creates an instance of the login form
     error_message = request.args.get('error_message')
     return render_template('logins.html', form=form, error_message=error_message)
-
-
 
 @logins_bp.route('/check_logins', methods=['POST'])
 def check_logins():
@@ -31,7 +24,6 @@ def check_logins():
                  
             role = None
             if contact == str(current_app.config['ADMIN_CONTACT']) and user_password == current_app.config['ADMIN_PASSWORD']:
-
                 # Admin login: If the contact and password match, set the session as an admin
                 session['logged_in'] = True
                 session['role'] = 'admin'
@@ -145,12 +137,6 @@ def check_logins():
         error_message = f"An error occurred: {str(e)}"
         return render_template('logins.html', form=form, error_message=error_message)
 
-    #finally:
-     #   pass
-        
-    # If none of the conditions are met, return a generic error response
-    #return "An error occurred during login."
-
 @logins_bp.route('/update_participant_statuses', methods=['POST'])
 def update_participant_statuses():
     db_cursor = None
@@ -181,7 +167,6 @@ def update_participant_statuses():
                     "UPDATE participants SET training_end = CURRENT_TIMESTAMP WHERE id = %s",
                     (participant_id,)
                      )
-
 
             return jsonify({"success": True, "participantId": participant_id, "newStatus": new_status})
 
@@ -287,8 +272,6 @@ def participants_display():
         error_message = "An error occurred during participant display."
 
     return render_template('participant_display.html', role=role, error_message=error_message)
-
-
 
 @logins_bp.route('/admin-display')
 def admin_display():
