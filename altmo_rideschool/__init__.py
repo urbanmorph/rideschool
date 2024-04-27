@@ -33,7 +33,7 @@ def create_app(test_config=None):
     if test_config is None:
         
         app.config.from_file("config.json", load=json.load) # loading configuration settings from a config.json file and sets them in app.config. After this, we can access these settings using app.config['SETTING_NAME'] eg: app.config['ORGANIZATION_FOLDER'] = app.config.get('ORGANIZATION_FOLDER', 'static/organization_image').
-       
+        
     else:
         app.config.from_mapping(test_config)
 
