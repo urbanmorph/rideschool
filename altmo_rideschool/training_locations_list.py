@@ -5,7 +5,8 @@ import time
 from altmo_utils.db import get_db_cursor
 import traceback
 from werkzeug.utils import secure_filename
-from functools import wraps
+
+from .validate import admin_required
 
 training_locations_list_bp = Blueprint('training_locations_list', __name__)
 
@@ -15,19 +16,8 @@ training_location = []
 # Function to delete a training location from the database
 def delete_training_location_from_database(id):
     with get_db_cursor(commit=True) as cursor:
-   
         cursor.execute("DELETE FROM training_locations_list WHERE id = %s", (id,))
  
-# Decorator to restrict access other users users 
-def admin_required(route_func):
-    @wraps(route_func)
-    def decorated_route(*args, **kwargs):
-        if session.get('role') != 'admin': 
-            error_message = 'Please login as a valid user to view this page.'
-            return redirect(url_for('logins.index', error_message=error_message))
-        return route_func(*args, **kwargs)
-    return decorated_route
-
 @training_locations_list_bp.route('/training_locations_list', methods=['GET', 'POST'])
 @admin_required
 def show_training_location():
