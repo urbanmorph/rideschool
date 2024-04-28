@@ -4,17 +4,10 @@ from flask import Blueprint, render_template, request, jsonify, current_app, ses
 import logging # Import the logging module
 from altmo_utils.db import get_db_cursor
 import traceback 
-from functools import wraps
+
+from .validate import admin_required
 admin_bp = Blueprint('admin', __name__)
 
-def admin_required(route_func):
-    @wraps(route_func)
-    def decorated_route(*args, **kwargs):
-        if session.get('role') != 'admin': 
-            error_message = 'Please login as a valid user to view this page.'
-            return redirect(url_for('logins.index', error_message=error_message))
-        return route_func(*args, **kwargs)
-    return decorated_route
 
 
 @admin_bp.route('/admin')
@@ -71,7 +64,7 @@ def trainer_info():
                     t.aadhar_no,
                     t.created_date,
                     t.training_completion,
-                    o.name AS organization_name, -- rename this o.name to this organization_name to avoide confusion 
+                    o.name AS organization_name, 
                     t.status,
                     t.code
                 FROM trainer t
