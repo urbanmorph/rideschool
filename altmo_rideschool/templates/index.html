@@ -1,97 +1,60 @@
 {% extends "application.html" %}
 {% block head %}
   {{ super() }}
- 
 {% endblock %}
-
 {% block title %} Homepage {% endblock %}
-
 {% block content %}
-  <div class="container-fluid">
-    <img src="\static\Image\banner-img.jpg" class="banner-img">
-  </div>
-
-  <div class="container">
-    <div class="d-grid d-flex gap-2 mt-5 mx-auto mx-auto" role="group" aria-label="Registration Forms" style="justify-content: center;">
-      <a href="participant-form" class="btn btn-warning">Participant Registration</a>
-      <a href="trainer-form" class="btn btn-secondary">Trainer Registration</a>
-      <a href="organization-form" class="btn btn-info">Organisation Registration</a>
-      <a href="/signup" class=" btn btn-success btn-block">Create an account.</a>
+  <div class="container-fluid" style="margin-bottom: 180px;">
+    <div class="row mt-2">
+      <div class="col-lg-12">
+        {% include "tital.html" %}
+      </div>
     </div>
-
-    <div class="row text-justify mt-5">
-      <div class="col-lg-5">
-        <div class="text-center py-1 rounded-3">
-          <h2 style="font-family: 'Baloo 2', cursive;">What is <img src="\static\Image\AltMo - Ride school.png" height="40" class="d-inline-block align-center" alt="altmo" class="img-thumbnail">?</h2>
-        </div>
-        <div class="py-3 mx-auto rounded-3">
-          <p class="lead" style="text-indent: 30px; text-align: justify;">
-            AltMo Ride School is a Certified Bicycle Training Program where participants 
-            undergo a training that prepares them to properly participate in Indian traffic 
-            as a cyclist. Its main mission is to enable you to confidently handle your 
-            bicycle in city roads. This program is to promote active mobility in Bangalore 
-            and get more cyclists on the roads. A completion certificate rounds up the 
-            accomplishment of the participant.
+    <div class="container second-container footer-container">    
+      <div class="custom-text-style container col-lg-5" style="margin-top: 10px;">Discover the impact of AltMo's Small Changes.</div>
+      <div class="custom-altmo-text-style" style="margin-top: 10px;">
+        Empowering cycling learners to make a big difference.
+      </div>
+      <div class="container col-lg-8 footer-content" style="order: 2;">
+        <div class="text-gray-800 text-center lg:text-left text-5xl lg:text-7xl tracking-tight leading-10">
+          <p class="text-gray-900 " style="color: #5e5d5d;">
+            AltMo Ride School’s innovative platform provides you with the tools and resources needed to effectively track and analyze your cycling progress, enabling you to embark on a rewarding learning journey in the world of cycling.
           </p>
         </div>
       </div>
-      <!--
-      <div class="col-lg-6 px-5 py-3 mx-auto rounded-3 bg-text-secondary">
+    </div>
+    <div class="row" style="margin-top: 10px;">
+      <div class="col-lg-12">
         <div id="summary-data"></div>
-      </div> -->
-      <div class="col-lg-6 px-5 py-3 mx-auto rounded-3 bg-text-secondary">
-        <div id="summary-data">  </div>
       </div>
     </div>
- 
-    <div class="row mt-4 justify-content-md-center"> 
-      <div class="col-lg-8">
-        <h2 class="text-center mb-3" style="font-family: 'Baloo 2', cursive;">Why are we doing <img src="\static\Image\AltMo - Ride school.png" height="40" class="d-inline-block align-center" alt="altmo" class="img-thumbnail">?</h2>
-        <p class="lead">Our goal is to create enthusiasm and confidence amongst people by teaching how to safely handle the bicycle. </p>
-        <div  class="lead text-left mb-5">
-          <ul class="list-unstyled">
-            <li><i class="fa fa-eye fa-fw text-primary"></i>Creating perspective - Educate the public on rights and responsibilities.</li>
-            <li><i class="fa fa-child fa-fw text-primary"></i>Beginning with the notion that children are the country's future and tomorrow's citizens will assist to develop that worldview.</li>
-            <li><i class="fa fa-female fa-fw text-primary"></i>Promote women's participation in society by introducing cycling to the economically underprivileged areas of the population.</li>
-          </ul>
+    <div class="container footer-container" style="margin-top: 100px;">
+      <div class="custom-text-style">
+        How does this work?
+      </div>
+      <div class="custom-altmo-text-style" style="margin-top: 10px; ">
+        Master Urban Cycling, Track Your Progress.
+      </div>
+      <div class="container col-lg-7 footer-content">
+        <div class="text-gray-800 text-center tracking-tight ">
+          <p class="text-gray-900 " style="color: #5e5d5d;">
+            We prioritize data-driven skill development. Learn to cycle confidently in city settings—commute actively and let us quantify your journey towards safer, greener mobility.
+          </p>
         </div>
       </div>
-      <div class="col-lg-2">
-        <img src="/static/Image/why-image.png" class="custom-img" alt="Cycles for All">
-      </div>
     </div>
-
-    <div class="row mt-2 justify-content-md-center"> 
-      <div class="col-lg-3">
-        <img src="\static\Image\how-image.png" class="img-fluid" style="object-fit: cover;" alt="cycles for all">
-      </div>
-      <div class="col-lg-8">
-        <h2 class="text-center mb-3" style="font-family: 'Baloo 2', cursive;">How are we doing this?</h2>
-          <div class="lead text-left mb-0">
-            <ul class="list-unstyled">
-              <li><i class="fa fa-chart-line fa-fw text-success"></i> Improve their cycling skills.</li>
-              <li><i class="fa fa-traffic-light fa-fw text-success"></i> Increase the participants' knowledge of traffic rules. </li>
-              <li><i class="fa fa-biking fa-fw text-success"></i> Popularise the idea of cycling.</li>
-              <li><i class="fa fa-heart fa-fw text-success"></i> Improve their health by using non-motorized transport.</li>
-              <li><i class="fa fa-trophy fa-fw text-success"></i> Have every participant trained by a trainer</li>
-            </ul>
-          </div>
-      </div>
-    </div>
-
-    <div class="row mt-2" >
+    <div class="row mt-2">
       <div class="col-lg-12">
-        {% include "testimony.html" %}
+        {% include "know_about.html" %}
       </div>
-    </div>   
-    </div> 
-           
+    </div>
+  </div>
+
   <script>
-    // Use AJAX to fetch data from the 'summary' route
+    // AJAX to fetch data from the 'summary' route
     fetch('/summary')
       .then(response => response.text())
       .then(data => {
-        // Update the content of the 'summary-data' div with the received data
         document.getElementById('summary-data').innerHTML = data;
       })
       .catch(error => {
@@ -99,4 +62,3 @@
       });
   </script>
 {% endblock %}
-  
