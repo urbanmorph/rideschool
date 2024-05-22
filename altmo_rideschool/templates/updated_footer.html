@@ -1,51 +1,80 @@
-<footer class="footer bg-light">
+<!-- Footer with Privacy Note Link -->
+<footer class="bg-gray-900 text-white border-t-2 md:border-t-4 border-altmo-green-100 py-6 px-4 space-y-6 md:px-5 xl:px-28" id="footer-body">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-        <ul class="list-inline mb-2">
+      <div class="col-lg-8 h-100 text-left text-lg-left my-auto mb-2">
+        <div class="text-white text-lg md:text-xl font-bold leading-8 tracking-tight text-h">
+          AltMo
+        </div>
+        <ul class="list-inline mt-2">
           <li class="list-inline-item">
-            <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal">About</a>
+            <div class="inline-flex items-center space-x-2">
+              <img style="height: 20px; width: 20px;" src="/static/Image/urbanmorph_logo.png">
+              <a target="_blank" class="text-white text-sm md:text-base font-medium capitalize text-b" href="https://www.urbanmorph.com">Urbanmorph</a>
+            </div>
           </li>
           <li class="list-inline-item">
-            &sdot;
-          </li>
-          <li class="list-inline-item">
-            <a href="mailto: councilforactivemobility@gmail.com?subject=[Contact]" class="text-decoration-none">Contact</a>
-          </li>
-          <li class="list-inline-item">
-            &sdot;
-          </li>
-          <li class="list-inline-item">
-            <a href="#" class="text-decoration-none">ಕನ್ನಡ</a>
+            <div class="inline-flex items-center space-x-2">
+              <img style="height: 20px; width: 20px;" src="/static/Image/document_icon.svg">
+              <a class="text-white text-sm md:text-base font-medium capitalize text-b" href="privacy_note.html" id="privacy-link">Privacy Note</a>
+            </div>
           </li>
         </ul>
-        <p class="text-muted small mb-4 mb-lg-0">&copy; <img src="\static\Image\AltMo - Ride school.png" height="30" class="d-inline-block align-center px-1" alt="altmo" class="img-thumbnail"> All Rights Reserved.</p>
       </div>
-      
-      <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-        <ul class="list-inline mb-0">
+      <div class="col-lg-4 h-100 text-right text-lg-right my-auto">
+        <div class="text-white text-lg md:text-xl leading-8 font-bold mb-2 text-h">
+          Socials
+        </div>
+        <ul class="list-inline mt-2">
           <li class="list-inline-item mr-3">
-            <a href="#" target="_blank">
-              <i class="fab fa-facebook fa-2x fa-fw"style="color: #1877F2;"></i>
-            </a>
+            <div class="inline-flex items-center space-x-2">
+              <img style="height: 23px; width: 23px;" src="/static/Image/twitter_logo.svg">
+              <a target="_blank" class="text-white text-sm md:text-base font-medium capitalize text-b" href="https://twitter.com/altmoapp">Twitter</a>
+            </div>
           </li>
           <li class="list-inline-item mr-3">
-            <a href="#" target="_blank">
-              <i class="fab fa-twitter-square fa-2x fa-fw" style="color: #1DA1F2;"></i>
-            </a>
+            <div class="inline-flex items-center space-x-2">
+              <div>
+                <img style="height: 23px; width: 23px;" src="/static/Image/telegram_logo.svg">
+                <a target="_blank" class="text-white text-sm md:text-base font-medium capitalize text-b" href="">Telegram</a>
+              </div>
+            </div>
           </li>
           <li class="list-inline-item">
-            <a href="#" target="_blank">
-              <i class="fab fa-instagram fa-2x fa-fw" style="color: #E4405F;"></i>
-            </a>
-          </li>
-          <li class="list-inline-item">
-            <a href="#" target="_blank">
-              <i class="fab fa-telegram-plane fa-2x fa-fw" style="color: #0088CC;"></i>
-            </a>
+            <div class="inline-flex items-center space-x-2">
+              <div>
+                <img style="height: 23px; width: 23px; border-radius: 50%;" src="/static/Image/email_icon.svg">
+                <a class="text-white text-sm md:text-base font-medium capitalize text-b" href="mailto:contact@altmo.app">Email</a>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- Link to Privacy Note Modal -->
+<script>
+  document.getElementById('privacy-link').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch('privacy_note.html')
+      .then(response => response.text())
+      .then(data => {
+        let modalContainer = document.createElement('div');
+        modalContainer.innerHTML = data;
+        document.body.appendChild(modalContainer);
+        document.getElementById('privacy-modal').style.display = 'flex';
+
+        document.getElementById('modal-close-button').addEventListener('click', function() {
+          document.getElementById('privacy-modal').style.display = 'none';
+          modalContainer.remove();
+        });
+
+        document.getElementById('modal-overlay').addEventListener('click', function() {
+          document.getElementById('privacy-modal').style.display = 'none';
+          modalContainer.remove();
+        });
+      });
+  });
+</script>
