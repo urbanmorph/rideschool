@@ -1,0 +1,36 @@
+<div class="modal" id="privacy-modal">
+  <div class="modal-overlay" id="modal-overlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>AltMo Privacy Note</h2>
+      <button class="modal-close" id="modal-close-button">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Our Privacy Note explains the information we collect and how we use it.</p>
+      <p>AltMo is headquartered in Bangalore, India and our service is provided to you by Urban Morph Consultants Pvt. Ltd. Questions or comments about this Privacy Note may be submitted by email to contact@altmo.app</p>
+      <h3>Collection and Usage of Data</h3>
+      <p>AltMo collects information about you, including information that directly or indirectly identifies you, if you choose to share it with AltMo. We receive information in two ways:</p>
+      <ol>
+        <li>When you sign up to AltMo and fill out the registration form.</li>
+        <li>When you track, complete or upload activities using Strava.</li>
+      </ol>
+      <p>We collect <strong>basic account information</strong> such as your name, email address, age (optional), gender (optional), and password that helps secure and provide you with access to our service. We use your <strong>contact information</strong> so we can respond to your support requests and comments.</p>
+      <h3>Location Information</h3>
+      <p>We collect and process <strong>location information</strong> when you connect your account to Strava for the usage of their services. We cannot track your device location, but to provide our core service, we must obtain your trip information through Strava with your permission. If you would like to stop the data sharing, you may do so at any time by revoking your Strava authentication.</p>
+      <h3>Map Visibility and Ride Display</h3>
+      <p>AltMo uses the information we collect and receive solely to display your commute activities and analyze your ride metrics. AltMo may aggregate the information you and others make available and use this aggregate anonymized information to display interactive maps for commute and leisure rides.</p>
+      <h3>Data Sharing and Protection</h3>
+      <p><strong>We do not sell your personal or location information</strong>. Only your organization name and your activities will be shared on AltMo so that you may be able to participate in our service. Only anonymized and/or aggregate data is shared with planning bodies to provision infrastructure that benefits cycling to work, and with corporates for their Environment, Social and Governance goals.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('modal-close-button').addEventListener('click', function() {
+    document.getElementById('privacy-modal').style.display = 'none';
+  });
+
+  document.getElementById('modal-overlay').addEventListener('click', function() {
+    document.getElementById('privacy-modal').style.display = 'none';
+  });
+</script>
