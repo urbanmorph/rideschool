@@ -1,15 +1,12 @@
 {% extends "application.html" %}
-
 {% block head %}
   {{ super() }}
   <!--Participant_sessions_info is displayed once logged-in as participant, in the sesson menu  -->
 {% endblock %}
-
-{% block title %} Participant Session Info {% endblock %}
-    
+{% block title %} Participant Session Info {% endblock %} 
 {% block content %}
-    <div class="container" style="margin-top: 80px;">
-        <h1>Sessions Attended </h1>
+    <div class="container" style="margin-top: 150px; margin-bottom: 550px;">
+        <h2 style="text-align: center; margin-top: 150px; margin-bottom: 50px;">Sessions Attended </h2>
         <table class="my-table table-bordered border-dark">
             <thead>
                 <tr>
