@@ -6,8 +6,8 @@
 {% block title %} Session Completion Form {% endblock %}
   
 {% block content %}
-    <div class="container" style="margin-top: 100px;">
-        <h4>Welcome {{ session['name'] }}</h1>
+    <div class="container" style="margin-top: 150px; margin-bottom: 470px;">
+        <h2>Welcome {{ session['name'] }}</h2>
         <p>Your Training Location: {{ session['participant_training_location'] }}</p>  
         <p>Trainer Name: {{ session['session_trainer_data'][0]['name'] }}</p>
         <p>Trainer Contact: {{ session['session_trainer_data'][0]['contact'] }}</p>
@@ -35,12 +35,11 @@
         <!-- Check if the participant status is COMPLETED -->
         {% if session['participant_status'] == 'COMPLETED' %}
         <div class="text-center"><p>Click here to access the feedback form for your valuable input </p>
-        <button id="show-feedback-form" class="btn btn-primary">Feedback Form</button>
+        <button id="show-feedback-form" class="btn-altmo-green">Feedback Form</button>
         </div>
         {% endif %}
         <script>
             $(document).ready(function () {
-            // When the "Show Feedback Form" button is clicked
                 $('#show-feedback-form').on('click', function () {
                     console.log("Button clicked!");  // Added this line to log the click event
                 // Redirect to the feedback form page
