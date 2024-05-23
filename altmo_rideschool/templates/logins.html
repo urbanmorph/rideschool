@@ -8,28 +8,31 @@
 {% block title %} Homepage {% endblock %}
      
 {% block content %}
-    <div class="container" style="margin-top: 100px;">            
-        <h1>Login Page</h1>
-        <form class="my-form" action="/check_logins" method="POST">
-            {{ form.csrf_token }}  
-            <label for="contact">Enter Contact Number:</label>
-            <input type="text" id="contact" name="contact" required>
-            <br>
-            <label for="password">Enter Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">Login</button>
-        </form>
-        <p id="message"></p>
-        {% if error_message %}
-            <script>
-                // Display an alert for error messages from the server
-                $(document).ready(function () {
-                    alert("{{ error_message }}");
-                });
-            </script>
-        {% endif %}
-        <p style ="text-align: center;"> If you have not created an account click to : <a href="/signup">Create account </a></p>
+    <div class="background-img"> 
+        <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+        <div class="container" style="margin-top: 150px; margin-bottom: 200px;" >            
+            <h1 class="form-title">Login Page</h1>
+            <form class="my-form" action="/check_logins" method="POST">
+                {{ form.csrf_token }}  
+                <label for="contact">Enter Contact Number:</label>
+                <input type="text" id="contact" name="contact" required>
+                <br>
+                <label for="password">Enter Password:</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <button type="submit">Login</button>
+            </form>
+            <p id="message"></p>
+            {% if error_message %}
+                <script>
+                    // Display an alert for error messages from the server
+                    $(document).ready(function () {
+                        alert("{{ error_message }}");
+                    });
+                </script>
+            {% endif %}
+            <p style ="text-align: center;"> If you have not created an account click to : <a class="custom-link" href="/signup">Create account </a></p>
+        </div>
     </div>
 {% endblock %} 
 
