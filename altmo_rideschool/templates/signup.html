@@ -1,5 +1,5 @@
 {% extends "application.html" %}
-
+s
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -7,61 +7,64 @@
 {% block title %} Signup Form {% endblock %}
 
 {% block content %}
-    <div class="container" style="margin-top: 100px;">
-        <h1>Create Account </h1>
-        <p id="message"></p>
-        <p class="text-center"> You have to be registered to create an account, click to register as : <a href="/participant-form">Participant, </a> <a href="/trainer-form">Trainer</a></p>
-        <form class="my-form" id="signup-form" action="{{ url_for('signup.check_contact') }}" method="POST">           
-            {{ form.csrf_token }}
-            <label for="contact">Enter Contact Number:</label>
-            {{ form.contact(size=20) }}<br>
-            {% if form.contact.errors %}
-                <p class="error">{{ form.contact.errors[0] }}</p>
-            {% endif %}
+    <div class="background-img"> 
+        <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+        <div class="container" style="margin-top: 150px; margin-bottom: 180px;">
+            <h1 class="form-title">Create Account </h1>
+            <p id="message"></p>
+            <p class="text-center"> You have to be registered to create an account, click to register as : <a class="custom-link" href="/participant-form">Participant</a> or <a class="custom-link" href="/trainer-form">Trainer</a></p>
+            <form class="my-form" id="signup-form" action="{{ url_for('signup.check_contact') }}" method="POST">           
+                {{ form.csrf_token }}
+                <label for="contact">Enter Contact Number:</label>
+                {{ form.contact(size=20) }}<br>
+                {% if form.contact.errors %}
+                    <p class="error">{{ form.contact.errors[0] }}</p>
+                {% endif %}
 
-            <label for="password">Enter Password:</label>
-            {{ form.password(size=20) }}<br>
-            {% if form.password.errors %}
-                <p class="error">{{ form.password.errors[0] }}</p>
-            {% endif %}
+                <label for="password">Enter Password:</label>
+                {{ form.password(size=20) }}<br>
+                {% if form.password.errors %}
+                    <p class="error">{{ form.password.errors[0] }}</p>
+                {% endif %}
 
-            <label for="confirm_password">Confirm Password:</label>
-            {{ form.confirm_password(size=20) }}<br>
-            {% if form.confirm_password.errors %}
-                <p class="error">{{ form.confirm_password.errors[0] }}</p>
-            {% endif %}             
-          <button type="submit" >Submit</button>
-        </form>
+                <label for="confirm_password">Confirm Password:</label>
+                {{ form.confirm_password(size=20) }}<br>
+                {% if form.confirm_password.errors %}
+                    <p class="error">{{ form.confirm_password.errors[0] }}</p>
+                {% endif %}             
+            <button type="submit" >Submit</button>
+            </form>
+            
+            <p class="text-center"> click here to <a class="custom-link" href="/logins"> Login </a> </p>
         
-        <p class="text-center"> click here to <a href="/logins"> Login </a> </p>
-     
-        <script>
-            $(document).ready(function () {
-                $('#signup-form').submit(function (event) {
-                    event.preventDefault();
-                    var formData = $(this).serialize();
-                    
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ url_for('signup.check_contact') }}",
-                        data: formData,
-                        success: function (response) {
-                            alert(response.message); //standard nd basic alert function-- alert()  This function presents a simple pop-up dialog with the provided message.//here you call the specific function that checks if the return response is 
-                            
-                            if(response.alert_type === 'success') {
-                                window.location.href = "/logins";
-                            } 
-                            else {
-                                $('#signup-form')[0].reset();                            
-                        }
-                        },
-                        error: function (xhr, alert_type, error) {
-                            var responseText = xhr.responseJSON;
-                            alert(responseText && responseText.message || 'An error occurred while processing the signup.');
-                        }
+            <script>
+                $(document).ready(function () {
+                    $('#signup-form').submit(function (event) {
+                        event.preventDefault();
+                        var formData = $(this).serialize();
+                        
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ url_for('signup.check_contact') }}",
+                            data: formData,
+                            success: function (response) {
+                                alert(response.message); //standard nd basic alert function-- alert()  This function presents a simple pop-up dialog with the provided message.//here you call the specific function that checks if the return response is 
+                                
+                                if(response.alert_type === 'success') {
+                                    window.location.href = "/logins";
+                                } 
+                                else {
+                                    $('#signup-form')[0].reset();                            
+                            }
+                            },
+                            error: function (xhr, alert_type, error) {
+                                var responseText = xhr.responseJSON;
+                                alert(responseText && responseText.message || 'An error occurred while processing the signup.');
+                            }
+                        });
                     });
                 });
-            });
-        </script>
+            </script>
+        </div>
     </div>
 {% endblock %}
