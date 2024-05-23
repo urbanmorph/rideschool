@@ -2,93 +2,94 @@
 {% block head %}
   {{ super() }}
 {% endblock %}
-
 {% block title %} Homepage {% endblock %}
-    
 {% block content %}
-    <div style="margin-top: 100px;">
-        <h1 class="mt-5">Trainer Information</h1>
-        <table class="my-table table table-striped table-bordered border-dark">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Training Location</th>
-                    <th>Trainer Status</th>
-                    <th>Gender</th>
-                    <th>Aadhar No</th>
-                    <th>Registered Date</th>
-                    <th>Training Completion Date</th>
-                    <th>Organisation</th>                
-                    <th>Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for trainer in trainers %}
-                <tr>
-                    <td>{{ trainer['code'] }}</td>             
-                    <td><a href="{{ url_for('admin.trainer_details', id=trainer['id']) }}">{{ trainer['name'] }}</a></td>               
-                    <td>{{ trainer['email'] }}</td>
-                    <td>{{ trainer['contact'] }}</td>          
-                    <td>
-                        <label for="location-select-{{ trainer['id'] }}">Current Location: {{ trainer['training_location'] }}</label>
-                        <select class="location-select" id="location-select-{{ trainer['id'] }}">
-                            {% for location in training_locations %}
-                                <option value="{{ location['id'] }}">{{ location['training_location'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>                      
-                    <td>
-                        <select class="status-select" name="trainer_status" trainer-id="{{ trainer['id'] }}" data-initial-status="{{ trainer['status'] }}">
-                            <option value="{{ trainer['status'] }}" selected>{{ trainer['status'] }}</option>
-                            <option value="CERTIFIED">CERTIFIED</option>
-                        </select>
-                    </td>
-                    <td>{{ trainer['gender'] }}</td>
-                    <td>{{ trainer['aadhar_no'] }}</td>
-                    <td>{{ trainer['created_date'] }}</td>
-                    <td>{{ trainer['training_completion'] }}</td>
-                    <td>{{ trainer['name'] }}</td>                
-                    <td>
-                        <button class="update-button btn btn-primary" trainer-id="{{ trainer['id'] }}">Update</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-       
-        <script>
-            $(document).ready(function () {
-                // Event listener for individual update buttons
-                $(".update-button").click(function () {
-                    var trainerId = $(this).attr("trainer-id");
-                    var newStatus = $(this).closest("tr").find(".status-select option:selected").val();
-                    var newLocationId = $(this).closest("tr").find(".location-select option:selected").val();
-                    //var newLocation = $(this).closest("tr").find(".location-select option:selected").val();
-                    updateTrainerStatus(trainerId, newStatus, newLocationId);
+    
+        <div style="margin-top: 150px; margin-bottom: 600px;">
+            <h2 style="text-align: center;">Trainer Information</h1>
+            <table class="my-table table table-striped table-bordered border-dark" style="margin-top: 50px; margin-bottom: 100px;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Training Location</th>
+                        <th>Trainer Status</th>
+                        <th>Gender</th>
+                        <th>Aadhar No</th>
+                        <th>Registered Date</th>
+                        <th>Training Completion Date</th>
+                        <th>Organisation</th>                
+                        <th>Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in trainers %}
+                    <tr>
+                        <td>{{ trainer['code'] }}</td>             
+                        <td><a href="{{ url_for('admin.trainer_details', id=trainer['id']) }}">{{ trainer['name'] }}</a></td>               
+                        <td>{{ trainer['email'] }}</td>
+                        <td>{{ trainer['contact'] }}</td>          
+                        <td>
+                            <label for="location-select-{{ trainer['id'] }}">Current Location: {{ trainer['training_location'] }}</label>
+                            <select class="location-select" id="location-select-{{ trainer['id'] }}">
+                                {% for location in training_locations %}
+                                    <option value="{{ location['id'] }}">{{ location['training_location'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>                      
+                        <td>
+                            <select class="status-select" name="trainer_status" trainer-id="{{ trainer['id'] }}" data-initial-status="{{ trainer['status'] }}">
+                                <option value="{{ trainer['status'] }}" selected>{{ trainer['status'] }}</option>
+                                <option value="CERTIFIED">CERTIFIED</option>
+                            </select>
+                        </td>
+                        <td>{{ trainer['gender'] }}</td>
+                        <td>{{ trainer['aadhar_no'] }}</td>
+                        <td>{{ trainer['created_date'] }}</td>
+                        <td>{{ trainer['training_completion'] }}</td>
+                        <td>{{ trainer['name'] }}</td>                
+                        <td>
+                            <button class="update-button btn btn-primary" trainer-id="{{ trainer['id'] }}">Update</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+            <script>
+                $(document).ready(function () {
+                    // Event listener for individual update buttons
+                    $(".update-button").click(function () {
+                        var trainerId = $(this).attr("trainer-id");
+                        var newStatus = $(this).closest("tr").find(".status-select option:selected").val();
+                        var newLocationId = $(this).closest("tr").find(".location-select option:selected").val();
+                        //var newLocation = $(this).closest("tr").find(".location-select option:selected").val();
+                        updateTrainerStatus(trainerId, newStatus, newLocationId);
+                    });
                 });
-            });
-            // Function to update individual trainer status
-            function updateTrainerStatus(trainerId, newStatus, newLocationId) {
-                // Your existing AJAX logic for individual update
-                $.ajax({
-                    url: '/trainer_update_status',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ trainerId: trainerId, newStatus: newStatus, newLocationId: newLocationId }),
-                    success: function (response) {
-                        // Handle success
-                        console.log(response);
-                    },
-                    error: function () {
-                        // Handle error
-                        console.error("Error updating trainer status");
-                    },
-                });
-            }
-        </script>
-    </div>
+                // Function to update individual trainer status
+                function updateTrainerStatus(trainerId, newStatus, newLocationId) {
+                    // Your existing AJAX logic for individual update
+                    $.ajax({
+                        url: '/trainer_update_status',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ trainerId: trainerId, newStatus: newStatus, newLocationId: newLocationId }),
+                        success: function (response) {
+                            // Handle success
+                            console.log(response);
+                        },
+                        error: function () {
+                            // Handle error
+                            console.error("Error updating trainer status");
+                        },
+                    });
+                }
+            </script>
+        
+    
 {% endblock %}
 
