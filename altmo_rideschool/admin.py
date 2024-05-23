@@ -1,13 +1,11 @@
   # admin.py
 print("import feane/ admin.py")
 from flask import Blueprint, render_template, request, jsonify, current_app, session, redirect, url_for
-import logging # Import the logging module
+import logging 
 from altmo_utils.db import get_db_cursor
 import traceback 
-
 from .validate import admin_required
 admin_bp = Blueprint('admin', __name__)
-
 
 
 @admin_bp.route('/admin')
@@ -64,7 +62,7 @@ def trainer_info():
                     t.aadhar_no,
                     t.created_date,
                     t.training_completion,
-                    o.name AS organization_name, 
+                    o.name AS organization_name, -- rename this o.name to this organization_name to avoide confusion 
                     t.status,
                     t.code
                 FROM trainer t
@@ -91,8 +89,7 @@ def trainer_info():
 def sessions_info():
     print("Reached sessions_info route")  
     try:
-         # Creating a database connection
-        with get_db_cursor() as cursor:
+        with get_db_cursor() as cursor:   # Creating a database connection
             cursor.execute("""
                 SELECT
                     t.id,  
@@ -123,10 +120,8 @@ def sessions_info():
 @admin_required
 def trainer_details(id):
     try:
-        # Converts trainer_id to an integer
         trainer_id = int(id)
 
-        # Fetch trainer details based on trainer_id from the database
         with get_db_cursor() as cursor:
             cursor.execute("""
                 SELECT
@@ -160,7 +155,6 @@ def trainer_details(id):
     except Exception as e:
         traceback.print_exc()
         logging.error("An error occurred:", exc_info=True)
-        #return 'Error fetching trainer details. Please try again later.'
         return f"Error fetching trainer details. Details: {str(e)}"
     
 # function to fetch feedback data for a specific participant with COMPLETED or CERTIFIED status
@@ -233,7 +227,6 @@ def update_participant_statuses_admin():
         success = True
         error_message = None
 
-        # Debugging: Print the received updates
         print("Received updates:", updates)
         with get_db_cursor(commit=True) as cursor:
             for update in updates:
@@ -257,7 +250,6 @@ def update_participant_statuses_admin():
     except Exception as e:
         current_app.logger.error("Error in /update_participant_statuses_admin: %s", str(e))
         traceback.print_exc()
-        # Debugging: Print the error message
         print("Error in /update_participant_statuses_admin:", str(e))
         return jsonify({"success": False, "error": "An error occurred. Please check the logs for more information."})
 
@@ -304,13 +296,12 @@ def organisation_info():
                 FROM organisation
             """)
             organizations = cursor.fetchall()
-        ###
+       
         # loops through organizations and print the organisation_legal_status_document path this is just for debugging 
         for organization in organizations:
             legal_status_document_path = organization['legal_document']
             print("Organisation Document Path:", legal_status_document_path)
         #print("organization:", organization['organisation_legal_status_document'])
-        ###
         #print("Organizations:", organizations)  
             
         return render_template('organization_admin.html', organizations=organizations)
