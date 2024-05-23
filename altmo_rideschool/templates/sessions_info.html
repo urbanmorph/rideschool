@@ -2,12 +2,10 @@
 {% block head %}
   {{ super() }}   
 {% endblock %}
-
 {% block title %}Sessions Conducted {% endblock %}
-
 {% block content %}
     <div style="margin-top: 100px;">
-        <h1 class="mt-5">Sessions Conducted</h1>
+        <h2 style="text-align: center; margin-top: 150px; margin-bottom: 50px;">Sessions Conducted</h2>
         <table class="my-table table table-striped table table-bordered border-dark ">
             <thead>
                 <tr>
@@ -26,7 +24,6 @@
             <tbody>
                 {% for session in sessions %}
                     <tr>
-                        <!-- Link to trainer_details route for trainer details -->
                         <td><a href="{{ url_for('admin.trainer_details', id=session['id']) }}">{{ session['name'] }}</a></td>
                         <td>  <a href="{{ url_for('admin.participant_admin', id=session['id']) }}">  {{ session['participant_name'] }}</a> </td>
                         <!--<td>{{session['actual_datetime']}}</td>-->
