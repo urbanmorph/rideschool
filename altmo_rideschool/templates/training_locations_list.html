@@ -6,9 +6,9 @@
 {% block title %} Training Locations List{% endblock %}
    
 {% block content %}
-    
-    <div class="training-list-container" style="margin-top: 100px;">
-        <h1 style="text-align: center;">Training Locations List</h1>
+   <div class="container">
+    <div class="training-list-container" style="margin-top: 100px; margin-bottom: 100px;">
+        <h2 style="text-align: center; margin-top: 150px; margin-bottom: 50px;">Training Location</h2>
         <form action="/delete_location" method="post" id="training-locations-form">
             <table class="training-list-table table table-striped">
                 <thead>
@@ -42,39 +42,34 @@
                 </tbody>                     
             </table>
             <br> 
-            <input type="submit" value="Delete Selected" class="btn btn-primary">              
+            <input type="submit" value="Delete Selected Locations " class="btn btn-altmo-green">              
         </form>
-        
+    </div>     
     </div>
 
     <div class="card" style="margin-top: 50px;">
         <div class="card-body">
-            <h2 class="card-title" style="text-align:center;" >Add a new training location</h2>
-            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data" class="my-con-container">
-                <div class="form-group">
+            <h2 class="card-title" style="text-align:center; margin-top: 50px; margin-bottom: 50px;"" >Add Training Location</h2>
+            <form action="/add_location" method="post" id="add-location-form" enctype="multipart/form-data" class="my-form">
+                
                     <label for="id">Location ID:</label>
                     <input type="text" class="form-control" id="id" name="id" required>
-                </div>
-                <div class="form-group">
+                
                     <label for="training_location">Training Location:</label>
                     <input type="text" class="form-control" id="training_location" name="training_location" required>
-                </div>
-                <div class="form-group">
+                
                     <label for="address">Address:</label>
                     <input type="text" class="form-control" id="address" name="address" required>
-                </div>
-                <div class="form-group">
+                
                     <label for="latitude">Latitude:</label>
                     <input type="text" class="form-control" id="latitude" name="latitude" required>
-                </div>
-                <div class="form-group">
+                
                     <label for="longitude">Longitude:</label>
                     <input type="text" class="form-control" id="longitude" name="longitude" required>
-                </div>
-                <div class="form-group">
+                
                     <label for="location_picture">Location Picture:</label>                
                     <input type="file" class="form-control" id="location_picture" name="location_picture" accept="image/*" required>           
-                </div>
+                
                 <br>
                 <input type="submit" class="btn btn-primary" value="Add Location">
             </form>
