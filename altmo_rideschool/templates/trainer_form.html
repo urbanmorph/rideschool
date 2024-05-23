@@ -3,73 +3,83 @@
 {% block head %}
   {{ super() }}
    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-{% endblock %}
+
+   
+   {% endblock %}
 
 {% block title %} Trainer Form {% endblock %}
 
 {% block content %}
-    <div class="container" style="margin-top: 150px;">
-        <h1>Trainer Form</h1>
-        <form class="my-form" id="trainerForm" action="/register" method="POST">
+    <div class="background-img"> 
+        <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+        <div class="container" style="margin-top: 150px; margin-bottom: 800px;">
+            <h1 class="form-title">Trainer Form</h1>
+            <form class="my-form" id="trainerForm" action="/register" method="POST">
 
-            <label for="trainer_name">Name:</label>
-            <input type="text" id="trainer_name" name="name" required>
+                <label for="trainer_name">Name:</label>
+                <input type="text" id="trainer_name" name="name" required>
 
-            <label for="trainer_email">Email:</label>       
-            <input type="email" id="trainer_email" name="trainer_email" required onblur="validateEmail()">
-            <span id="email_error" class="error"></span>
-            
-            <label for="trainer_contact">Contact No:</label>           
-            <input type="text" id="trainer_contact" name="trainer_contact" required onblur="validateContact()">
-            <span id="contact_error" class="error"></span>
-            
-            <label for="trainer_address">Address:</label>           
-            <textarea id="trainer_address" name="trainer_address" required></textarea>
+                <label for="trainer_email">Email:</label>       
+                <input type="email" id="trainer_email" name="trainer_email" required onblur="validateEmail()">
+                <span id="email_error" class="error"></span>
+                
+                <label for="trainer_contact">Contact No:</label>           
+                <input type="text" id="trainer_contact" name="trainer_contact" required onblur="validateContact()">
+                <span id="contact_error" class="error"></span>
+                
+                <label for="trainer_address">Address:</label>           
+                <textarea id="trainer_address" name="trainer_address" required></textarea>
 
-            <label for="trainer_age">Age:</label>           
-            <input type="text" id="trainer_age" name="trainer_age" required>
-            
-            <label for="trainer_gender">Gender:</label>          
-            <select id="trainer_gender" name="trainer_gender" required>
-                <option value="">Select gender</option>
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
-                <option value="Other">Others</option>
-            </select>
-            
-            <label for="trainer_education">Education Qualification:</label>          
-            <select id="trainer_education" name="trainer_education" onchange="handleEducationChange()" required>
-                <option value="">Select qualification</option>
-                <option value="Below 10th">Below 10th</option>
-                <option value="10th / SSLC">10th / SSLC</option>
-                <option value="12th / PUC">12th / PUC</option>
-                <option value="Graduation">Graduation</option>
-                <option value="Post Graduation">Post Graduation</option>
-            </select>
-            
-            <label for="trainer_language">Language:</label>
-            <label for="language_kannada" style="margin-right: 5px;">Kannada          
-            <input type="checkbox" id="language_kannada" name="trainer_language" value="Kannada"></label>  
-            <label for="language_hindi" style="margin-right: 5px;">Hindi 
-            <input type="checkbox" id="language_hindi" name="trainer_language" value="Hindi"></label> 
-            <label for="language_english" style="margin-right: 5px;">English   
-            <input type="checkbox" id="language_english" name="trainer_language" value="English"></label> 
-              
-            <label for="trainer_aadhar_no">Aadhar Number:</label>          
-            <input type="text" id="trainer_aadhar_no" name="trainer_aadhar_no" required onblur="validateAadharNumber()">
-            <span id="aadhar_error" class="error"></span>
-            
-            <label for="organisation_name">Organisation Name:</label>            
-            <select id="organisation_name" name="organisation_name" required>
-                <option value="">Select organisation</option>
-                {% for organisation_name in organisation_names %}
-                <option value="{{ organisation_name }}">{{ organisation_name }}</option>
-                {% endfor %}
-            </select>            
-            <input type="submit"id="submitBtn" value="Register">
-        </form>        
-        <br>
-        <p class="text-center">If you have already registered, please create an account to login : <a href="/signup">Create an account </a></p>
+                <label for="trainer_age">Age:</label>           
+                <input type="text" id="trainer_age" name="trainer_age" required>
+                
+                <label for="trainer_gender">Gender:</label>          
+                <select id="trainer_gender" name="trainer_gender" required>
+                    <option value="">Select gender</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Others</option>
+                </select>
+                
+                <label for="trainer_education">Education Qualification:</label>          
+                <select id="trainer_education" name="trainer_education" onchange="handleEducationChange()" required>
+                    <option value="">Select qualification</option>
+                    <option value="Below 10th">Below 10th</option>
+                    <option value="10th / SSLC">10th / SSLC</option>
+                    <option value="12th / PUC">12th / PUC</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Post Graduation">Post Graduation</option>
+                </select>
+                
+                <label for="trainer_language">Language:</label>
+                <label class="checkbox-container">Kannada
+                    <input type="checkbox" id="language_kannada" name="trainer_language" value="Kannada">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">Hindi
+                    <input type="checkbox" id="language_hindi" name="trainer_language" value="Hindi">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="checkbox-container">English
+                    <input type="checkbox" id="language_english" name="trainer_language" value="English">
+                    <span class="checkmark"></span>
+                </label>
+                <label for="trainer_aadhar_no">Aadhar Number:</label>          
+                <input type="text" id="trainer_aadhar_no" name="trainer_aadhar_no" required onblur="validateAadharNumber()">
+                <span id="aadhar_error" class="error"></span>
+                
+                <label for="organisation_name">Organisation Name:</label>            
+                <select id="organisation_name" name="organisation_name" required>
+                    <option value="">Select organisation</option>
+                    {% for organisation_name in organisation_names %}
+                    <option value="{{ organisation_name }}">{{ organisation_name }}</option>
+                    {% endfor %}
+                </select>            
+                <input type="submit"id="submitBtn" value="Register">
+            </form>        
+            <br>
+            <p class="text-center">If you have already registered, please create an account to login : <a class="custom-link" href="/signup">Create an account </a></p>
+        </div>
     </div>
         <!--below code performs form validation for contact no , email and aadhar_no --> 
         <script>
