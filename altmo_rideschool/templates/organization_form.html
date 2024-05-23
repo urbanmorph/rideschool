@@ -1,177 +1,169 @@
 {% extends "application.html" %}
-
 {% block head %}
     {{ super() }}   
 {% endblock %}
-
 {% block title %} Organization Form {% endblock %}
-
 {% block content %}
-    <div class="container" style="margin-top: 100px;">
-        <h1>Organization Form</h1>
-        <form class="my-form" id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
-            <label for="organization-name">Organization Name:</label>
-            <input type="text" id="organization-name" name="organization-name" required>
-            
-            <label for="organization-address">Organization Address:</label>
-            <input type="text" id="organization-address" name="organization-address" required>
-            
-            <label for="organization-contact">Organization Contact:</label>
-            <input type="text" id="organization-contact" name="organization-contact" required>
-            <div class="error-message" id="contact-error-message"></div>
-            
-            <label for="organization-email">Organization Email:</label>
-            <input type="email" id="organization-email" name="organization-email" required>
-            <div class="error-message" id="email-error-message"></div>
-            
-            <label for="organization-type">Organization Type:</label>
-            <select id="organization-type" name="organization-type" required>
-                <option value="" selected disabled>Select Organization Type</option>
-                <option value="Public Limited Company">Public Limited Company</option>
-                <option value="Private Limited Company">Private Limited Company</option>
-                <option value="Registered Trust">Registered Trust</option>
-                <option value="Registered Society">Registered Society</option>
-                <option value="Registered Resident Welfare Association (RWA)">Registered Resident Welfare Association (RWA)</option>
-                <option value="Section 8 Company">Section 8 Company</option>
-                <option value="New Governmental Organization">Non Governmental Organization</option>
-                <option value="Other">Other</option>
-            </select>
-            
-            <label for="organization-activities">Organization Activities:</label>
-            <textarea id="organization-activities" name="organization-activities"></textarea>
-            
-            <label for="organization-legal-status-document">Legal Status Document:</label>
-            <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.jpg,.jpeg">  <!--  accept=".pdf,.doc,.docx">-->
-  
-            <label for="coordinator-name">Coordinator Name:</label>
-            <input type="text" id="coordinator-name" name="coordinator-name" required>
-            
-            <label for="coordinator-email">Coordinator Email:</label>
-            <input type="email" id="coordinator-email" name="coordinator-email" required>
-            <div class="error-message" id="coordinator-email-error-message"></div>
-            
-            <label for="coordinator-contact">Coordinator Contact:</label>
-            <input type="text" id="coordinator-contact" name="coordinator-contact" required>
-            <div class="error-message" id="coordinator-contact-error-message"></div>
-            
-            <button type="submit" id="submitButton">Submit</button>
-        </form>
- 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+    <div class="background-img">
+        <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+        <div class="container" style="margin-top: 150px; margin-bottom: 800px;">
+            <h1 class="form-title">Organization Form</h1>
+            <form class="my-form" id="organization-form" action="/submit_organization" method="post" enctype="multipart/form-data">
+                <label for="organization-name">Organization Name:</label>
+                <input type="text" id="organization-name" name="organization-name" required>
+                
+                <label for="organization-address">Organization Address:</label>
+                <input type="text" id="organization-address" name="organization-address" required>
+                
+                <label for="organization-contact">Organization Contact:</label>
+                <input type="text" id="organization-contact" name="organization-contact" required>
+                <div class="error-message" id="contact-error-message"></div>
+                
+                <label for="organization-email">Organization Email:</label>
+                <input type="email" id="organization-email" name="organization-email" required>
+                <div class="error-message" id="email-error-message"></div>
+                
+                <label for="organization-type">Organization Type:</label>
+                <select id="organization-type" name="organization-type" required>
+                    <option value="" selected disabled>Select Organization Type</option>
+                    <option value="Public Limited Company">Public Limited Company</option>
+                    <option value="Private Limited Company">Private Limited Company</option>
+                    <option value="Registered Trust">Registered Trust</option>
+                    <option value="Registered Society">Registered Society</option>
+                    <option value="Registered Resident Welfare Association (RWA)">Registered Resident Welfare Association (RWA)</option>
+                    <option value="Section 8 Company">Section 8 Company</option>
+                    <option value="New Governmental Organization">Non Governmental Organization</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label for="organization-activities">Organization Activities:</label>
+                <textarea id="organization-activities" name="organization-activities"></textarea>
+                
+                <label for="organization-legal-status-document">Legal Status Document:</label>
+                <input type="file" id="organization-legal-status-document" name="organization-legal-status-document" accept=".pdf,.jpg,.jpeg">  <!--  accept=".pdf,.doc,.docx">-->
+    
+                <label for="coordinator-name">Coordinator Name:</label>
+                <input type="text" id="coordinator-name" name="coordinator-name" required>
+                
+                <label for="coordinator-email">Coordinator Email:</label>
+                <input type="email" id="coordinator-email" name="coordinator-email" required>
+                <div class="error-message" id="coordinator-email-error-message"></div>
+                
+                <label for="coordinator-contact">Coordinator Contact:</label>
+                <input type="text" id="coordinator-contact" name="coordinator-contact" required>
+                <div class="error-message" id="coordinator-contact-error-message"></div>
+                
+                <button type="submit" id="submitButton">Submit</button>
+            </form>
+    
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var organizationForm = document.getElementById('organization-form');
+                    var submitButton = document.getElementById('submitButton');           
+                    var allowedExtensions = ['.pdf', '.jpg', '.jpeg'];                
+                    organizationForm.addEventListener('submit', function (event) {
+                    event.preventDefault(); 
 
-                var organizationForm = document.getElementById('organization-form');
-                var submitButton = document.getElementById('submitButton'); // Gets the submit button           
-                // this js is used to validate if the document is 1 of these '.pdf', '.jpg', '.jpeg' if it is any thing appart from these it will give an allert that says the uploaded folder should be 1 of those types 
-                var allowedExtensions = ['.pdf', '.jpg', '.jpeg'];
-               
-                organizationForm.addEventListener('submit', function (event) {
-                event.preventDefault(); // Prevent default form submission
+                    var legalStatusDocumentInput = document.getElementById('organization-legal-status-document');
+                    if (legalStatusDocumentInput.files.length === 0) {
+                        displayMessage('alert-danger', 'Please select a document.');
+                        return;
+                    }
 
-                //submitButton.addEventListener('click', function () {
-                //const formData = new FormData(organizationForm);
+                    var fileName = legalStatusDocumentInput.files[0].name;
+                    var fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
-                // Check if a file is selected
-                var legalStatusDocumentInput = document.getElementById('organization-legal-status-document');
-                if (legalStatusDocumentInput.files.length === 0) {
-                    displayMessage('alert-danger', 'Please select a document.');
-                    return;
-                }
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        displayMessage('alert-danger', 'Invalid file type. Please select a .pdf, .jpg, or .jpeg document.');
+                        return;
+                    }
 
-                // Check the file extension
-                var fileName = legalStatusDocumentInput.files[0].name;
-                var fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
-
-                if (!allowedExtensions.includes(fileExtension)) {
-                    displayMessage('alert-danger', 'Invalid file type. Please select a .pdf, .jpg, or .jpeg document.');
-                    return;
-                }
-
-                $.ajax({
-                    url: '/submit_organization',
-                    type: 'POST',
-                   // data: formData,
-                    data: new FormData(this),
-                    contentType: false,
-                    processData: false,
-                    success: function (result) {
-                        alert(result.message);
-                        if (result.alert_type === 'success') {
-                                window.location.href = '/';
-                            } else {
-                                organizationForm.reset();
+                    $.ajax({
+                        url: '/submit_organization',
+                        type: 'POST',
+                    // data: formData,
+                        data: new FormData(this),
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            alert(result.message);
+                            if (result.alert_type === 'success') {
+                                    window.location.href = '/';
+                                } else {
+                                    organizationForm.reset();
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                //console.error('AJAX Error:', error);
+                                var responseText = xhr.responseJSON;
+                                alert(responseText && responseText.message || 'An error occurred. Please try again.');
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            //console.error('AJAX Error:', error);
-                            var responseText = xhr.responseJSON;
-                            alert(responseText && responseText.message || 'An error occurred. Please try again.');
-                        }
+                        });
                     });
+
+                    // Event listener for organization contact
+                    var organizationContactInput = document.getElementById('organization-contact');
+                    organizationContactInput.addEventListener('input', function () {
+                    var contactValue = organizationContactInput.value;
+                    if (!/^\d{10}$/.test(contactValue)) {
+                        displayError('contact', 'Organization contact should contain 10 digits.');
+                    } else {
+                        hideError('contact');
+                    }
+                    });
+
+                    // Event listener for coordinator contact
+                    var coordinatorContactInput = document.getElementById('coordinator-contact');
+                    coordinatorContactInput.addEventListener('input', function () {
+                    var coordinatorContactValue = coordinatorContactInput.value;
+                    if (!/^\d{10}$/.test(coordinatorContactValue)) {
+                        displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
+                    } else {
+                        hideError('coordinator-contact');
+                    }
+                    });
+
+                    // Event listener for organization email
+                    var organizationEmailInput = document.getElementById('organization-email');
+                    organizationEmailInput.addEventListener('input', function () {
+                    var emailValue = organizationEmailInput.value;
+                    if (!isValidEmail(emailValue)) {
+                        displayError('email', 'Invalid email address.');
+                    } else {
+                        hideError('email');
+                    }
+                    });
+
+                    // Event listener for coordinator email
+                    var coordinatorEmailInput = document.getElementById('coordinator-email');
+                    coordinatorEmailInput.addEventListener('input', function () {
+                    var coordinatorEmailValue = coordinatorEmailInput.value;
+                    if (!isValidEmail(coordinatorEmailValue)) {
+                        displayError('coordinator-email', 'Invalid email address.');
+                    } else {
+                        hideError('coordinator-email');
+                    }
+                    });
+
+                    function isValidEmail(email) {
+                        // Updated email validation logic to check for '@' and '.'
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                    }
+
+                    function displayError(fieldId, errorMessage) {
+                    var errorField = document.getElementById(fieldId + '-error-message');
+                    errorField.innerHTML = errorMessage;
+                    errorField.style.display = 'block';
+                    }
+
+                    function hideError(fieldId) {
+                    var errorField = document.getElementById(fieldId + '-error-message');
+                    errorField.innerHTML = '';
+                    errorField.style.display = 'none';
+                    }               
                 });
-
-                // Event listener for organization contact
-                var organizationContactInput = document.getElementById('organization-contact');
-                organizationContactInput.addEventListener('input', function () {
-                var contactValue = organizationContactInput.value;
-                if (!/^\d{10}$/.test(contactValue)) {
-                    displayError('contact', 'Organization contact should contain 10 digits.');
-                } else {
-                    hideError('contact');
-                }
-                });
-
-                // Event listener for coordinator contact
-                var coordinatorContactInput = document.getElementById('coordinator-contact');
-                coordinatorContactInput.addEventListener('input', function () {
-                var coordinatorContactValue = coordinatorContactInput.value;
-                if (!/^\d{10}$/.test(coordinatorContactValue)) {
-                    displayError('coordinator-contact', 'Coordinator contact should contain 10 digits.');
-                } else {
-                    hideError('coordinator-contact');
-                }
-                });
-
-                // Event listener for organization email
-                var organizationEmailInput = document.getElementById('organization-email');
-                organizationEmailInput.addEventListener('input', function () {
-                var emailValue = organizationEmailInput.value;
-                if (!isValidEmail(emailValue)) {
-                    displayError('email', 'Invalid email address.');
-                } else {
-                    hideError('email');
-                }
-                });
-
-                // Event listener for coordinator email
-                var coordinatorEmailInput = document.getElementById('coordinator-email');
-                coordinatorEmailInput.addEventListener('input', function () {
-                var coordinatorEmailValue = coordinatorEmailInput.value;
-                if (!isValidEmail(coordinatorEmailValue)) {
-                    displayError('coordinator-email', 'Invalid email address.');
-                } else {
-                    hideError('coordinator-email');
-                }
-                });
-
-                function isValidEmail(email) {
-                    // Updated email validation logic to check for '@' and '.'
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                }
-
-                function displayError(fieldId, errorMessage) {
-                var errorField = document.getElementById(fieldId + '-error-message');
-                errorField.innerHTML = errorMessage;
-                errorField.style.display = 'block';
-                }
-
-                function hideError(fieldId) {
-                var errorField = document.getElementById(fieldId + '-error-message');
-                errorField.innerHTML = '';
-                errorField.style.display = 'none';
-                }               
-            });
-        </script>
+            </script>
+        </div>
     </div>
 {% endblock %}
    
