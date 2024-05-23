@@ -7,10 +7,10 @@
 {% block title %} Homepage {% endblock %}
     
 {% block content %}
-    <div class="container" style="margin-top: 100px;">
-        <h1>Participant Details</h1>
-        <form method="POST" id="update-status-form"></form>
-            <table>
+    <div class="container" style="margin-top: 150px; margin-bottom: 800px;">
+        <h2 style="text-align: center;">Participant Details</h2>
+        <form method="POST" id="update-status-form" style="margin-bottom: 50px;">
+            <table class="my-table table table-striped table-bordered border-dark" style="margin-bottom: 50px;" >
                 <tr>
                     <td><strong>id:</strong></td>
                     <td>{{ participant_data['id'] }}</td>
@@ -83,42 +83,44 @@
         </form>
         <!-- Check if there is feedback data and render the feedback section -->
         {% if feedback_data %}
-        <h2>Feedback Information</h2>
-        <table>
-            {% for feedback_item in feedback_data %}
-            <tr>
-                <td><strong>Rate Training Sessions:</strong></td>
-                <td>{{ feedback_item['sessions_rating'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Learner Guide Useful:</strong></td>
-                <td>{{ feedback_item['lguide_useful'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Feedback:</strong></td>
-                <td>{{ feedback_item['feedback'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Confident to Ride:</strong></td>
-                <td>{{ feedback_item['confident'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Trainer Evaluation:</strong></td>
-                <td>{{ feedback_item['trainer_rating'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Trainer Feedback:</strong></td>
-                <td>{{ feedback_item['trainer_feedback'] }}</td>
-            </tr>
-            <tr>
-                <td><strong>Feedback Created At:</strong></td>
-                <td>{{ feedback_item['created_at'] }}</td>
-                <!--<td>{{ feedback_item['feedback_created_at'] }}</td>-->
-            </tr>
-            {% endfor %}
-        </table>
+        <h2 style="text-align: center;">Feedback Information</h2>
+        <div class="container">
+            <table class="my-table table table-striped table-bordered border-dark" >
+                {% for feedback_item in feedback_data %}
+                <tr>
+                    <td><strong>Rate Training Sessions:</strong></td>
+                    <td>{{ feedback_item['sessions_rating'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Learner Guide Useful:</strong></td>
+                    <td>{{ feedback_item['lguide_useful'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Feedback:</strong></td>
+                    <td>{{ feedback_item['feedback'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Confident to Ride:</strong></td>
+                    <td>{{ feedback_item['confident'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Trainer Evaluation:</strong></td>
+                    <td>{{ feedback_item['trainer_rating'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Trainer Feedback:</strong></td>
+                    <td>{{ feedback_item['trainer_feedback'] }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Feedback Created At:</strong></td>
+                    <td>{{ feedback_item['created_at'] }}</td>
+                    <!--<td>{{ feedback_item['feedback_created_at'] }}</td>-->
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
         {% else %}
-        <p>Feedback data for this participant is currently unavailable.</p>
+        <p style="text-align: center;">Feedback data for this participant is currently unavailable.  </p>
         {% endif %}
         <!-- JavaScript for Updating Participant Status -->
         <script>

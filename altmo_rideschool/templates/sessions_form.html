@@ -8,66 +8,68 @@
 {% block title %} Session Completion Form {% endblock %}
   
 {% block content %}
-  <h1 style="margin-top: 120px;"> Session Completion Form</h1>
-  <div class="my-con-container">
-    <br>
-    <form id="training-session-form" method="POST" action="/submit_form" enctype="multipart/form-data"> 
+  <div class="background-img"> 
+    <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+    <div class="container" style="margin-top: 150px; margin-bottom: 100px;"></div>
+      <h1 class="form-title" style="margin-top: 120px;"> Session Completion Form</h1>
+    
+      <form class="my-form" id="training-session-form" method="POST" action="/submit_form" enctype="multipart/form-data"> 
+          <label for="trainer-name">Trainer Name:</label>
+          <div class="form-group">
+          <div class="trainer-name-box" id="logged-in-trainer-name">
+            {{ session['name'] }}
+          </div>
+          <input type="hidden" name="trainer-id" value="{{ session['trainer_id'] }}">
+          <input type="hidden" name="training_location_id" id="trainer_training_location_id">
+          </div>     
+        
+          <label for="participant-name">Participant Name:</label>
+          <select name="participant-name" id="name" class="form-control">
+            <option value="">Select Participant</option>
+          </select>
+          <input type="hidden" name="training_location_id" id="participant_training_location_id">
+        
+        
+          <label for="scheduled-datetime">Scheduled Date and Time:</label>
+          <div class="date-time-wrapper">
+            <input type="datetime-local" id="scheduled-datetime" name="scheduled-datetime" required>
+          </div>
+        
+        
+          <label for="actual-datetime">Actual Date and Time:</label>
+          <div class="date-time-wrapper">
+            <input type="datetime-local" id="actual-datetime" name="actual-datetime" required>
+          </div>
+        
+        
+          <label for="hours-trained">Hours Trained:</label>
+          <select id="hours-trained" name="hours-trained" required>
+            <option value="0.5">30 Minutes</option>i
+            <option value="1">1 Hour</option>
+            <option value="1.5">1 Hour 30 Minutes</option>
+            <option value="2">2 Hour's</option>
+          </select>
+        
+          <label for="session-picture">Picture:</label>
+          <input type="file" id="session-picture" name="session-picture" accept="image/*" required>
+      
 
-      <div class="form-group">
-        <label for="trainer-name">Trainer Name:</label>
-        <div class="trainer-name-box" id="logged-in-trainer-name">
-          {{ session['name'] }}
-        </div>
-        <input type="hidden" name="trainer-id" value="{{ session['trainer_id'] }}">
-        <input type="hidden" name="training_location_id" id="trainer_training_location_id">
-      </div>     
-      <div class="form-group">
-        <label for="participant-name">Participant Name:</label>
-        <select name="participant-name" id="name" class="form-control">
-          <option value="">Select Participant</option>
-        </select>
-        <input type="hidden" name="training_location_id" id="participant_training_location_id">
-      </div>
-      <div class="form-group">
-        <label for="scheduled-datetime">Scheduled Date and Time:</label>
-        <div class="date-time-wrapper">
-          <input type="datetime-local" id="scheduled-datetime" name="scheduled-datetime" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="actual-datetime">Actual Date and Time:</label>
-        <div class="date-time-wrapper">
-          <input type="datetime-local" id="actual-datetime" name="actual-datetime" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hours-trained">Hours Trained:</label>
-        <select id="hours-trained" name="hours-trained" required>
-          <option value="0.5">30 Minutes</option>i
-          <option value="1">1 Hour</option>
-          <option value="1.5">1 Hour 30 Minutes</option>
-          <option value="2">2 Hour's</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="session-picture">Picture:</label>
-        <input type="file" id="session-picture" name="session-picture" accept="image/*" required>
-      </div>
+        
+          <label for="session-video">Video:</label>
+          <input type="file" id="session-video" name="session-video" accept="video/*" required>
+      
 
-      <div class="form-group">
-        <label for="session-video">Video:</label>
-        <input type="file" id="session-video" name="session-video" accept="video/*" required>
-      </div>
+        
+          <label for="session-description">Description:</label>
+          <textarea id="session-description" name="session-description" rows="4" required></textarea>
+        
 
-      <div class="form-group">
-        <label for="session-description">Description:</label>
-        <textarea id="session-description" name="session-description" rows="4" required></textarea>
-      </div>
-
-      <div class="form-group" style="text-align: center;">
-        <button type="submit" id="submit-button">Submit</button>
-      </div>
-    </form>  
+        
+          <button type="submit" id="submit-button">Submit</button>
+      
+      </form>  
+    </div>
+  </div>
 <script>
   $(document).ready(function () {
 
@@ -128,5 +130,6 @@
         });
       });
 </script>
-</div>
+
+
 {% endblock %}
