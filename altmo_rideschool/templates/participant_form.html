@@ -7,60 +7,61 @@
 {% block title %} Homepage {% endblock %}
       
 {% block content %}
-    <div class="container" style="margin-top: 150px;">
-        <h1>Participant Form</h1>
-        <form class="my-form" id="participantForm" action="/submit" method="POST" onsubmit="return validateRegistrationForm();">
-            <label for="participant_name">Name:</label>
-            <input type="text" id="participant_name" name="participant_name" required>
+    <div class="background-img">
+        <img class="blur-background" src="/static/Image/blob_scatter.svg" alt="Background Image">
+        <div class="container" style="margin-top: 150px; margin-bottom: 550px;">
+            <h1 class="form-title">Participant Form</h1>
+            <form class="my-form" id="participantForm" action="/submit" method="POST" onsubmit="return validateRegistrationForm();">
+                <label for="participant_name">Name:</label>
+                <input type="text" id="participant_name" name="participant_name" required>
 
-            <label for="participant_email">Email:</label>
-            <input type="email" id="participant_email" name="participant_email" required onblur="validateEmail()">
-            <span id="email_error" class="error"></span>
+                <label for="participant_email">Email:</label>
+                <input type="email" id="participant_email" name="participant_email" required onblur="validateEmail()">
+                <span id="email_error" class="error"></span>
 
-            <label for="participant_contact">Contact No:</label>
-            <input type="tel" id="participant_contact" name="participant_contact" required onblur="validateContact()">
-            <span id="contact_error" class="error"></span>
-        
-            <label for="participant_address">Address:</label>
-            <textarea id="participant_address" name="participant_address"></textarea>
+                <label for="participant_contact">Contact No:</label>
+                <input type="tel" id="participant_contact" name="participant_contact" required onblur="validateContact()">
+                <span id="contact_error" class="error"></span>
+            
+                <label for="participant_address">Address:</label>
+                <textarea id="participant_address" name="participant_address"></textarea>
 
-            <label for="participant_age">Age:</label>
-            <select id="participant_age" name="participant_age" required>
-                <option value="">Select age range</option>
-                <option value="5-10">5-10</option>
-                <option value="11-20">11-20</option>
-                <option value="21-30">21-30</option>
-                <option value="31-40">31-40</option>
-                <option value="41-50">41-50</option>
-                <option value="51-60">51-60</option>
-                <option value="61-70">61-70</option>
-            </select>
+                <label for="participant_age">Age:</label>
+                <select id="participant_age" name="participant_age" required>
+                    <option value="">Select age range</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-20">11-20</option>
+                    <option value="21-30">21-30</option>
+                    <option value="31-40">31-40</option>
+                    <option value="41-50">41-50</option>
+                    <option value="51-60">51-60</option>
+                    <option value="61-70">61-70</option>
+                </select>
 
-            <label for="participant_gender">Gender:</label>
-            <select id="participant_gender" name="participant_gender" required>
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Others">Others</option>
-            </select>
-        
-            <label for="training_location">Training Location:</label>
-            <select id="training_location" name="training_location" onchange="showAddress()" required>
-                <option value="">Select a location</option>
-                {% for training_location in training_locations %}
-                <option value="{{ training_location.training_location }}" data-address="{{ training_location.training_location_address }}">{{ training_location.training_location }}</option>
-                {% endfor %}
-            </select>
-            <p id="training_location_address"></p>
+                <label for="participant_gender">Gender:</label>
+                <select id="participant_gender" name="participant_gender" required>
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+                </select>
+            
+                <label for="training_location">Training Location:</label>
+                <select id="training_location" name="training_location" onchange="showAddress()" required>
+                    <option value="">Select a location</option>
+                    {% for training_location in training_locations %}
+                    <option value="{{ training_location.training_location }}" data-address="{{ training_location.training_location_address }}">{{ training_location.training_location }}</option>
+                    {% endfor %}
+                </select>
+                <p id="training_location_address"></p>
 
-            <input type="submit" value="Register" id="submitBtn" onclick="submitForm()">
-        </form>
-       <!-- <div class="alert" id="messageAlert" style="display: none;"></div>-->
-        <br>
-        <p class="text-center">If you have already registered, please create an account to login : <a href="/signup">Create an account  </a></p>
-    </div> 
-  
-   
+                <input type="submit" value="Register" id="submitBtn" onclick="submitForm()">
+            </form>
+        <!-- <div class="alert" id="messageAlert" style="display: none;"></div>-->
+            <br>
+            <p class="text-center">If you have already registered, <a class="custom-link" href="/signup">Create an account  </a>to login</p>
+        </div> 
+    </div>
     <script> 
         function validateEmail() {
             var emailInput = document.getElementById("participant_email");
@@ -87,8 +88,8 @@
             var contact = contactInput.value.trim();
             var contactError = document.getElementById("contact_error");
     
-            if (contact.length > 0) { //It checks if the contact number is not empty 
-                if (contact.length !== 10 || !/^\d{10}$/.test(contact)) { // checks whether it consists of exactly 10 digits if it does not contain exactly 10 digit it is considered  invalid.
+            if (contact.length > 0) { 
+                if (contact.length !== 10 || !/^\d{10}$/.test(contact)) { 
                     contactError.textContent = "Invalid contact number. Contact number should consist of 10 digits.";
                     contactInput.classList.add("error");
                 } else {
@@ -109,23 +110,21 @@
     </script>
 
 
-<!--send the form data and display the return message as an alert -->
+    <!--send the form data and display the return message as an alert -->
     <script>
-        $(document).ready(function () { //This ensures that the enclosed code runs only after the DOM has fully loaded.
-            $('#participantForm').submit(function (event) {//This attaches a submit event handler to the form with the ID "participantForm". When this form is submitted, the provided function is executed.(insidde this there are below 2 thing that hapeen )
-                event.preventDefault();//This prevents the default form submission behavior, ensuring that the form doesn't perform a traditional synchronous submission (that is form action).
-                var formData = $(this).serialize();//The this keyword that reffers to the form id , within the context of the submit event handler function, refers to the HTML form element that triggered the event. In this case, it is the form with the ID "participantForm" because the event handler is attached to that specific form using $('#participantForm').submit(...).  // Within the event handler function, this refers to the form element that triggered the submit event. $(this) converts it into a jQuery object, and .serialize() then serializes the form data into a format that can be easily sent in an HTTP request.
-
+        $(document).ready(function () { 
+            $('#participantForm').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: "/submit", // Update the URL to match your endpoint
+                    url: "/submit", 
                     data: formData,
                     success: function (response) {
                         alert(response.message);
 
                         if (response.alert_type === 'success') {
-                            window.location.href = '/signup';
-                            
+                            window.location.href = '/signup';                            
                         } else {
                             $('#participantForm')[0].reset();
                         }
